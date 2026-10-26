@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enctypo (icomoon) — Demo de iconos</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  :root {
+    --bg: #1b1f24;
+    --panel: #242a31;
+    --panel-hover: #2e353d;
+    --text: #e6e9ed;
+    --muted: #9aa4af;
+    --accent: #1c76ea;
+    --border: #353d46;
+    --ok: #14a075;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Roboto, system-ui, sans-serif;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+  }
+  h1 {
+    margin: 0 0 12px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  h1 small { color: var(--muted); font-weight: 400; font-size: 13px; }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .search {
+    flex: 1 1 260px;
+    display: flex;
+    align-items: center;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 12px;
+  }
+  .search .ico-prefix { color: var(--muted); font-size: 16px; }
+  .search input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: var(--text);
+    font-size: 15px;
+    padding: 10px 10px;
+  }
+  .sizes { display: flex; gap: 6px; }
+  .sizes button {
+    background: var(--bg);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .sizes button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    padding: 24px;
+  }
+  .cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform .08s, background .15s, border-color .15s;
+    text-align: center;
+    min-height: 100px;
+  }
+  .cell:hover { background: var(--panel-hover); border-color: var(--accent); transform: translateY(-2px); }
+  .cell [class^="icon-"] { color: var(--text); transition: transform .15s; }
+  .cell:hover [class^="icon-"] { transform: scale(1.1); }
+  .cell .name {
+    font-size: 11px;
+    color: var(--muted);
+    word-break: break-word;
+    line-height: 1.3;
+  }
+  .cell.copied { border-color: var(--ok); }
+  .cell.copied .name { color: var(--ok); }
+
+  /* tamaños de icono conmutables */
+  .grid[data-size="1"] [class^="icon-"] { font-size: 24px; }
+  .grid[data-size="2"] [class^="icon-"] { font-size: 36px; }
+  .grid[data-size="3"] [class^="icon-"] { font-size: 52px; }
+
+  .empty { padding: 60px; text-align: center; color: var(--muted); grid-column: 1/-1; }
+
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ok);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s, transform .2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Enctypo <span style="font-weight:400;color:var(--muted);font-size:14px;">(icomoon)</span> &nbsp;<small>— <span id="total">0</span> iconos · clic para copiar la clase</small></h1>
+  <div class="controls">
+    <label class="search">
+      <span class="icon-magnifying-glass ico-prefix"></span>
+      <input type="text" id="buscar" placeholder="Buscar icono (ej: arrow, user, cloud)…" autofocus>
+    </label>
+    <div class="sizes" id="sizes">
+      <button data-size="1" class="active">S</button>
+      <button data-size="2">M</button>
+      <button data-size="3">L</button>
+    </div>
+    <span class="count" id="contador"></span>
+  </div>
+</header>
+
+<div class="grid" id="grid" data-size="1"></div>
+<div id="toast">Copiado</div>
+
+<script>
+// Lista completa de iconos extraída de style.css (Enctypo / icomoon, prefijo icon-)
+var ICONS = ["add-to-list","classic-computer","controller-fast-backward","creative-commons-attribution","creative-commons-noderivs","creative-commons-noncommercial-eu","creative-commons-noncommercial-us","creative-commons-public-domain","creative-commons-remix","creative-commons-share","creative-commons-sharealike","creative-commons","document-landscape","remove-user","warning2","arrow-bold-down","arrow-bold-left","arrow-bold-right","arrow-bold-up","arrow-down3","arrow-left3","arrow-long-down","arrow-long-left","arrow-long-right","arrow-long-up","arrow-right3","arrow-up3","arrow-with-circle-down","arrow-with-circle-left","arrow-with-circle-right","arrow-with-circle-up","bookmark2","bookmarks2","chevron-down","chevron-left","chevron-right","chevron-small-down","chevron-small-left","chevron-small-right","chevron-small-up","chevron-thin-down","chevron-thin-left","chevron-thin-right","chevron-thin-up","chevron-up","chevron-with-circle-down","chevron-with-circle-left","chevron-with-circle-right","chevron-with-circle-up","cloud3","controller-fast-forward","controller-jump-to-start","controller-next","controller-paus","controller-play","controller-record","controller-stop","controller-volume","dot-single","dots-three-horizontal","dots-three-vertical","dots-two-horizontal","dots-two-vertical","download4","emoji-flirt","flow-branch","flow-cascade","flow-line","flow-parallel","flow-tree","install","layers","open-book","resize-100","resize-full-screen","save","select-arrows","sound-mute","sound2","trash2","triangle-down","triangle-left","triangle-right","triangle-up","uninstall","upload-to-cloud","upload4","add-user","address","adjust","air","aircraft-landing","aircraft-take-off","aircraft","align-bottom","align-horizontal-middle","align-left","align-right","align-top","align-vertical-middle","archive","area-graph","attachment2","awareness-ribbon","back-in-time","back","bar-graph","battery","beamed-note","bell2","blackboard","block","book2","bowl","box","briefcase2","browser","brush","bucket","cake","calculator2","calendar3","camera3","ccw","chat","check","circle-with-cross","circle-with-minus","circle-with-plus","circle","circular-graph","clapperboard","clipboard2","clock4","code","cog2","colours","compass3","copy2","credit-card2","credit","cross2","cup2","cw","cycle","database2","dial-pad","direction","document","documents","drink","drive2","drop","edit","email","emoji-happy","emoji-neutral","emoji-sad","erase","eraser","export","eye3","feather","flag2","flash","flashlight","flat-brush","folder-images","folder-music","folder-video","folder2","forward4","funnel","game-controller","gauge","globe","graduation-cap","grid","hair-cross","hand","heart-outlined","heart3","help-with-circle","help","home4","hour-glass2","image-inverted","image2","images2","inbox","infinity","info-with-circle","info2","key4","keyboard2","lab-flask","landline","language","laptop2","leaf2","level-down","level-up","lifebuoy2","light-bulb","light-down","light-up","line-graph","link2","list3","location-pin","location4","lock-open","lock3","log-out","login","loop3","magnet2","magnifying-glass","mail6","man2","map3","mask","medal","megaphone2","menu5","message","mic2","minus2","mobile3","modern-mic","moon","mouse","music3","network","new-message","new","news2","note2","notification2","old-mobile","old-phone","palette","paper-plane","pencil3","phone3","pie-chart2","pin","plus2","popup","power-plug","price-ribbon","price-tag2","print","progress-empty","progress-full","progress-one","progress-two","publish","quote","radio","reply-all","reply2","retweet","rocket2","round-brush","rss","ruler","scissors2","share-alternitive","share3","shareable","shield2","shop2","shopping-bag","shopping-basket","shopping-cart","shuffle2","signal","sound-mix","sports-club","spreadsheet","squared-cross","squared-minus","squared-plus","star-outlined","star2","stopwatch2","suitcase","swap","sweden","switch2","tablet2","tag2","text-document-inverted","text-document","text","thermometer","thumbs-down","thumbs-up","thunder-cloud","ticket2","time-slot","tools","traffic-cone","tree2","trophy2","tv3","typing","unread","untag","user3","users2","v-card","video2","vinyl","voicemail","wallet2","water","500px-with-circle","500px","basecamp","behance","creative-cloud","dropbox2","evernote","flattr2","foursquare2","google-drive2","google-hangouts","grooveshark","icloud","mixi","onedrive2","paypal4","picasa","qq","rdio-with-circle","renren","scribd","sina-weibo","skype-with-circle","skype2","slideshare","smashing","soundcloud3","spotify-with-circle","spotify","swarm","vine-with-circle","vine","vk-alternitive","vk-with-circle","vk","xing-with-circle","xing3","yelp2","dribbble-with-circle","dribbble4","facebook-with-circle","facebook4","flickr-with-circle","flickr5","github-with-circle","github6","google-with-circle","google2","instagram-with-circle","instagram2","lastfm-with-circle","lastfm3","linkedin-with-circle","linkedin3","pinterest-with-circle","pinterest3","rdio","stumbleupon-with-circle","stumbleupon3","tumblr-with-circle","tumblr3","twitter-with-circle","twitter4","vimeo-with-circle","vimeo4","youtube-with-circle","youtube5"];
+
+var grid = document.getElementById('grid');
+var buscar = document.getElementById('buscar');
+var contador = document.getElementById('contador');
+var toast = document.getElementById('toast');
+document.getElementById('total').textContent = ICONS.length;
+var toastTimer;
+
+function render(filtro) {
+  filtro = (filtro || '').trim().toLowerCase();
+  var lista = filtro ? ICONS.filter(function(n){ return n.indexOf(filtro) !== -1; }) : ICONS;
+  grid.innerHTML = '';
+  if (lista.length === 0) {
+    grid.innerHTML = '<div class="empty">Sin resultados para "' + filtro + '"</div>';
+    contador.textContent = '0 iconos';
+    return;
+  }
+  var frag = document.createDocumentFragment();
+  lista.forEach(function(name){
+    var cls = 'icon-' + name;
+    var cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.title = 'Clic para copiar: ' + cls;
+    cell.dataset.cls = cls;
+    cell.innerHTML = '<span class="' + cls + '"></span><span class="name">' + name + '</span>';
+    frag.appendChild(cell);
+  });
+  grid.appendChild(frag);
+  contador.textContent = lista.length + ' iconos';
+}
+
+function copiar(texto, cell) {
+  function ok() {
+    cell.classList.add('copied');
+    setTimeout(function(){ cell.classList.remove('copied'); }, 900);
+    showToast('Copiado: ' + texto);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(texto).then(ok, function(){ fallback(texto); ok(); });
+  } else {
+    fallback(texto); ok();
+  }
+}
+function fallback(texto) {
+  var ta = document.createElement('textarea');
+  ta.value = texto; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+}
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 1400);
+}
+
+grid.addEventListener('click', function(e){
+  var cell = e.target.closest('.cell');
+  if (!cell) return;
+  copiar(cell.dataset.cls, cell);
+});
+
+buscar.addEventListener('input', function(){ render(this.value); });
+
+document.getElementById('sizes').addEventListener('click', function(e){
+  var btn = e.target.closest('button');
+  if (!btn) return;
+  this.querySelectorAll('button').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  grid.dataset.size = btn.dataset.size;
+});
+
+render('');
+</script>
+</body>
+</html>

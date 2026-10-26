@@ -1,0 +1,118 @@
+/********************************************************************/
+/*	Joel Ruben Cauti Rojas | 963315470 | Lima - Peru				*/
+/*  www.programadoresperuanos.com 									*/
+/*  www.clubdelcaos.com 											*/
+/*	joe_io@hotmail.com | joel.cauti@gmail.com						*/
+/********************************************************************/
+
+/* Declaracion de Fuentes Roboto */
+@font-face{
+	font-family: "Roboto Black";
+	src: url("Roboto-Black.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto BlackItalic";
+	src: url("Roboto-BlackItalic.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto Bold";
+	src: url("Roboto-Bold.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto BoldItalic";
+	src: url("Roboto-BoldItalic.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto Italic";
+	src: url("Roboto-Italic.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto Light";
+	src: url("Roboto-Light.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto LightItalic";
+	src: url("Roboto-LightItalic.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto Medium";
+	src: url("Roboto-Medium.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto MediumItalic";
+	src: url("Roboto-MediumItalic.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto Regular";
+	src: url("Roboto-Regular.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto Thin";
+	src: url("Roboto-Thin.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto ThinItalic";
+	src: url("Roboto-ThinItalic.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto CondensedBold";
+	src: url("Roboto-Bold.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto CondensedBoldItalic";
+	src: url("Roboto-BoldItalic.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto CondensedItalic";
+	src: url("Roboto-Italic.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto CondensedLight";
+	src: url("Roboto-Light.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto CondensedLightItalic";
+	src: url("Roboto-LightItalic.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto CondensedRegular";
+	src: url("Roboto-Regular.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto SlabRegular";
+	src: url("RobotoSlab-Regular.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto SlabBold";
+	src: url("RobotoSlab-Bold.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto SlabLight";
+	src: url("RobotoSlab-Light.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}
+@font-face{
+	font-family: "Roboto SlabThin";
+	src: url("RobotoSlab-Thin.ttf") format("truetype");
+	font-style: normal;	font-weight: normal;
+}

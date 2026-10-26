@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SDCM — Sistema de Comprobantes Monaco</title>
+<link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="icons/Feather/style.css">
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sb">
+  <div class="sb-brand">
+    <h1>SDCM</h1>
+    <small>Sistema de Comprobantes · Monaco</small>
+  </div>
+  <nav class="sb-nav">
+    <a data-view="inicio" class="active"><i class="icon-home ic"></i> Inicio</a>
+    <a data-view="kasnet-digital"><i class="icon-smartphone ic"></i> Kasnet Digital</a>
+    <a data-view="wallet"><i class="icon-credit-card ic"></i> Wallet</a>
+
+    <div class="grp" id="grp-sdcm">
+      <div class="grp-head"><i class="icon-layers ic"></i> Sistema de Comprobantes <i class="icon-chevron-right caret"></i></div>
+      <div class="grp-body">
+        <div class="subgrp">Emisión de Comprobantes</div>
+        <a data-view="lotes"><i class="icon-inbox ic"></i> Lotes</a>
+        <a data-view="comprobantes"><i class="icon-file-text ic"></i> Comprobantes</a>
+        <a data-view="bandeja"><i class="icon-tool ic"></i> Bandeja de Revisión</a>
+        <a data-view="anulaciones"><i class="icon-x-circle ic"></i> Anulaciones</a>
+
+        <div class="subgrp">Módulo de Pagos</div>
+        <a data-view="prep-pagos"><i class="icon-link-2 ic"></i> Preparación de Pagos</a>
+        <a data-view="disp-pagos"><i class="icon-dollar-sign ic"></i> Dispersión de Pagos</a>
+
+        <div class="subgrp">Administración de tablas</div>
+        <a data-view="mantenimiento"><i class="icon-settings ic"></i> Mantenimiento</a>
+        <a data-view="auditoria"><i class="icon-edit-3 ic"></i> Auditoría</a>
+      </div>
+    </div>
+  </nav>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title" id="viewTitle">Inicio</span>
+    <span class="topbar-sub" id="viewSub"></span>
+    <div class="ml">
+      <span style="font-size:12px;color:var(--muted)">Período: <b>2026-08</b></span>
+      <div class="avatar">JC</div>
+    </div>
+  </div>
+  <div class="content">
+
+<!-- ======================== INICIO ======================== -->
+<section class="view active" id="inicio">
+  <div class="cards" style="grid-template-columns:repeat(4,1fr)">
+    <div class="card"><div class="n">3</div><div class="lbl">Módulos activos</div><div class="sub">Kasnet Digital · Wallet · Comprobantes</div></div>
+    <div class="card amber"><div class="n">47</div><div class="lbl">Pendientes de revisión</div><div class="sub">Bandeja de comprobantes</div></div>
+    <div class="card ok"><div class="n">S/ 312,940</div><div class="lbl">Pagado (período 2026-08)</div><div class="sub">Dispersión de pagos</div></div>
+    <div class="card"><div class="n">1,503</div><div class="lbl">Agentes</div><div class="sub">Habilitados en autofacturación</div></div>
+  </div>
+  <div class="panel">
+    <div class="ph">Bienvenido al Backoffice</div>
+    <div class="pb">
+      <div class="info">Selecciona un módulo en el menú lateral. El <b>Sistema de Comprobantes</b> concentra la emisión, el módulo de pagos y la administración de tablas.</div>
+      <p style="color:var(--muted);font-size:12.5px;">Vista de inicio (placeholder del mockup).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== KASNET DIGITAL ======================== -->
+<section class="view" id="kasnet-digital">
+  <div class="panel">
+    <div class="ph">Kasnet Digital</div>
+    <div class="pb"><div class="info">Módulo <b>Kasnet Digital</b> — placeholder del mockup. Aún sin pantallas definidas.</div></div>
+  </div>
+</section>
+
+<!-- ======================== WALLET ======================== -->
+<section class="view" id="wallet">
+  <div class="panel">
+    <div class="ph">Wallet</div>
+    <div class="pb"><div class="info">Módulo <b>Wallet</b> — placeholder del mockup. Aún sin pantallas definidas.</div></div>
+  </div>
+</section>
+
+<!-- ======================== LOTES ======================== -->
+<section class="view" id="lotes">
+  <div class="tabs">
+    <button class="active" data-tab="lotes-dash">📊 Estado General</button>
+    <button data-tab="lotes-carga">📤 Carga de Planilla</button>
+    <button data-tab="lotes-consulta">📋 Consulta de Lotes</button>
+  </div>
+
+  <!-- Tab: Estado General -->
+  <div class="tab-pane active" id="lotes-dash">
+    <div class="cards">
+      <div class="card"><div class="n">12</div><div class="lbl">Total lotes</div><div class="sub">Histórico</div></div>
+      <div class="card amber"><div class="n">1</div><div class="lbl">Lote Clasificado</div><div class="sub">Pendiente de envío</div></div>
+      <div class="card amber"><div class="n">1</div><div class="lbl">Lote Procesando</div><div class="sub">En emisión</div></div>
+      <div class="card amber"><div class="n">1</div><div class="lbl">Lote Pagando</div><div class="sub">En módulo de pagos</div></div>
+      <div class="card ok"><div class="n">9</div><div class="lbl">Lote Finalizado</div><div class="sub">Cerrados</div></div>
+    </div>
+    <div class="panel">
+      <div class="ph">Distribución de lotes por estado</div>
+      <div class="pb">
+        <div class="chart">
+          <div class="bar-row"><span class="lbl">Lote Finalizado</span><div class="bar-track"><div class="bar-fill bar-ok" style="width:75%"></div></div><span class="val">9</span></div>
+          <div class="bar-row"><span class="lbl">Lote Pagando</span><div class="bar-track"><div class="bar-fill bar-amber" style="width:8%"></div></div><span class="val">1</span></div>
+          <div class="bar-row"><span class="lbl">Lote Procesando</span><div class="bar-track"><div class="bar-fill bar-kas" style="width:8%"></div></div><span class="val">1</span></div>
+          <div class="bar-row"><span class="lbl">Lote Clasificado</span><div class="bar-track"><div class="bar-fill bar-amber" style="width:8%"></div></div><span class="val">1</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph">Lotes recientes</div>
+      <div class="pb">
+        <table>
+          <tr><th>Archivo</th><th>Período</th><th>Registros</th><th>Completados</th><th>Observados</th><th>Estado</th><th></th></tr>
+          <tr><td>Carga_2026-08.xlsx</td><td>2026-08</td><td>1,482</td><td>1,203</td><td>47</td><td><span class="badge b-amber">Lote Pagando</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Ver</button></td></tr>
+          <tr><td>Carga_2026-07.xlsx</td><td>2026-07</td><td>1,455</td><td>1,420</td><td>12</td><td><span class="badge b-ok">Lote Finalizado</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Ver</button></td></tr>
+          <tr><td>Carga_2026-06.xlsx</td><td>2026-06</td><td>1,430</td><td>1,398</td><td>8</td><td><span class="badge b-ok">Lote Finalizado</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Ver</button></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Carga de Planilla -->
+  <div class="tab-pane" id="lotes-carga">
+    <div class="info">Solo se aceptan archivos <b>.xlsx</b> con las 27 columnas definidas. El sistema verifica que existan reglas activas antes de aceptar el archivo.</div>
+    <div class="drop" onclick="startClasif()">
+      <div class="drop-icon">📁</div>
+      <b>Arrastra el Excel aquí o haz clic para seleccionar</b>
+      <p>Formato: .xlsx · Máx. ~10,000 registros (Escenario B)</p>
+    </div>
+    <div id="carga-panel" style="display:none;margin-top:16px;">
+      <div class="panel">
+        <div class="ph">Resumen del archivo <span class="hint">confirmar antes de clasificar</span></div>
+        <div class="pb">
+          <table style="margin-bottom:12px;">
+            <tr><td><b>Archivo</b></td><td>Carga_2026-08.xlsx</td><td><b>Registros</b></td><td>1,482</td><td><b>Cargado por</b></td><td>Joel Cauti · 09:14 hrs</td></tr>
+          </table>
+          <div class="btn-row"><button class="btn" onclick="runClasif()">✓ Confirmar y clasificar</button><button class="btn ghost">Cancelar</button></div>
+        </div>
+      </div>
+      <div id="clasif-run" style="display:none;">
+        <div class="panel">
+          <div class="ph">Clasificando… <span class="hint">el sistema aplica reglas de negocio en tiempo real</span></div>
+          <div class="pb">
+            <div class="prog"><i id="clasif-bar" style="width:0%;transition:width .3s"></i></div>
+            <small id="clasif-pct" style="color:var(--muted)">0 de 1,482 registros procesados</small>
+          </div>
+        </div>
+      </div>
+      <div id="clasif-result" style="display:none;">
+        <div class="panel">
+          <div class="ph">Resultado de clasificación <span class="hint">revisa antes de enviar a la OSE</span></div>
+          <div class="pb">
+            <div class="cards">
+              <div class="card ok"><div class="n">1,203</div><div class="lbl">05 · Carga Completado</div></div>
+              <div class="card"><div class="n">98</div><div class="lbl">01 · No Aplica</div></div>
+              <div class="card"><div class="n">86</div><div class="lbl">02 · No Requerido</div></div>
+              <div class="card"><div class="n">48</div><div class="lbl">03 · No Pago</div></div>
+              <div class="card warn"><div class="n">47</div><div class="lbl">04 · Observado</div></div>
+            </div>
+            <div class="formula"><b>Cuadre:</b> 1,482 = 1,203 + 98 + 86 + 48 + 47</div>
+            <div class="btn-row" style="margin-top:14px;">
+              <button class="btn ok">✓ Confirmar envío a OSE</button>
+              <button class="btn ghost">Ver observados (47)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Consulta de Lotes -->
+  <div class="tab-pane" id="lotes-consulta">
+    <div class="filters">
+      <div class="fld"><label>Período</label><input type="month" value="2026-08"></div>
+      <div class="fld"><label>Estado</label><select><option>Todos</option><option>Lote Clasificado</option><option>Lote Procesando</option><option>Lote Pagando</option><option>Lote Finalizado</option></select></div>
+      <div class="fld"><label>Archivo</label><input placeholder="Buscar por nombre…"></div>
+      <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
+    </div>
+    <div class="panel">
+      <div class="ph">Lotes <span class="cnt">12 resultados</span></div>
+      <div class="pb">
+        <table>
+          <tr><th>Archivo</th><th>Período</th><th>Cargado por</th><th>Fecha carga</th><th>Registros</th><th>Completados</th><th>Estado</th><th></th></tr>
+          <tr><td>Carga_2026-08.xlsx</td><td>2026-08</td><td>Joel Cauti</td><td>2026-08-31 09:14</td><td>1,482</td><td>1,203</td><td><span class="badge b-amber">Lote Pagando</span></td><td><button class="btn sm ghost" onclick="openLote()">Ver</button></td></tr>
+          <tr><td>Carga_2026-07.xlsx</td><td>2026-07</td><td>María Torres</td><td>2026-07-30 10:22</td><td>1,455</td><td>1,420</td><td><span class="badge b-ok">Lote Finalizado</span></td><td><button class="btn sm ghost" onclick="openLote()">Ver</button></td></tr>
+          <tr><td>Carga_2026-06.xlsx</td><td>2026-06</td><td>Joel Cauti</td><td>2026-06-28 08:55</td><td>1,430</td><td>1,398</td><td><span class="badge b-ok">Lote Finalizado</span></td><td><button class="btn sm ghost" onclick="openLote()">Ver</button></td></tr>
+        </table>
+        <div class="pager"><span class="pager-info">1–3 de 12 lotes</span><div class="pager-ctrls"><button>«</button><button class="active">1</button><button>2</button><button>3</button><button>4</button><button>»</button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== COMPROBANTES ======================== -->
+<section class="view" id="comprobantes">
+  <div class="tabs">
+    <button class="active" data-tab="comp-facturas">🧾 Facturas</button>
+    <button data-tab="comp-boletas">📄 Boletas</button>
+    <button data-tab="comp-nc">↩️ Notas de Crédito</button>
+  </div>
+  <div class="tab-pane active" id="comp-facturas">
+    <div class="filters">
+      <div class="fld"><label>Período</label><input type="month" value="2026-08"></div>
+      <div class="fld"><label>Estado</label><select><option>Todos</option><option>09 · Emitido SUNAT</option><option>11 · Aprobado</option><option>10 · Rechazado</option><option>07 · Observado</option></select></div>
+      <div class="fld"><label>RUC</label><input placeholder="20481234567"></div>
+      <div class="fld"><label>Tienda</label><input placeholder="034301"></div>
+      <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
+      <div class="fld"><label>&nbsp;</label><button class="btn ghost">Exportar</button></div>
+    </div>
+    <div class="cards" style="grid-template-columns:repeat(5,1fr)">
+      <div class="card ok"><div class="n">1,150</div><div class="lbl">11 · Aprobados</div></div>
+      <div class="card"><div class="n">28</div><div class="lbl">09 · En SUNAT</div></div>
+      <div class="card warn"><div class="n">18</div><div class="lbl">10 · Rechazados</div></div>
+      <div class="card amber"><div class="n">47</div><div class="lbl">04/07 · Observados</div></div>
+      <div class="card amber"><div class="n">5</div><div class="lbl">08 · Error</div></div>
+    </div>
+    <div class="panel">
+      <div class="pb">
+        <table>
+          <tr><th>Agente</th><th>RUC</th><th>Tienda</th><th>Serie-Corr.</th><th>Monto</th><th>Detracción</th><th>Estado</th><th></th></tr>
+          <tr><td>Sucre y Sale</td><td>10238817868</td><td>034301</td><td>F001-0410</td><td>S/ 640.00</td><td>—</td><td><span class="badge b-ok">11 · Aprobado</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Detalle</button></td></tr>
+          <tr><td>Comercial Lima EIRL</td><td>20487654321</td><td>102944</td><td>F001-0411</td><td>S/ 1,240.00</td><td>S/ 124.00</td><td><span class="badge b-ok">11 · Aprobado</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Detalle</button></td></tr>
+          <tr><td>Servicios Norte SAC</td><td>20489999888</td><td>108877</td><td>F001-0412</td><td>S/ 560.00</td><td>—</td><td><span class="badge b-amber">07 · Observado</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Detalle</button></td></tr>
+          <tr><td>Bodega San Isidro</td><td>20481112223</td><td>098011</td><td>F001-0409</td><td>S/ 820.00</td><td>S/ 82.00</td><td><span class="badge b-warn">10 · Rechazado</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Detalle</button></td></tr>
+        </table>
+        <div class="pager"><span class="pager-info">1–4 de 1,248 comprobantes</span><div class="pager-ctrls"><button>«</button><button class="active">1</button><button>2</button><button>»</button></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane" id="comp-boletas">
+    <div class="info">Las boletas son clasificadas como <b>02 - Carga No Requerido</b> y no se emiten a la OSE. Se muestran aquí para consulta y descarga de información.</div>
+    <div class="panel"><div class="pb">
+      <table>
+        <tr><th>Agente</th><th>RUC</th><th>Tienda</th><th>Monto</th><th>Estado</th><th></th></tr>
+        <tr><td>Minimarket El Sol</td><td>10238800001</td><td>011203</td><td>S/ 94.72</td><td><span class="badge b-muted">02 · No Requerido</span></td><td><button class="btn sm ghost">Ver</button></td></tr>
+        <tr><td>Kiosco Norte</td><td>10238800002</td><td>011204</td><td>S/ 120.00</td><td><span class="badge b-muted">02 · No Requerido</span></td><td><button class="btn sm ghost">Ver</button></td></tr>
+      </table>
+    </div></div>
+  </div>
+  <div class="tab-pane" id="comp-nc">
+    <div class="filters">
+      <div class="fld"><label>Período</label><input type="month" value="2026-08"></div>
+      <div class="fld"><label>RUC</label><input placeholder="20481234567"></div>
+      <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
+    </div>
+    <div class="panel"><div class="pb">
+      <table>
+        <tr><th>NC Serie-Corr.</th><th>Factura original</th><th>Período</th><th>Agente</th><th>Monto</th><th>Motivo</th><th>Anulado por</th><th></th></tr>
+        <tr><td>FC01-045</td><td>F001-0198</td><td>2026-07</td><td>Bodega Central</td><td>S/ 780.00</td><td>Error en monto</td><td>Joel Cauti · 2026-07-15</td><td><button class="btn sm ghost" onclick="openDetalle()">Ver</button></td></tr>
+        <tr><td>FC01-041</td><td>F001-0176</td><td>2026-07</td><td>Servicios del Sur</td><td>S/ 1,320.00</td><td>Duplicidad</td><td>María Torres · 2026-07-10</td><td><button class="btn sm ghost" onclick="openDetalle()">Ver</button></td></tr>
+      </table>
+    </div></div>
+  </div>
+</section>
+
+<!-- ======================== BANDEJA DE REVISIÓN ======================== -->
+<section class="view" id="bandeja">
+  <div class="info">Comprobantes que requieren atención: <b>04 · Carga Observado</b>, <b>07 · Emisión Observado</b>, <b>08 · Error Técnico</b>, <b>10 · SUNAT Rechazado</b>, <b>17 · Pago Error</b>, <b>18 · Pago Rechazado</b>. Las acciones disponibles se adaptan al estado de cada comprobante.</div>
+  <div class="filters">
+    <div class="fld"><label>Estado</label><select><option>Todos</option><option>04 · Carga Observado</option><option>07 · Emisión Observado</option><option>08 · Error Técnico</option><option>10 · SUNAT Rechazado</option><option>17 · Pago Error</option><option>18 · Pago Rechazado</option></select></div>
+    <div class="fld"><label>RUC</label><input placeholder="20481234567"></div>
+    <div class="fld"><label>Período</label><input type="month" value="2026-08"></div>
+    <div class="fld"><label>Tienda</label><input placeholder="034301"></div>
+    <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
+  </div>
+  <div class="panel">
+    <div class="ph">Bandeja de revisión <span class="cnt">47 comprobantes pendientes</span></div>
+    <div class="pb">
+      <table>
+        <tr><th>Agente</th><th>RUC</th><th>Tienda</th><th>Serie-Corr.</th><th>Monto</th><th>Estado</th><th>Motivo</th><th>Acciones</th></tr>
+        <tr><td>Sucre y Sale</td><td>10238817868</td><td>034301</td><td>—</td><td>S/ 94.72</td><td><span class="badge b-amber">04 · Carga Obs.</span></td><td>Sin cuenta detracción</td>
+          <td><button class="btn sm ghost" onclick="openDetalle()">Detalle</button> <button class="btn sm">Validar y reenviar</button></td></tr>
+        <tr><td>Comercial Lima EIRL</td><td>20487654321</td><td>102944</td><td>F001-0244</td><td>S/ 1,240.00</td><td><span class="badge b-amber">07 · Emisión Obs.</span></td><td>RUC receptor inválido (4032)</td>
+          <td><button class="btn sm ghost" onclick="openDetalle()">Detalle</button> <button class="btn sm">Corregir y reenviar</button></td></tr>
+        <tr><td>Servicios Norte SAC</td><td>20489999888</td><td>108877</td><td>F001-0118</td><td>S/ 560.00</td><td><span class="badge b-warn">08 · Error técnico</span></td><td>Timeout BizLinks — 3 reintentos agotados</td>
+          <td><button class="btn sm ghost" onclick="openDetalle()">Detalle</button> <button class="btn sm">Reintentar emisión</button></td></tr>
+        <tr><td>Bodega San Isidro</td><td>20481112223</td><td>098011</td><td>F001-0409</td><td>S/ 820.00</td><td><span class="badge b-warn">10 · SUNAT Rech.</span></td><td>Monto no coincide con detracción</td>
+          <td><button class="btn sm ghost" onclick="openDetalle()">Detalle</button> <button class="btn sm ghost">Opción A</button> <button class="btn sm ghost">Opción B</button></td></tr>
+        <tr><td>Distribuidora Andina</td><td>20486667778</td><td>055312</td><td>F001-0388</td><td>S/ 430.00</td><td><span class="badge b-warn">17 · Pago Error</span></td><td>Timeout API TAM — extorno ejecutado</td>
+          <td><button class="btn sm ghost" onclick="openDetalle()">Detalle</button> <button class="btn sm">Reintentar pago</button></td></tr>
+        <tr><td>Kiosco Central</td><td>20481235555</td><td>011011</td><td>F001-0301</td><td>S/ 95.00</td><td><span class="badge b-warn">18 · Pago Rech.</span></td><td>Cuenta bancaria cerrada</td>
+          <td><button class="btn sm ghost" onclick="openDetalle()">Detalle</button> <button class="btn sm">Corregir cuenta</button></td></tr>
+      </table>
+      <div class="pager"><span class="pager-info">1–6 de 47 comprobantes</span><div class="pager-ctrls"><button>«</button><button class="active">1</button><button>2</button><button>3</button><button>»</button></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== ANULACIONES ======================== -->
+<section class="view" id="anulaciones">
+  <div class="tabs">
+    <button class="active" data-tab="anu-sel">🔲 Selección para anular</button>
+    <button data-tab="anu-hist">📋 Historial de anulaciones</button>
+  </div>
+  <div class="tab-pane active" id="anu-sel">
+    <div class="warn-box">Selecciona los comprobantes a anular e ingresa un motivo. El sistema generará automáticamente la Nota de Crédito tipo 07 y la enviará a la OSE. Esta acción <b>no se puede deshacer</b>.</div>
+    <div class="filters">
+      <div class="fld"><label>Período</label><input type="month" value="2026-08"></div>
+      <div class="fld"><label>RUC</label><input placeholder="20481234567"></div>
+      <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
+    </div>
+    <div class="panel"><div class="pb">
+      <div class="check-all"><input type="checkbox" id="anulAll" onclick="toggleAll('anulChk',this.checked)"><label for="anulAll">Seleccionar todos los resultados</label></div>
+      <table>
+        <tr><th></th><th>Agente</th><th>RUC</th><th>Serie-Corr.</th><th>Monto</th><th>Estado comp.</th><th>Estado pago</th><th></th></tr>
+        <tr><td><input type="checkbox" class="anulChk"></td><td>Bodega San Isidro</td><td>20481112223</td><td>F001-0410</td><td>S/ 640.00</td><td><span class="badge b-ok">11 · Aprobado</span></td><td><span class="badge b-kas">15 · Programado</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Ver</button></td></tr>
+        <tr><td><input type="checkbox" class="anulChk"></td><td>Agente Los Andes</td><td>20485550001</td><td>F001-0289</td><td>S/ 1,120.00</td><td><span class="badge b-ok">11 · Aprobado</span></td><td><span class="badge b-ok">20 · Completado</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Ver</button></td></tr>
+        <tr><td><input type="checkbox" class="anulChk"></td><td>Comercial Lima EIRL</td><td>20487654321</td><td>F001-0411</td><td>S/ 1,240.00</td><td><span class="badge b-ok">11 · Aprobado</span></td><td><span class="badge b-muted">14 · Pendiente</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Ver</button></td></tr>
+      </table>
+      <div class="btn-row">
+        <div style="flex:1"><input id="motivoAnul" placeholder="Motivo de anulación (obligatorio)…" style="width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:6px;font-size:12.5px;"></div>
+        <button class="btn danger">🚫 Anular seleccionados</button>
+      </div>
+    </div></div>
+  </div>
+  <div class="tab-pane" id="anu-hist">
+    <div class="filters">
+      <div class="fld"><label>Período</label><input type="month" value="2026-08"></div>
+      <div class="fld"><label>RUC</label><input placeholder="20481234567"></div>
+      <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
+      <div class="fld"><label>&nbsp;</label><button class="btn ghost">Exportar</button></div>
+    </div>
+    <div class="panel"><div class="pb">
+      <table>
+        <tr><th>NC</th><th>Factura orig.</th><th>Período</th><th>Agente</th><th>Monto</th><th>Motivo</th><th>Anulado por</th><th></th></tr>
+        <tr><td>FC01-045</td><td>F001-0198</td><td>2026-07</td><td>Bodega Central</td><td>S/ 780.00</td><td>Error en monto</td><td>Joel Cauti · 2026-07-15</td><td><button class="btn sm ghost">PDF/XML</button></td></tr>
+        <tr><td>FC01-041</td><td>F001-0176</td><td>2026-07</td><td>Servicios del Sur</td><td>S/ 1,320.00</td><td>Duplicidad</td><td>María Torres · 2026-07-10</td><td><button class="btn sm ghost">PDF/XML</button></td></tr>
+      </table>
+      <div class="pager"><span class="pager-info">1–2 de 63 anulaciones</span><div class="pager-ctrls"><button>«</button><button class="active">1</button><button>2</button><button>»</button></div></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ======================== PREPARACIÓN DE PAGOS ======================== -->
+<section class="view" id="prep-pagos">
+  <div class="tabs">
+    <button class="active" data-tab="prep-cruce">🔗 Cruce SUNAT</button>
+    <button data-tab="prep-reten">🔒 Retención de Pagos</button>
+    <button data-tab="prep-prog">📅 Programación de Pagos</button>
+  </div>
+  <div class="tab-pane active" id="prep-cruce">
+    <div class="info">Carga el CSV exportado de SUNAT con las facturas registradas del período. El sistema cruza por <b>RUC + Serie + Correlativo</b> y asigna estados 13 o 14.</div>
+    <div class="drop">
+      <div class="drop-icon">📎</div>
+      <b>Cargar CSV de SUNAT — Período 2026-08</b>
+      <p>El cruce es idempotente: cargar el mismo archivo dos veces no duplica registros.</p>
+    </div>
+    <div class="panel" style="margin-top:16px;">
+      <div class="ph">Resultado del cruce anterior <span class="hint">2026-08-15 14:30</span></div>
+      <div class="pb">
+        <div class="cards" style="grid-template-columns:repeat(3,1fr)">
+          <div class="card"><div class="n">1,150</div><div class="lbl">Procesados</div></div>
+          <div class="card ok"><div class="n">892</div><div class="lbl">14 · Pago Pendiente</div></div>
+          <div class="card warn"><div class="n">58</div><div class="lbl">13 · Pago Observado</div></div>
+        </div>
+        <table style="margin-top:14px;">
+          <tr><th>Agente</th><th>RUC</th><th>Serie-Corr.</th><th>Estado OSE</th><th>En SUNAT</th><th>Monto sistema</th><th>Monto SUNAT</th><th>Resultado</th></tr>
+          <tr><td>Bodega San Isidro</td><td>20481112223</td><td>F001-0410</td><td><span class="badge b-ok">11 · Aprobado</span></td><td><span class="badge b-ok">Sí</span></td><td>S/ 640.00</td><td>S/ 640.00</td><td><span class="badge b-muted">14 · Pendiente</span></td></tr>
+          <tr><td>Comercial El Faro</td><td>20484445556</td><td>F001-0411</td><td><span class="badge b-ok">11 · Aprobado</span></td><td><span class="badge b-warn">No</span></td><td>S/ 1,320.00</td><td>—</td><td><span class="badge b-warn">13 · No en SUNAT</span></td></tr>
+          <tr><td>Servicios Norte</td><td>20489999888</td><td>F001-0118</td><td><span class="badge b-ok">11 · Aprobado</span></td><td><span class="badge b-ok">Sí</span></td><td>S/ 900.00</td><td>S/ 850.00</td><td><span class="badge b-warn">13 · Monto difiere</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane" id="prep-reten">
+    <div class="info"><b>Gate de aprobación:</b> solo los comprobantes que Red Comercial apruebe (<code>approvedForPayment = true</code>) podrán ser programados por Tesorería. Los retenidos no avanzan a estado 15 por ningún flujo.</div>
+    <div class="filters">
+      <div class="fld"><label>RUC</label><input placeholder="20481234567"></div>
+      <div class="fld"><label>Período</label><input type="month" value="2026-08"></div>
+      <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
+    </div>
+    <div class="panel"><div class="pb">
+      <div class="check-all"><input type="checkbox" id="retenAll" onclick="toggleAll('retenChk',this.checked)"><label for="retenAll">Seleccionar todos</label></div>
+      <table>
+        <tr><th></th><th>Agente</th><th>RUC</th><th>Serie-Corr.</th><th>Monto</th><th>Aprobación</th><th></th></tr>
+        <tr><td><input type="checkbox" class="retenChk" checked></td><td>Bodega San Isidro</td><td>20481112223</td><td>F001-0410</td><td>S/ 640.00</td><td><span class="badge b-amber">Pendiente</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Ver</button></td></tr>
+        <tr><td><input type="checkbox" class="retenChk" checked></td><td>Comercial El Faro</td><td>20484445556</td><td>F001-0411</td><td>S/ 1,320.00</td><td><span class="badge b-amber">Pendiente</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Ver</button></td></tr>
+        <tr><td><input type="checkbox" class="retenChk" checked></td><td>Agente Miraflores</td><td>20487778889</td><td>F001-0412</td><td>S/ 980.00</td><td><span class="badge b-amber">Pendiente</span></td><td><button class="btn sm ghost" onclick="openDetalle()">Ver</button></td></tr>
+      </table>
+      <div class="btn-row">
+        <button class="btn ok">✓ Aprobar seleccionados</button>
+        <button class="btn neutral">Retener seleccionados</button>
+        <button class="btn ghost danger">Retener y anular (→ NC)</button>
+      </div>
+      <div class="pager"><span class="pager-info">1–3 de 892 comprobantes por revisar</span><div class="pager-ctrls"><button>«</button><button class="active">1</button><button>2</button><button>»</button></div></div>
+    </div></div>
+  </div>
+  <div class="tab-pane" id="prep-prog">
+    <div class="panel">
+      <div class="ph">Programar fecha de pago del período</div>
+      <div class="pb">
+        <div class="filters" style="margin-bottom:0">
+          <div class="fld"><label>Período</label><select><option>2026-08 (actual)</option><option>2026-07 (anterior)</option></select></div>
+          <div class="fld"><label>Fecha de pago</label><input type="date" value="2026-09-05"></div>
+          <div class="fld"><label>&nbsp;</label><button class="btn">Programar → estado 15</button></div>
+        </div>
+        <div class="info" style="margin-top:14px;margin-bottom:0">
+          Solo se programarán los <b>852 comprobantes</b> con <code>approvedForPayment = true</code>. Los 40 retenidos no serán afectados.
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph">Resumen de aprobaciones</div>
+      <div class="pb">
+        <div class="cards" style="grid-template-columns:repeat(3,1fr)">
+          <div class="card ok"><div class="n">852</div><div class="lbl">Aprobados para pago</div></div>
+          <div class="card warn"><div class="n">40</div><div class="lbl">Retenidos</div></div>
+          <div class="card"><div class="n">892</div><div class="lbl">Total en 14 · Pendiente</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== DISPERSIÓN DE PAGOS ======================== -->
+<section class="view" id="disp-pagos">
+  <!-- Bloque 1: Dashboard + Reportes -->
+  <div class="panel">
+    <div class="ph">Estado general de pagos — 2026-08</div>
+    <div class="pb">
+      <div class="tabs" style="margin-bottom:14px;">
+        <button class="active" data-tab="dp-dashboard">📊 Dashboard</button>
+        <button data-tab="dp-reportes">📈 Reportes</button>
+      </div>
+      <div class="tab-pane active" id="dp-dashboard">
+        <div class="disp-summary">
+          <div class="disp-card"><div class="n" style="color:var(--text)">S/ 486,320</div><div class="l">Total a pagar</div></div>
+          <div class="disp-card"><div class="n" style="color:var(--ok)">S/ 312,940</div><div class="l">Pagado (19+20)</div></div>
+          <div class="disp-card"><div class="n" style="color:var(--kas)">S/ 158,120</div><div class="l">En proceso (14+15+16)</div></div>
+          <div class="disp-card"><div class="n" style="color:var(--warn)">S/ 15,260</div><div class="l">Con error/rechazo (17+18)</div></div>
+        </div>
+        <div class="prog" style="height:14px;margin-bottom:6px;"><i style="width:64%"></i></div>
+        <small style="color:var(--muted)">64% completado · 546 de 852 agentes confirmados</small>
+        <div class="formula" style="margin-top:10px;"><b>Cuadre:</b> S/ 486,320 = Pagado S/ 312,940 + En proceso S/ 158,120 + Con problema S/ 15,260</div>
+        <div style="margin-top:16px;">
+          <div class="chart">
+            <div class="bar-row"><span class="lbl">20 · Comprobante Completado</span><div class="bar-track"><div class="bar-fill bar-ok" style="width:56%"></div></div><span class="val">480</span></div>
+            <div class="bar-row"><span class="lbl">19 · Pago Confirmado</span><div class="bar-track"><div class="bar-fill bar-ok" style="width:8%"></div></div><span class="val">66</span></div>
+            <div class="bar-row"><span class="lbl">16 · Archivo Generado</span><div class="bar-track"><div class="bar-fill bar-kas" style="width:18%"></div></div><span class="val">152</span></div>
+            <div class="bar-row"><span class="lbl">15 · Pago Programado</span><div class="bar-track"><div class="bar-fill bar-kas" style="width:9%"></div></div><span class="val">80</span></div>
+            <div class="bar-row"><span class="lbl">14 · Pago Pendiente</span><div class="bar-track"><div class="bar-fill bar-amber" style="width:4%"></div></div><span class="val">40</span></div>
+            <div class="bar-row"><span class="lbl">18 · Pago Rechazado</span><div class="bar-track"><div class="bar-fill bar-warn" style="width:3%"></div></div><span class="val">5</span></div>
+            <div class="bar-row"><span class="lbl">17 · Pago Error</span><div class="bar-track"><div class="bar-fill bar-warn" style="width:3%"></div></div><span class="val">3</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="dp-reportes">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+          <div class="panel" style="margin:0;">
+            <div class="ph">Pagos realizados <span class="hint">estados 19+20</span></div>
+            <div class="pb">
+              <div class="card ok" style="margin-bottom:10px;"><div class="n">546</div><div class="lbl">S/ 312,940 dispersados</div></div>
+              <div class="filters" style="margin:0;flex-direction:column;gap:6px;">
+                <div class="fld"><label>Canal</label><select><option>Todos</option><option>BCP</option><option>Scotiabank</option><option>BBVA</option><option>Detracciones</option><option>Cajas</option></select></div>
+                <button class="btn ghost" style="width:100%">📥 Descargar Excel</button>
+              </div>
+            </div>
+          </div>
+          <div class="panel" style="margin:0;">
+            <div class="ph">Pagos pendientes <span class="hint">estados 13–17</span></div>
+            <div class="pb">
+              <div class="card amber" style="margin-bottom:10px;"><div class="n">242</div><div class="lbl">S/ 158,120 en proceso</div></div>
+              <div class="filters" style="margin:0;flex-direction:column;gap:6px;">
+                <div class="fld"><label>Canal</label><select><option>Todos</option><option>BCP</option><option>Scotiabank</option><option>BBVA</option><option>Detracciones</option><option>Cajas</option></select></div>
+                <button class="btn ghost" style="width:100%">📥 Descargar Excel</button>
+              </div>
+            </div>
+          </div>
+          <div class="panel" style="margin:0;">
+            <div class="ph">Rechazos bancarios <span class="hint">estado 18</span></div>
+            <div class="pb">
+              <div class="card warn" style="margin-bottom:10px;"><div class="n">5</div><div class="lbl">S/ 610 rechazados</div></div>
+              <div class="filters" style="margin:0;flex-direction:column;gap:6px;">
+                <div class="fld"><label>Canal</label><select><option>Todos</option><option>BCP</option><option>Scotiabank</option></select></div>
+                <button class="btn ghost" style="width:100%">📥 Descargar Excel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bloque 2: Dispersión por entidad financiera -->
+  <div class="panel">
+    <div class="ph">Dispersión por entidad financiera</div>
+    <div class="pb">
+      <div class="tabs" style="margin-bottom:14px;">
+        <button class="active" data-tab="dp-bcp">BCP (312)</button>
+        <button data-tab="dp-scotia">Scotiabank (198)</button>
+        <button data-tab="dp-bbva">BBVA (156)</button>
+        <button data-tab="dp-detrac">Detracciones (98)</button>
+        <button data-tab="dp-cajas">Cajas · TAM (88)</button>
+      </div>
+      <div class="tab-pane active" id="dp-bcp">
+        <div class="info" style="margin-bottom:10px;">BCP: la fecha de pago efectivo se asigna manualmente al cargar el archivo de resultado.</div>
+        <div class="check-all"><input type="checkbox" id="bcpAll" onclick="toggleAll('bcpChk',this.checked)"><label for="bcpAll">Seleccionar todo el grupo BCP</label></div>
+        <table>
+          <tr><th></th><th>Agente</th><th>RUC</th><th>N° Cuenta</th><th>Monto</th><th>Estado pago</th><th>Fecha/hora pago</th></tr>
+          <tr><td><input type="checkbox" class="bcpChk"></td><td>Bodega San Isidro</td><td>20481112223</td><td>194-2837465-0-88</td><td>S/ 640.00</td><td><span class="badge b-kas">15 · Programado</span></td><td><input type="datetime-local" style="padding:4px;border:1px solid var(--border);border-radius:5px;font-size:11px;" disabled></td></tr>
+          <tr><td><input type="checkbox" class="bcpChk"></td><td>Minimarket Central</td><td>20482223334</td><td>194-9988776-0-55</td><td>S/ 1,050.00</td><td><span class="badge b-blue">16 · Archivo Gen.</span></td><td><input type="datetime-local" style="padding:4px;border:1px solid var(--border);border-radius:5px;font-size:11px;" disabled></td></tr>
+        </table>
+        <div class="btn-row">
+          <button class="btn">📄 Generar TXT (seleccionados)</button>
+          <button class="btn ghost">📥 Cargar resultado del banco</button>
+          <button class="btn ghost">📎 Cargar constancia PDF</button>
+        </div>
+        <small style="color:var(--muted);">La fecha de pago efectivo se habilita solo después de cargar el resultado bancario.</small>
+      </div>
+      <div class="tab-pane" id="dp-scotia">
+        <div class="info">Scotiabank informa la <b>fecha de pago en la cabecera</b> de su Excel de resultado — el sistema la asigna automáticamente a todos los registros del lote.</div>
+        <div class="check-all"><input type="checkbox"><label>Seleccionar todo el grupo Scotiabank</label></div>
+        <table>
+          <tr><th></th><th>Agente</th><th>RUC</th><th>N° Cuenta</th><th>Monto</th><th>Estado</th><th>Fecha pago (auto)</th></tr>
+          <tr><td><input type="checkbox"></td><td>Sucre y Sale</td><td>10238817868</td><td>780-7618819-00</td><td>S/ 94.72</td><td><span class="badge b-ok">19 · Confirmado</span></td><td>2026-09-05 (cabecera)</td></tr>
+        </table>
+        <div class="btn-row"><button class="btn">📄 Generar TXT</button><button class="btn ghost">📥 Cargar resultado</button><button class="btn ghost">📎 Constancia PDF</button></div>
+      </div>
+      <div class="tab-pane" id="dp-bbva">
+        <div class="info">BBVA informa <b>fecha y hora por registro</b> en su Excel — el sistema la asigna automáticamente a cada comprobante.</div>
+        <div class="check-all"><input type="checkbox"><label>Seleccionar todo el grupo BBVA</label></div>
+        <table>
+          <tr><th></th><th>Agente</th><th>RUC</th><th>N° Cuenta</th><th>Monto</th><th>Estado</th><th>Fecha pago (auto)</th></tr>
+          <tr><td><input type="checkbox"></td><td>Agente Miraflores</td><td>20487778889</td><td>0011-0234-56789012</td><td>S/ 980.00</td><td><span class="badge b-ok">19 · Confirmado</span></td><td>2026-09-05 14:32</td></tr>
+        </table>
+        <div class="btn-row"><button class="btn">📄 Generar TXT</button><button class="btn ghost">📥 Cargar resultado</button><button class="btn ghost">📎 Constancia PDF</button></div>
+      </div>
+      <div class="tab-pane" id="dp-detrac">
+        <div class="info">SUNAT Detracciones: la fecha de pago efectivo se asigna manualmente, igual que BCP.</div>
+        <div class="check-all"><input type="checkbox"><label>Seleccionar todo el grupo Detracciones</label></div>
+        <table>
+          <tr><th></th><th>Agente</th><th>RUC</th><th>Cuenta detracción</th><th>Monto detr.</th><th>Estado</th><th>Fecha pago</th></tr>
+          <tr><td><input type="checkbox"></td><td>Servicios del Sur</td><td>20485556667</td><td>00-123-456789</td><td>S/ 158.40</td><td><span class="badge b-kas">15 · Programado</span></td><td><input type="datetime-local" style="padding:4px;border:1px solid var(--border);border-radius:5px;font-size:11px;" disabled></td></tr>
+        </table>
+        <div class="btn-row"><button class="btn">📄 Generar TXT</button><button class="btn ghost">📥 Cargar resultado</button><button class="btn ghost">📎 Constancia PDF</button></div>
+      </div>
+      <div class="tab-pane" id="dp-cajas">
+        <div class="info">Dispersión en línea vía <b>API TAM</b>. Login JWT (8h), cifrado AES-GCM. La fecha de pago la responde el API por transacción. Sin generar TXT.</div>
+        <div class="filters" style="margin-bottom:10px;">
+          <div class="fld" style="flex:1"><label>Glosa genérica</label><input style="min-width:340px" value="Pago autofacturación período 2026-08"></div>
+          <div class="fld"><label>&nbsp;</label><button class="btn ghost sm">Aplicar a todos</button></div>
+        </div>
+        <div class="check-all"><input type="checkbox"><label>Seleccionar todos</label></div>
+        <table>
+          <tr><th></th><th>Agente</th><th>RUC</th><th>financialBin</th><th>Monto</th><th>Glosa</th><th>Estado</th><th>Fecha pago</th></tr>
+          <tr><td><input type="checkbox"></td><td>Agente Kasnet 0912</td><td>20486667778</td><td>009</td><td>S/ 430.00</td><td><input value="Pago autofacturación período 2026-08" style="width:200px;padding:4px 7px;border:1px solid var(--kas);border-radius:5px;font-size:11px;"></td><td><span class="badge b-ok">20 · Completado</span></td><td>2026-09-05 16:42:18</td></tr>
+          <tr><td><input type="checkbox"></td><td>Agente Kasnet 1188</td><td>20489990001</td><td>011</td><td>S/ 380.00</td><td><input value="Pago autofacturación período 2026-08" style="width:200px;padding:4px 7px;border:1px solid var(--kas);border-radius:5px;font-size:11px;"></td><td><span class="badge b-warn">17 · Pago Error</span></td><td>—</td></tr>
+        </table>
+        <div class="btn-row"><button class="btn ok">▶ Dispersar seleccionados</button><button class="btn ghost">Reintentar errores (17)</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bloque 3: Bandeja de Pagos Rechazados -->
+  <div class="panel">
+    <div class="ph">Bandeja de pagos rechazados <span class="cnt">5 comprobantes — estado 18</span></div>
+    <div class="pb">
+      <div class="info" style="margin-bottom:10px;">El banco rechazó el pago. Corrige los datos bancarios y el sistema regresa el comprobante a <b>15 · Pago Programado</b> con indicador <span style="background:#fef3c7;color:#92400e;padding:1px 5px;border-radius:3px;font-size:11px;">Novedad</span>.</div>
+      <table>
+        <tr><th>Agente</th><th>RUC</th><th>N° Cuenta actual</th><th>Canal</th><th>Monto</th><th>Motivo rechazo</th><th>Cuenta corregida</th><th></th></tr>
+        <tr><td>Bodega Pequeña</td><td>20481230000</td><td>194-9988000-0-11</td><td>BCP</td><td>S/ 220.00</td><td>Cuenta inexistente</td>
+          <td><input placeholder="Nueva cuenta…" style="padding:5px 7px;border:1px solid var(--kas);border-radius:5px;font-size:11.5px;width:150px;"></td>
+          <td><button class="btn sm ok">Corregir → 15</button></td></tr>
+        <tr><td>Kiosco Central</td><td>20481235555</td><td>780-0000001-00</td><td>Scotiabank</td><td>S/ 95.00</td><td>Cuenta cerrada</td>
+          <td><input placeholder="Nueva cuenta…" style="padding:5px 7px;border:1px solid var(--kas);border-radius:5px;font-size:11.5px;width:150px;"></td>
+          <td><button class="btn sm ok">Corregir → 15</button></td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== MANTENIMIENTO ======================== -->
+<section class="view" id="mantenimiento">
+  <div class="tabs">
+    <button class="active" data-tab="mant-ubigeos">🌎 Ubigeos</button>
+    <button data-tab="mant-agentes">👥 Agentes</button>
+  </div>
+  <div class="tab-pane active" id="mant-ubigeos">
+    <div class="btn-row" style="margin-bottom:14px;">
+      <button class="btn">+ Nuevo ubigeo</button>
+      <button class="btn ghost">📥 Importar Excel</button>
+      <button class="btn ghost">📤 Exportar Excel</button>
+    </div>
+    <div class="filters">
+      <div class="fld"><label>Código</label><input placeholder="150101"></div>
+      <div class="fld"><label>Departamento</label><input placeholder="Lima"></div>
+      <div class="fld"><label>Excepción IGV</label><select><option>Todos</option><option>Con excepción</option><option>Sin excepción</option></select></div>
+      <div class="fld"><label>Estado</label><select><option>Todos</option><option>Activo</option><option>Inactivo</option></select></div>
+      <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
+    </div>
+    <div class="panel"><div class="pb">
+      <table>
+        <tr><th>Código</th><th>Departamento</th><th>Provincia</th><th>Distrito</th><th>Excepción IGV</th><th>Estado</th><th></th></tr>
+        <tr><td>150101</td><td>Lima</td><td>Lima</td><td>Lima</td><td><span class="badge b-muted">No</span></td><td><span class="badge b-ok">Activo</span></td><td><button class="btn sm ghost">Editar</button></td></tr>
+        <tr><td>160101</td><td>Loreto</td><td>Maynas</td><td>Iquitos</td><td><span class="badge b-ok">Sí — TaxRate=0</span></td><td><span class="badge b-ok">Activo</span></td><td><button class="btn sm ghost">Editar</button></td></tr>
+        <tr><td>210101</td><td>Puno</td><td>Puno</td><td>Puno</td><td><span class="badge b-muted">No</span></td><td><span class="badge b-muted">Inactivo</span></td><td><button class="btn sm ghost">Activar</button></td></tr>
+      </table>
+      <div class="pager"><span class="pager-info">1–3 de 1,874 ubigeos</span><div class="pager-ctrls"><button>«</button><button class="active">1</button><button>2</button><button>»</button></div></div>
+    </div></div>
+  </div>
+  <div class="tab-pane" id="mant-agentes">
+    <div class="btn-row" style="margin-bottom:14px;">
+      <button class="btn">+ Alta en autofacturación</button>
+      <button class="btn ghost">📥 Importar Excel</button>
+      <button class="btn ghost">📤 Exportar Excel</button>
+    </div>
+    <div class="filters">
+      <div class="fld"><label>RUC</label><input placeholder="20481234567"></div>
+      <div class="fld"><label>Tienda (AgentCode)</label><input placeholder="034301"></div>
+      <div class="fld"><label>Estado</label><select><option>Todos</option><option>Habilitado</option><option>Deshabilitado</option><option>Solo alta (sin datos)</option></select></div>
+      <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
+    </div>
+    <div class="panel"><div class="pb">
+      <table>
+        <tr><th>RUC</th><th>Tienda</th><th>Razón Social</th><th>Cuenta detracción</th><th>selfBilling</th><th>Datos</th><th>Habilitado por</th><th></th></tr>
+        <tr><td>10238817868</td><td>034301</td><td>Sucre y Sale</td><td>00-123-456789</td><td><span class="badge b-ok">Habilitado</span></td><td><span class="badge b-ok">Completos</span></td><td>Joel Cauti · 2026-08-01</td><td><button class="btn sm ghost">Editar</button> <button class="btn sm ghost warn" style="color:var(--warn);border-color:var(--warn);">Deshabilitar</button></td></tr>
+        <tr><td>20484445556</td><td>102944</td><td>—</td><td>00-987-654321</td><td><span class="badge b-ok">Habilitado</span></td><td><span class="badge b-amber">Solo alta</span></td><td>María Torres · 2026-09-20</td><td><button class="btn sm ghost">Editar</button> <button class="btn sm ghost warn" style="color:var(--warn);border-color:var(--warn);">Deshabilitar</button></td></tr>
+        <tr><td>20489112233</td><td>055888</td><td>Distribuidora Norte SAC</td><td>00-445-112233</td><td><span class="badge b-muted">Deshabilitado</span></td><td><span class="badge b-ok">Completos</span></td><td>Joel Cauti · 2026-06-15</td><td><button class="btn sm ghost">Editar</button> <button class="btn sm ok">Habilitar</button></td></tr>
+      </table>
+      <div class="pager"><span class="pager-info">1–3 de 1,503 agentes</span><div class="pager-ctrls"><button>«</button><button class="active">1</button><button>2</button><button>»</button></div></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ======================== AUDITORÍA ======================== -->
+<section class="view" id="auditoria">
+  <div class="filters">
+    <div class="fld"><label>Usuario</label><input placeholder="jcauti"></div>
+    <div class="fld"><label>Entidad</label><select><option>Todas</option><option>Lote</option><option>Comprobante</option><option>Pago</option><option>Ubigeo</option><option>Agente</option></select></div>
+    <div class="fld"><label>Acción</label><select><option>Todas</option><option>Crear</option><option>Editar</option><option>Anular</option><option>Aprobar</option><option>Dispersar</option></select></div>
+    <div class="fld"><label>Período</label><input type="month" value="2026-08"></div>
+    <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
+    <div class="fld"><label>&nbsp;</label><button class="btn ghost">Exportar</button></div>
+  </div>
+  <div class="panel">
+    <div class="ph">Bitácora de auditoría <span class="cnt">registro de cambios del sistema</span></div>
+    <div class="pb">
+      <table>
+        <tr><th>Fecha/hora</th><th>Usuario</th><th>Entidad</th><th>Acción</th><th>Detalle</th><th>IP</th></tr>
+        <tr><td>2026-08-31 09:14:22</td><td>Joel Cauti</td><td><span class="badge b-kas">Lote</span></td><td><span class="badge b-ok">Crear</span></td><td>Carga_2026-08.xlsx · 1,482 registros</td><td>10.20.1.45</td></tr>
+        <tr><td>2026-08-31 11:02:10</td><td>María Torres</td><td><span class="badge b-kas">Comprobante</span></td><td><span class="badge b-amber">Editar</span></td><td>F001-0244 · corrección RUC receptor</td><td>10.20.1.52</td></tr>
+        <tr><td>2026-08-30 16:40:55</td><td>Joel Cauti</td><td><span class="badge b-kas">Comprobante</span></td><td><span class="badge b-warn">Anular</span></td><td>F001-0198 · NC FC01-045 · motivo: error en monto</td><td>10.20.1.45</td></tr>
+        <tr><td>2026-08-30 14:31:08</td><td>Red Comercial</td><td><span class="badge b-kas">Pago</span></td><td><span class="badge b-ok">Aprobar</span></td><td>852 comprobantes aprobados para pago</td><td>10.20.1.77</td></tr>
+        <tr><td>2026-08-29 10:05:33</td><td>Tesorería</td><td><span class="badge b-kas">Pago</span></td><td><span class="badge b-blue">Dispersar</span></td><td>Lote BCP · 312 registros · TXT generado</td><td>10.20.1.90</td></tr>
+      </table>
+      <div class="pager"><span class="pager-info">1–5 de 2,841 eventos</span><div class="pager-ctrls"><button>«</button><button class="active">1</button><button>2</button><button>3</button><button>»</button></div></div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ===== MODAL: DETALLE COMPROBANTE ===== -->
+<div class="modal-bg" id="detalleModal">
+  <div class="modal">
+    <div class="mh">
+      <h3>Detalle del comprobante — Sucre y Sale · F001-0410</h3>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+        <span class="badge b-ok">11 · Sunat Aprobado</span>
+        <button class="btn sm ghost">PDF</button>
+        <button class="btn sm ghost">XML</button>
+        <button class="mh .x" onclick="closeDetalle()" style="font-size:20px;background:none;border:none;cursor:pointer;color:var(--muted);margin-left:8px;">×</button>
+      </div>
+    </div>
+    <div class="mb">
+      <p style="font-size:11.5px;color:var(--muted);margin-bottom:12px;">Ciclo de emisión</p>
+      <div class="timeline">
+        <div class="tl-step done"><span class="tl-dot">✓</span>05 Carga</div><span class="tl-line done"></span>
+        <div class="tl-step done"><span class="tl-dot">✓</span>06 OSE</div><span class="tl-line done"></span>
+        <div class="tl-step done"><span class="tl-dot">✓</span>09 SUNAT</div><span class="tl-line done"></span>
+        <div class="tl-step done"><span class="tl-dot">✓</span>11 Aprobado</div>
+        <span class="tl-line done"></span>
+        <div class="tl-step done"><span class="tl-dot">✓</span>14 Pendiente</div><span class="tl-line done"></span>
+        <div class="tl-step done"><span class="tl-dot">✓</span>15 Programado</div><span class="tl-line done"></span>
+        <div class="tl-step done"><span class="tl-dot">✓</span>16 Archivo</div><span class="tl-line done"></span>
+        <div class="tl-step done"><span class="tl-dot">✓</span>19 Confirmado</div><span class="tl-line done"></span>
+        <div class="tl-step cur"><span class="tl-dot">●</span>20 Completo</div>
+      </div>
+      <details class="dblock" open style="margin-top:14px;">
+        <summary>Datos del Agente</summary>
+        <div class="dblock-b">
+          <div class="dfield"><span class="k">Tienda (AgentCode)</span><span class="v">034301</span></div>
+          <div class="dfield"><span class="k">RUC</span><span class="v">10238817868</span></div>
+          <div class="dfield"><span class="k">Razón Social</span><span class="v">SUCRE Y SALE</span></div>
+          <div class="dfield"><span class="k">Titular</span><span class="v">MARIA ANGELICA HUARCAYA</span></div>
+          <div class="dfield"><span class="k">Ubigeo</span><span class="v">080108</span></div>
+          <div class="dfield"><span class="k">Correo</span><span class="v">anikycha@hotmail.com</span></div>
+          <div class="dfield"><span class="k">Entidad Financiera</span><span class="v">Scotiabank</span></div>
+          <div class="dfield"><span class="k">Número de Cuenta</span><span class="v">7807618819</span></div>
+        </div>
+      </details>
+      <details class="dblock">
+        <summary>Datos del comprobante del período</summary>
+        <div class="dblock-b">
+          <div class="dfield"><span class="k">Período</span><span class="v">2026-08</span></div>
+          <div class="dfield"><span class="k">Segmentación</span><span class="v">Plata</span></div>
+          <div class="dfield"><span class="k">Comisión</span><span class="v">S/ 125.02</span></div>
+          <div class="dfield"><span class="k">Bonos</span><span class="v">S/ 0.00</span></div>
+          <div class="dfield"><span class="k">Devoluciones y Descuentos</span><span class="v">-S/ 30.30</span></div>
+          <div class="dfield"><span class="k">IGV</span><span class="v">S/ 0.00</span></div>
+          <div class="dfield"><span class="k">Total Comisión</span><span class="v">S/ 94.72</span></div>
+          <div class="dfield"><span class="k">Tipo Comprobante</span><span class="v">Boleta</span></div>
+        </div>
+      </details>
+      <details class="dblock">
+        <summary>Datos de Recepción del Comprobante de Pago</summary>
+        <div class="dblock-b">
+          <div class="dfield"><span class="k">Fecha de recepción</span><span class="v">08/09/2026 10:10</span></div>
+          <div class="dfield"><span class="k">Tipo de presentación</span><span class="v">Físico</span></div>
+          <div class="dfield"><span class="k">Estado</span><span class="v" style="color:var(--amber)">Pendiente</span></div>
+          <div class="dfield"><span class="k">Proceso</span><span class="v">Revisión de Documento</span></div>
+        </div>
+      </details>
+      <details class="dblock">
+        <summary>Estado de Revisión del Comprobante de Pago</summary>
+        <div class="dblock-b">
+          <div class="dfield"><span class="k">Fecha revisión</span><span class="v">—</span></div>
+          <div class="dfield"><span class="k">Usuario revisión</span><span class="v">—</span></div>
+          <div class="dfield"><span class="k">Observación</span><span class="v">—</span></div>
+          <div class="dfield"><span class="k">Estado</span><span class="v">—</span></div>
+        </div>
+      </details>
+    </div>
+    <div class="mf"><button class="btn ghost" onclick="closeDetalle()">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- ===== MODAL: RESUMEN LOTE ===== -->
+<div class="modal-bg" id="loteModal">
+  <div class="modal">
+    <div class="mh">
+      <h3>Resumen — Carga_2026-08.xlsx</h3>
+      <button onclick="closeLote()" style="margin-left:auto;font-size:20px;background:none;border:none;cursor:pointer;color:var(--muted);">×</button>
+    </div>
+    <div class="mb">
+      <div class="cards">
+        <div class="card"><div class="n">1,482</div><div class="lbl">Total registros</div></div>
+        <div class="card ok"><div class="n">1,203</div><div class="lbl">05 · Completado</div></div>
+        <div class="card"><div class="n">98</div><div class="lbl">01 · No Aplica</div></div>
+        <div class="card"><div class="n">86</div><div class="lbl">02 · No Requerido</div></div>
+        <div class="card"><div class="n">48</div><div class="lbl">03 · No Pago</div></div>
+        <div class="card warn"><div class="n">47</div><div class="lbl">04 · Observado</div></div>
+      </div>
+      <div class="formula"><b>Cuadre clasificación:</b> 1,482 = 1,203 + 98 + 86 + 48 + 47</div>
+      <div class="panel" style="margin-top:14px;">
+        <div class="ph">Comprobantes del lote</div>
+        <div class="pb">
+          <table>
+            <tr><th>RUC</th><th>Agente</th><th>Serie-Corr.</th><th>Monto</th><th>Estado</th><th></th></tr>
+            <tr><td>10238817868</td><td>Sucre y Sale</td><td>F001-0410</td><td>S/ 94.72</td><td><span class="badge b-ok">11 · Aprobado</span></td><td><button class="btn sm ghost" onclick="closeLote();openDetalle()">Ver</button></td></tr>
+            <tr><td>20484445556</td><td>Comercial El Faro</td><td>F001-0411</td><td>S/ 1,320.00</td><td><span class="badge b-kas">15 · Programado</span></td><td><button class="btn sm ghost" onclick="closeLote();openDetalle()">Ver</button></td></tr>
+            <tr><td>20481230000</td><td>Bodega Pequeña</td><td>—</td><td>S/ 0.00</td><td><span class="badge b-muted">03 · No Pago</span></td><td><button class="btn sm ghost" onclick="closeLote();openDetalle()">Ver</button></td></tr>
+          </table>
+          <div class="pager"><span class="pager-info">1–3 de 1,482</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn ghost" onclick="closeLote()">Cerrar</button>
+      <button class="btn ghost">📥 Descargar Excel del lote</button>
+      <button class="btn ok" onclick="alert('Lote confirmado como Procesado.')">✓ Confirmar cierre del lote</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>

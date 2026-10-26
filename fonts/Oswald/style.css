@@ -1,0 +1,88 @@
+/********************************************************************/
+/*	Joel Ruben Cauti Rojas | 963315470 | Lima - Peru				*/
+/*  www.programadoresperuanos.com 									*/
+/*  www.clubdelcaos.com 											*/
+/*	joe_io@hotmail.com | joel.cauti@gmail.com						*/
+/********************************************************************/
+
+/* Declaracion de Fuentes Oswald */
+@font-face{
+	font-family: "Oswald Bold";
+	src: url("Oswald-Bold.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald BoldItalic";
+	src: url("Oswald-BoldItalic.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald DemiBoldItalic";
+	src: url("Oswald-Demi-BoldItalic.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald DemiBold";
+	src: url("Oswald-DemiBold.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald ExtraLightItalic";
+	src: url("Oswald-Extra-LightItalic.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald ExtraLight";
+	src: url("Oswald-ExtraLight.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald Heavy";
+	src: url("Oswald-Heavy.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald HeavyItalic";
+	src: url("Oswald-HeavyItalic.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald Light";
+	src: url("Oswald-Light.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald LightItalic";
+	src: url("Oswald-LightItalic.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald Medium";
+	src: url("Oswald-Medium.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald MediumItalic";
+	src: url("Oswald-MediumItalic.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald Regular";
+	src: url("Oswald-Regular.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald RegularItalic";
+	src: url("Oswald-RegularItalic.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald SemiBold";
+	src: url("Oswald-SemiBold.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}
+@font-face{
+	font-family: "Oswald Stencil";
+	src: url("Oswald-Stencil.ttf") format("truetype");
+	font-style: normal; font-weight: normal;
+}

@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brankic (icomoon) â€” Demo de iconos</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  :root {
+    --bg: #1b1f24;
+    --panel: #242a31;
+    --panel-hover: #2e353d;
+    --text: #e6e9ed;
+    --muted: #9aa4af;
+    --accent: #1c76ea;
+    --border: #353d46;
+    --ok: #14a075;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Roboto, system-ui, sans-serif;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+  }
+  h1 {
+    margin: 0 0 12px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  h1 small { color: var(--muted); font-weight: 400; font-size: 13px; }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .search {
+    flex: 1 1 260px;
+    display: flex;
+    align-items: center;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 12px;
+  }
+  .search .ico-prefix { color: var(--muted); font-size: 16px; }
+  .search input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: var(--text);
+    font-size: 15px;
+    padding: 10px 10px;
+  }
+  .sizes { display: flex; gap: 6px; }
+  .sizes button {
+    background: var(--bg);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .sizes button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    padding: 24px;
+  }
+  .cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform .08s, background .15s, border-color .15s;
+    text-align: center;
+    min-height: 100px;
+  }
+  .cell:hover { background: var(--panel-hover); border-color: var(--accent); transform: translateY(-2px); }
+  .cell [class^="icon-"] { color: var(--text); transition: transform .15s; }
+  .cell:hover [class^="icon-"] { transform: scale(1.1); }
+  .cell .name {
+    font-size: 11px;
+    color: var(--muted);
+    word-break: break-word;
+    line-height: 1.3;
+  }
+  .cell.copied { border-color: var(--ok); }
+  .cell.copied .name { color: var(--ok); }
+
+  /* tamaÃ±os de icono conmutables */
+  .grid[data-size="1"] [class^="icon-"] { font-size: 24px; }
+  .grid[data-size="2"] [class^="icon-"] { font-size: 36px; }
+  .grid[data-size="3"] [class^="icon-"] { font-size: 52px; }
+
+  .empty { padding: 60px; text-align: center; color: var(--muted); grid-column: 1/-1; }
+
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ok);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s, transform .2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Brankic <span style="font-weight:400;color:var(--muted);font-size:14px;">(icomoon)</span> &nbsp;<small>â€” <span id="total">0</span> iconos Â· clic para copiar la clase</small></h1>
+  <div class="controls">
+    <label class="search">
+      <span class="icon-search ico-prefix"></span>
+      <input type="text" id="buscar" placeholder="Buscar icono (ej: user, cloud, chart)â€¦" autofocus>
+    </label>
+    <div class="sizes" id="sizes">
+      <button data-size="1" class="active">S</button>
+      <button data-size="2">M</button>
+      <button data-size="3">L</button>
+    </div>
+    <span class="count" id="contador"></span>
+  </div>
+</header>
+
+<div class="grid" id="grid" data-size="1"></div>
+<div id="toast">Copiado</div>
+
+<script>
+// Lista completa de iconos extraÃ­da de style.css (Brankic / icomoon, prefijo icon-)
+var ICONS = ["number","number1","number2","number3","number4","number5","number6","number7","number8","number9","number10","number11","number12","number13","number14","number15","number16","number17","number18","number19","quote","quote1","tag2","tag3","link","link1","cabinet","cabinet1","calendar","calendar1","calendar2","file","file1","file2","files","phone","tablet","window","monitor","ipod","tv","camera","camera1","camera2","film","film1","film2","microphone","microphone1","microphone2","drink","drink1","drink2","drink3","coffee","mug","icecream","cake","inbox2","download","upload","inbox3","checkmark","checkmark1","cancel","cancel1","plus","plus1","minus","minus1","notice","notice1","cog","cogs","cog1","warning2","health","suitcase","suitcase1","suitcase2","picture","pictures","pictures1","android","marvin","pacman","cassette","watch","chronometer","watch1","alarmclock","time","time1","headphones","wallet","checkmark2","cancel2","eye2","position","sitemap","sitemap1","cloud4","upload1","chart","chart1","chart2","chart3","chart4","chart5","location","download1","basket","folder4","gamepad","alarm","alarm-cancel","phone1","phone2","image","open","sale","direction","map","trashcan","vote","graduate","lab","tie","football4","eightball","bowling","bowlingpin","baseball2","soccer","3dglasses","microwave","refrigerator","oven","washingmachine","mouse","smiley","sad","mute","hand","radio","satellite","medal8","medal9","switch","key4","cord","locked","unlocked","locked1","unlocked1","magnifier","zoomin","zoomout","stack","stack1","stack2","davidstar","cross","moonandstar","transformers","batman","spaceinvaders","skeletor","lamp","lamp1","umbrella2","streetlight","bomb","archive","battery","battery1","battery2","battery3","battery4","megaphone","megaphone1","patch","pil","injection","thermometer2","lamp2","lamp3","lamp4","cube","box6","box7","diamond","bag","moneybag","grid","grid1","list","list1","ruler","ruler1","layout","layout1","layout2","layout3","layout4","layout5","layout6","layout7","layout8","layout9","layout10","layout11","layout12","layout13","tools","screwdriver","paint","hammer","brush","pen2","chat","comments","chat1","chat2","volume","volume1","volume2","equalizer","resize","resize1","stretch","narrow","resize2","download2","calculator","library","auction","justice","stats","stats1","attachment","hourglass","abacus","pencil","pen3","pin","pin1","discout","edit","scissors","profile","profile1","profile2","rotate","rotate1","reply","forward","retweet","shuffle","loop","crop","square","square1","circle","dollar","dollar1","coins","pig","bookmark2","bookmark3","addressbook","addressbook1","safe","envelope","envelope1","radioactive","music","presentation","male","female","aids","heart","info","info1","piano","rain","snow","lightning2","sun2","moon4","cloudy","cloudy1","car","bike","truck","bus","bike1","plane","paperplane","rocket","book2","book3","barcode","barcode1","expand","collapse","popout","popin","target2","badge","badge1","ticket","ticket1","ticket2","microphone3","cone","blocked","stop","keyboard","keyboard1","radio1","printer4","checked","error","add","minus2","alert","pictures2","atom","eyedropper","globe","globe1","shipping","yingyang","compass8","zip2","zip3","anchor","lockedheart","magnet","navigation","tags2","heart1","heart2","usb","clipboard2","clipboard3","clipboard4","switch1","ruler2"];
+
+var grid = document.getElementById('grid');
+var buscar = document.getElementById('buscar');
+var contador = document.getElementById('contador');
+var toast = document.getElementById('toast');
+document.getElementById('total').textContent = ICONS.length;
+var toastTimer;
+
+function render(filtro) {
+  filtro = (filtro || '').trim().toLowerCase();
+  var lista = filtro ? ICONS.filter(function(n){ return n.indexOf(filtro) !== -1; }) : ICONS;
+  grid.innerHTML = '';
+  if (lista.length === 0) {
+    grid.innerHTML = '<div class="empty">Sin resultados para "' + filtro + '"</div>';
+    contador.textContent = '0 iconos';
+    return;
+  }
+  var frag = document.createDocumentFragment();
+  lista.forEach(function(name){
+    var cls = 'icon-' + name;
+    var cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.title = 'Clic para copiar: ' + cls;
+    cell.dataset.cls = cls;
+    cell.innerHTML = '<span class="' + cls + '"></span><span class="name">' + name + '</span>';
+    frag.appendChild(cell);
+  });
+  grid.appendChild(frag);
+  contador.textContent = lista.length + ' iconos';
+}
+
+function copiar(texto, cell) {
+  function ok() {
+    cell.classList.add('copied');
+    setTimeout(function(){ cell.classList.remove('copied'); }, 900);
+    showToast('Copiado: ' + texto);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(texto).then(ok, function(){ fallback(texto); ok(); });
+  } else {
+    fallback(texto); ok();
+  }
+}
+function fallback(texto) {
+  var ta = document.createElement('textarea');
+  ta.value = texto; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+}
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 1400);
+}
+
+grid.addEventListener('click', function(e){
+  var cell = e.target.closest('.cell');
+  if (!cell) return;
+  copiar(cell.dataset.cls, cell);
+});
+
+buscar.addEventListener('input', function(){ render(this.value); });
+
+document.getElementById('sizes').addEventListener('click', function(e){
+  var btn = e.target.closest('button');
+  if (!btn) return;
+  this.querySelectorAll('button').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  grid.dataset.size = btn.dataset.size;
+});
+
+render('');
+</script>
+</body>
+</html>
