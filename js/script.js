@@ -1,5 +1,7 @@
 const TITLES = {
   inicio:'Inicio', 'kasnet-digital':'Kasnet Digital', wallet:'Wallet',
+  'kasnet-pos':'Kasnet POS', reporting:'Reporting',
+  'sistema-comprobantes':'Sistema de Comprobantes',
   lotes:'Lotes', comprobantes:'Comprobantes', bandeja:'Bandeja de Revisión',
   anulaciones:'Anulaciones', 'prep-pagos':'Preparación de Pagos',
   'disp-pagos':'Dispersión de Pagos', mantenimiento:'Mantenimiento',
@@ -15,6 +17,8 @@ function navTo(id){
     link.classList.add('active');
     const grp = link.closest('.grp');
     if(grp) grp.classList.add('open');
+    const subgrp = link.closest('.subgrp');
+    if(subgrp) subgrp.classList.add('open');
   }
   const section = document.getElementById(id);
   if(section) section.classList.add('active');
@@ -23,17 +27,44 @@ function navTo(id){
   window.scrollTo(0,0);
 }
 document.querySelectorAll('.sb-nav a[data-view]').forEach(a=>{
-  a.addEventListener('click', ()=> navTo(a.dataset.view));
+  a.addEventListener('click', ()=>{
+    // si el ítem no pertenece a un grupo, contraer los grupos desplegados
+    if(!a.closest('.grp')){
+      document.querySelectorAll('.sb-nav .grp.open').forEach(g=>g.classList.remove('open'));
+    }
+    navTo(a.dataset.view);
+  });
 });
 
 // ─── Sidebar: acordeón de grupos ───
 document.querySelectorAll('.sb-nav .grp-head').forEach(h=>{
-  h.addEventListener('click', ()=> h.parentElement.classList.toggle('open'));
+  h.addEventListener('click', ()=>{
+    const grp = h.parentElement;
+    const willOpen = !grp.classList.contains('open');
+    if(h.dataset.view) navTo(h.dataset.view); // navTo deja el grupo abierto
+    grp.classList.toggle('open', willOpen);   // respeta el toggle del head
+  });
+});
+// ─── Sidebar: subacordeón (nivel 2) ───
+document.querySelectorAll('.sb-nav .subgrp-head').forEach(h=>{
+  h.addEventListener('click', ()=>{
+    const sg = h.parentElement;
+    const willOpen = !sg.classList.contains('open');
+    // acordeón exclusivo: cerrar los demás subgrupos del mismo grupo
+    const scope = sg.closest('.grp-body-inner') || sg.parentElement;
+    scope.querySelectorAll('.subgrp.open').forEach(o=>{ if(o!==sg) o.classList.remove('open'); });
+    sg.classList.toggle('open', willOpen);
+  });
 });
 // mantener abierto el grupo que contiene la vista activa
 document.querySelectorAll('.sb-nav .grp').forEach(grp=>{
   const link = grp.querySelector('a[data-view].active');
   if(link) grp.classList.add('open');
+});
+// mantener abierto el subgrupo que contiene la vista activa
+document.querySelectorAll('.sb-nav .subgrp').forEach(sg=>{
+  const link = sg.querySelector('a[data-view].active');
+  if(link) sg.classList.add('open');
 });
 
 // ─── Tabs (global) ───

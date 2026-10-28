@@ -22,23 +22,39 @@
     <a data-view="wallet"><i class="icon-credit-card ic"></i> Wallet</a>
 
     <div class="grp" id="grp-sdcm">
-      <div class="grp-head"><i class="icon-layers ic"></i> Sistema de Comprobantes <i class="icon-chevron-right caret"></i></div>
+      <div class="grp-head" data-view="sistema-comprobantes"><i class="icon-layers ic"></i> Sistema de Comprobantes <i class="icon-chevron-right caret"></i></div>
       <div class="grp-body">
-        <div class="subgrp">Emisión de Comprobantes</div>
-        <a data-view="lotes"><i class="icon-inbox ic"></i> Lotes</a>
-        <a data-view="comprobantes"><i class="icon-file-text ic"></i> Comprobantes</a>
-        <a data-view="bandeja"><i class="icon-tool ic"></i> Bandeja de Revisión</a>
-        <a data-view="anulaciones"><i class="icon-x-circle ic"></i> Anulaciones</a>
+        <div class="grp-body-inner">
+        <div class="subgrp">
+          <div class="subgrp-head">Emisión de Comprobantes <i class="icon-chevron-right caret"></i></div>
+          <div class="subgrp-body"><div class="subgrp-body-inner">
+            <a data-view="lotes"><i class="icon-inbox ic"></i> Lotes</a>
+            <a data-view="comprobantes"><i class="icon-file-text ic"></i> Comprobantes</a>
+            <a data-view="bandeja"><i class="icon-tool ic"></i> Bandeja de Revisión</a>
+            <a data-view="anulaciones"><i class="icon-x-circle ic"></i> Anulaciones</a>
+          </div></div>
+        </div>
 
-        <div class="subgrp">Módulo de Pagos</div>
-        <a data-view="prep-pagos"><i class="icon-link-2 ic"></i> Preparación de Pagos</a>
-        <a data-view="disp-pagos"><i class="icon-dollar-sign ic"></i> Dispersión de Pagos</a>
+        <div class="subgrp">
+          <div class="subgrp-head">Módulo de Pagos <i class="icon-chevron-right caret"></i></div>
+          <div class="subgrp-body"><div class="subgrp-body-inner">
+            <a data-view="prep-pagos"><i class="icon-link-2 ic"></i> Preparación de Pagos</a>
+            <a data-view="disp-pagos"><i class="icon-dollar-sign ic"></i> Dispersión de Pagos</a>
+          </div></div>
+        </div>
 
-        <div class="subgrp">Administración de tablas</div>
-        <a data-view="mantenimiento"><i class="icon-settings ic"></i> Mantenimiento</a>
-        <a data-view="auditoria"><i class="icon-edit-3 ic"></i> Auditoría</a>
+        <div class="subgrp">
+          <div class="subgrp-head">Administración de tablas <i class="icon-chevron-right caret"></i></div>
+          <div class="subgrp-body"><div class="subgrp-body-inner">
+            <a data-view="mantenimiento"><i class="icon-settings ic"></i> Mantenimiento</a>
+            <a data-view="auditoria"><i class="icon-edit-3 ic"></i> Auditoría</a>
+          </div></div>
+        </div>
+        </div>
       </div>
     </div>
+    <a data-view="kasnet-pos"><i class="icon-monitor ic"></i> Kasnet POS</a>
+    <a data-view="reporting"><i class="icon-bar-chart-2 ic"></i> Reporting</a>
   </nav>
 </aside>
 
@@ -56,17 +72,33 @@
 
 <!-- ======================== INICIO ======================== -->
 <section class="view active" id="inicio">
+  <div class="cards" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card"><div class="n"><i class="icon-smartphone"></i></div><div class="lbl">Kasnet Digital</div><div class="sub">Módulo digital</div></div>
+    <div class="card"><div class="n"><i class="icon-credit-card"></i></div><div class="lbl">Wallet</div><div class="sub">Billetera</div></div>
+    <div class="card"><div class="n"><i class="icon-layers"></i></div><div class="lbl">Sistema de Comprobantes</div><div class="sub">Emisión · Pagos · Administración</div></div>
+  </div>
+  <div class="panel">
+    <div class="ph">Bienvenido al Backoffice</div>
+    <div class="pb">
+      <div class="info">Selecciona un módulo en el menú lateral para empezar.</div>
+      <p style="color:var(--muted);font-size:12.5px;">Vista de inicio (placeholder del mockup).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== SISTEMA DE COMPROBANTES (resumen) ======================== -->
+<section class="view" id="sistema-comprobantes">
   <div class="cards" style="grid-template-columns:repeat(4,1fr)">
-    <div class="card"><div class="n">3</div><div class="lbl">Módulos activos</div><div class="sub">Kasnet Digital · Wallet · Comprobantes</div></div>
+    <div class="card"><div class="n">3</div><div class="lbl">Submódulos</div><div class="sub">Emisión · Pagos · Administración</div></div>
     <div class="card amber"><div class="n">47</div><div class="lbl">Pendientes de revisión</div><div class="sub">Bandeja de comprobantes</div></div>
     <div class="card ok"><div class="n">S/ 312,940</div><div class="lbl">Pagado (período 2026-08)</div><div class="sub">Dispersión de pagos</div></div>
     <div class="card"><div class="n">1,503</div><div class="lbl">Agentes</div><div class="sub">Habilitados en autofacturación</div></div>
   </div>
   <div class="panel">
-    <div class="ph">Bienvenido al Backoffice</div>
+    <div class="ph">Sistema de Comprobantes</div>
     <div class="pb">
-      <div class="info">Selecciona un módulo en el menú lateral. El <b>Sistema de Comprobantes</b> concentra la emisión, el módulo de pagos y la administración de tablas.</div>
-      <p style="color:var(--muted);font-size:12.5px;">Vista de inicio (placeholder del mockup).</p>
+      <div class="info">El <b>Sistema de Comprobantes</b> concentra la emisión, el módulo de pagos y la administración de tablas.</div>
+      <p style="color:var(--muted);font-size:12.5px;">Selecciona una pantalla del grupo en el menú lateral: Lotes, Comprobantes, Bandeja de Revisión, Anulaciones, Preparación/Dispersión de Pagos, Mantenimiento o Auditoría.</p>
     </div>
   </div>
 </section>
@@ -84,6 +116,22 @@
   <div class="panel">
     <div class="ph">Wallet</div>
     <div class="pb"><div class="info">Módulo <b>Wallet</b> — placeholder del mockup. Aún sin pantallas definidas.</div></div>
+  </div>
+</section>
+
+<!-- ======================== KASNET POS ======================== -->
+<section class="view" id="kasnet-pos">
+  <div class="panel">
+    <div class="ph">Kasnet POS</div>
+    <div class="pb"><div class="info">Módulo <b>Kasnet POS</b> — placeholder del mockup. Aún sin pantallas definidas.</div></div>
+  </div>
+</section>
+
+<!-- ======================== REPORTING ======================== -->
+<section class="view" id="reporting">
+  <div class="panel">
+    <div class="ph">Reporting</div>
+    <div class="pb"><div class="info">Módulo <b>Reporting</b> — placeholder del mockup. Aún sin pantallas definidas.</div></div>
   </div>
 </section>
 
