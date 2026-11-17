@@ -12,17 +12,8 @@ const TITLES = {
 const _sectionInited = new Set();
 
 async function navTo(id){
-  // Lazy-load: si la sección aún no está en el DOM, la carga ahora
-  if(!document.getElementById(id)){
-    try {
-      const res = await fetch(`sections/${id}.html`);
-      if(res.ok){
-        const html = await res.text();
-        const c = document.getElementById('view-container');
-        if(c) c.insertAdjacentHTML('beforeend', html);
-      }
-    } catch(e){ console.warn('No se pudo cargar sección:', id, e); }
-  }
+  // Todas las secciones están en el DOM (index.html único)
+  // No se hace fetch de archivos externos
 
   // Init componentes section-específicos (una sola vez)
   if(!_sectionInited.has(id)){
@@ -1040,10 +1031,10 @@ _sectionInited.add('anulaciones');
 initCustomSelects();   // custom dropdown para todos los .float-fld-select
 navTo('inicio');
 
-// Pre-carga adicional vía fetch si hay servidor (mejora rendimiento futuro)
-if(window.location.protocol !== 'file:'){
-  loadSections().catch(()=>{});
-}
+// Pre-carga adicional deshabilitada (todo el contenido está en index.html)
+// if(window.location.protocol !== 'file:'){
+//   loadSections().catch(()=>{});
+// }
 
 // -"?-"?-"? Modal confirmación: Emitir / Pagar lote -"?-"?-"?
 let _emitirLotId  = '';
