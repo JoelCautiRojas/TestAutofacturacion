@@ -1212,3 +1212,64 @@ tr:nth-child(even){background:#fafbff;}
 
 /* ── Programación muted (estados finales) ──────────────────── */
 .pp-prog-muted{width:80px;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid #cbd5e1;border-radius:10px;padding:2px 8px;color:var(--muted);font-size:11px;font-weight:500;font-family:'Poppins Medium';white-space:nowrap;}
+
+/* ── Estados de tramo de pago P-01..P-06 ───────────────────── */
+.b-p01{background:#e3f7dc;color:#008535;}
+.b-p02{background:#e3f7dc;color:#008535;}
+.b-p03{background:#e3f7dc;color:#008535;}
+.b-p04{background:#fee2e2;color:#dc2626;}
+.b-p05{background:#fee2e2;color:#dc2626;}
+.b-p06{background:#166534;color:#fff;}
+
+/* ── Badge tramo (NETO / DETRAC.) ──────────────────────────── */
+.dp-tramo{display:inline-flex;align-items:center;border-radius:4px;padding:2px 7px;font-size:11px;font-weight:500;font-family:'Poppins Medium';white-space:nowrap;}
+.dp-tramo-neto{background:var(--kas-l);color:var(--kas-d);}
+.dp-tramo-detrac{background:var(--amber-l);color:var(--amber);}
+
+/* ── dp-table row filter ───────────────────────────────────── */
+#dp-table tbody tr.row-filtered{display:none !important;}
+
+/* ── Gestión Telebanking ───────────────────────────────────── */
+.tb-result-row{display:flex;align-items:center;gap:24px;padding:12px 0;border-bottom:1px solid var(--border);margin-bottom:14px;flex-wrap:wrap;}
+.tb-result-item{display:flex;align-items:baseline;gap:8px;}
+.tb-result-lbl{font-size:12.5px;color:var(--muted);}
+.tb-result-val{font-size:17px;font-weight:500;font-family:'Poppins Medium';color:var(--text);}
+.tb-result-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
+.tb-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:#f0f4ff;border:1px solid var(--kas-l);border-radius:8px;}
+.tb-txt-info{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--kas-d);font-weight:500;font-family:'Poppins Medium';}
+.tb-txt-info i{font-size:15px;flex-shrink:0;}
+.tb-gen-btn{min-width:220px;display:inline-flex;align-items:center;justify-content:center;gap:7px;}
+.tb-empty{display:flex;align-items:center;gap:8px;padding:18px;background:#f8fafc;border-radius:8px;color:var(--muted);font-size:13px;border:1px dashed var(--border);}
+.tb-empty i{font-size:16px;flex-shrink:0;}
+/* ── Vista General dispersión: layout unificado ────────────── */
+.kpi-row.kpi-3col{grid-template-columns:repeat(3,1fr);}
+.dp-overview-section{padding:16px 20px 4px;}
+.dp-ctx-info-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:12.5px;}
+.dp-ctx-info-row i{color:var(--kas);font-size:15px;flex-shrink:0;}
+.dp-ctx-title{font-weight:500;font-family:'Poppins Medium';color:var(--text);font-size:13px;}
+.dp-ctx-sep,.dp-ctx-sub{color:var(--muted);}
+.dp-chart-section{border-top:1px solid var(--border);}
+.dp-chart-section > .ph{margin:0;border-bottom:none;}
+.dp-chart-legend{display:flex;gap:20px;margin-bottom:20px;font-size:12.5px;color:var(--muted);}
+.dp-leg-item{display:flex;align-items:center;gap:5px;}
+.dp-leg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+.dp-dot-pago{background:#c8ecba;}
+.dp-dot-prog{background:#b5c6de;}
+.dp-dot-err{background:#eeb2b2;}
+.dp-channel-chart{display:flex;flex-direction:column;gap:14px;}
+.dp-ch-row{display:flex;align-items:flex-start;gap:14px;}
+.dp-ch-lbl{width:88px;font-size:13px;color:var(--text);text-align:right;flex-shrink:0;padding-top:6px;}
+.dp-ch-bar-col{flex:1;display:flex;flex-direction:column;gap:6px;}
+.dp-ch-bar-wrap{width:100%;height:28px;background:#f1f5f9;border-radius:6px;overflow:hidden;}
+.dp-ch-labels{display:flex;gap:16px;flex-wrap:wrap;}
+.dp-ch-label{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;}
+.dp-ch-label::before{content:'';display:inline-block;width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.dp-lbl-pago::before{background:#c8ecba;}.dp-lbl-prog::before{background:#b5c6de;}.dp-lbl-err::before{background:#eeb2b2;}
+.dp-lbl-pct{font-weight:500;font-family:'Poppins Medium';color:var(--text);}
+.dp-lbl-amt{color:var(--muted);font-size:11px;}
+.dp-ch-bar{height:100%;display:flex;border-radius:6px;overflow:hidden;transition:width .8s ease;}
+.dp-ch-seg{height:100%;}
+.dp-seg-pago{background:#c8ecba;}
+.dp-seg-prog{background:#b5c6de;}
+.dp-seg-err{background:#eeb2b2;}
+.dp-ch-amt{width:96px;font-size:12.5px;font-weight:500;font-family:'Poppins Medium';color:var(--text);flex-shrink:0;}

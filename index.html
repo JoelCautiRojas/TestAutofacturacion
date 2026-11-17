@@ -2860,7 +2860,7 @@
   </div>
 
   <div class="panel">
-    <div class="ph ph-bare">Listado de comprobantes en bandeja</div>
+    <div class="ph ph-bare">Listado de comprobantes a revisar</div>
     <div class="lotes-search-panel">
       <div class="pb">
         <div class="lotes-filters">
@@ -2985,7 +2985,7 @@
   </div>
 
   <div class="panel">
-    <div class="ph ph-bare">Listado de anulaciones</div>
+    <div class="ph ph-bare">Listado de Notas de Crédito</div>
       <div class="lotes-search-panel">
         <div class="pb">
           <div class="lotes-filters">
@@ -3414,161 +3414,409 @@
     </div>
 
   </div>
-  </div>
 
 </section>
 <section class="view" id="disp-pagos">
-  <!-- Bloque 1: Dashboard + Reportes -->
+  <div class="pg-header">
+    <div>
+      <h2 class="pg-title">Dispersión de Pagos</h2>
+      <p class="pg-sub">Vista consolidada de todos los tramos de pago por entidad financiera</p>
+    </div>
+  </div>
+
+  <div class="pp-tabs">
+    <button class="pp-tab active" onclick="dpTab(this,'dp-pane-general')">Vista General</button>
+    <button class="pp-tab" onclick="dpTab(this,'dp-pane-detalle')">Vista Detallada</button>
+  </div>
+
+  <div class="pp-pane active" id="dp-pane-general">
+
   <div class="panel">
-    <div class="ph">Estado general de pagos — 2026-08</div>
-    <div class="pb">
-      <div class="tabs mb-14">
-        <button class="active" data-tab="dp-dashboard">📊 Dashboard</button>
-        <button data-tab="dp-reportes">📈 Reportes</button>
-      </div>
-      <div class="tab-pane active" id="dp-dashboard">
-        <div class="disp-summary">
-          <div class="disp-card"><div class="n c-text">S/ 486,320</div><div class="l">Total a pagar</div></div>
-          <div class="disp-card"><div class="n c-ok">S/ 312,940</div><div class="l">Pagado (19+20)</div></div>
-          <div class="disp-card"><div class="n c-kas">S/ 158,120</div><div class="l">En proceso (14+15+16)</div></div>
-          <div class="disp-card"><div class="n c-warn">S/ 15,260</div><div class="l">Con error/rechazo (17+18)</div></div>
-        </div>
-        <div class="prog prog-lg"><i class="prog-fill-64"></i></div>
-        <small class="small-muted">64% completado · 546 de 852 agentes confirmados</small>
-        <div class="formula formula-mt"><b>Cuadre:</b> S/ 486,320 = Pagado S/ 312,940 + En proceso S/ 158,120 + Con problema S/ 15,260</div>
-        <div class="chart-wrap">
-          <div class="chart">
-            <div class="bar-row"><span class="lbl">20 · Documento Completado</span><div class="bar-track"><div class="bar-fill bar-ok bw-56"></div></div><span class="val">480</span></div>
-            <div class="bar-row"><span class="lbl">19 · Pago Confirmado</span><div class="bar-track"><div class="bar-fill bar-ok bw-8"></div></div><span class="val">66</span></div>
-            <div class="bar-row"><span class="lbl">16 · Archivo Generado</span><div class="bar-track"><div class="bar-fill bar-kas bw-18"></div></div><span class="val">152</span></div>
-            <div class="bar-row"><span class="lbl">15 · Pago Programado</span><div class="bar-track"><div class="bar-fill bar-kas bw-9"></div></div><span class="val">80</span></div>
-            <div class="bar-row"><span class="lbl">14 · Pago Pendiente</span><div class="bar-track"><div class="bar-fill bar-amber bw-4"></div></div><span class="val">40</span></div>
-            <div class="bar-row"><span class="lbl">18 · Pago Rechazado</span><div class="bar-track"><div class="bar-fill bar-warn bw-3"></div></div><span class="val">5</span></div>
-            <div class="bar-row"><span class="lbl">17 · Pago Error</span><div class="bar-track"><div class="bar-fill bar-warn bw-3"></div></div><span class="val">3</span></div>
+    <div class="ph ph-bare">Distribución de pagos por canal</div>
+    <div class="lotes-search-panel">
+      <div class="pb">
+        <div class="lotes-filters">
+          <div class="float-fld float-fld-select">
+            <span class="float-label">Período</span>
+            <select id="dp-ctx-periodo" onchange="dpUpdateContext()">
+              <option value="">Todos los períodos</option>
+              <option value="2026-08">2026-08</option>
+              <option value="2026-09">2026-09</option>
+              <option value="2026-10">2026-10</option>
+              <option value="2026-11">2026-11</option>
+            </select>
           </div>
-        </div>
-      </div>
-      <div class="tab-pane" id="dp-reportes">
-        <div class="dp-grid-3">
-          <div class="panel dp-panel">
-            <div class="ph">Pagos realizados <span class="hint">estados 19+20</span></div>
-            <div class="pb">
-              <div class="card ok dp-card-mb"><div class="n">546</div><div class="lbl">S/ 312,940 dispersados</div></div>
-              <div class="filters filters-col">
-                <div class="fld"><label>Canal</label><select><option>Todos</option><option>BCP</option><option>Scotiabank</option><option>BBVA</option><option>Detracciones</option><option>Cajas</option></select></div>
-                <button class="btn ghost btn-full">📥 Descargar Excel</button>
-              </div>
-            </div>
+          <div class="float-fld">
+            <span class="float-label">ID Lote</span>
+            <input type="text" id="dp-ctx-lote" placeholder="ID Lote" oninput="dpUpdateContext()">
           </div>
-          <div class="panel dp-panel">
-            <div class="ph">Pagos pendientes <span class="hint">estados 13–17</span></div>
-            <div class="pb">
-              <div class="card amber dp-card-mb"><div class="n">242</div><div class="lbl">S/ 158,120 en proceso</div></div>
-              <div class="filters filters-col">
-                <div class="fld"><label>Canal</label><select><option>Todos</option><option>BCP</option><option>Scotiabank</option><option>BBVA</option><option>Detracciones</option><option>Cajas</option></select></div>
-                <button class="btn ghost btn-full">📥 Descargar Excel</button>
-              </div>
-            </div>
-          </div>
-          <div class="panel dp-panel">
-            <div class="ph">Rechazos bancarios <span class="hint">estado 18</span></div>
-            <div class="pb">
-              <div class="card warn dp-card-mb"><div class="n">5</div><div class="lbl">S/ 610 rechazados</div></div>
-              <div class="filters filters-col">
-                <div class="fld"><label>Canal</label><select><option>Todos</option><option>BCP</option><option>Scotiabank</option></select></div>
-                <button class="btn ghost btn-full">📥 Descargar Excel</button>
-              </div>
-            </div>
-          </div>
+          <button class="btn btn-yellow lotes-buscar-btn" onclick="dpUpdateContext()">Buscar</button>
+          <button class="btn ghost lotes-buscar-btn" onclick="dpCtxLimpiar()">Limpiar</button>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Bloque 2: Dispersión por entidad financiera -->
-  <div class="panel">
-    <div class="ph">Dispersión por entidad financiera</div>
-    <div class="pb">
-      <div class="tabs mb-14">
-        <button class="active" data-tab="dp-bcp">BCP (312)</button>
-        <button data-tab="dp-scotia">Scotiabank (198)</button>
-        <button data-tab="dp-bbva">BBVA (156)</button>
-        <button data-tab="dp-detrac">Detracciones (98)</button>
-        <button data-tab="dp-cajas">Cajas · TAM (88)</button>
-      </div>
-      <div class="tab-pane active" id="dp-bcp">
-        <div class="info info-mb10">BCP: la fecha de pago efectivo se asigna manualmente al cargar el archivo de resultado.</div>
-        <div class="check-all"><input type="checkbox" id="bcpAll" onclick="toggleAll('bcpChk',this.checked)"><label for="bcpAll">Seleccionar todo el grupo BCP</label></div>
-        <table>
-          <tr><th></th><th>Agente</th><th>RUC</th><th>N° Cuenta</th><th>Monto</th><th>Estado pago</th><th>Fecha/hora pago</th></tr>
-          <tr><td><input type="checkbox" class="bcpChk"></td><td>Bodega San Isidro</td><td>20481112223</td><td>194-2837465-0-88</td><td>S/ 640.00</td><td><span class="badge b-kas">15 · Programado</span></td><td><input type="datetime-local" class="input-datetime-sm" disabled></td></tr>
-          <tr><td><input type="checkbox" class="bcpChk"></td><td>Minimarket Central</td><td>20482223334</td><td>194-9988776-0-55</td><td>S/ 1,050.00</td><td><span class="badge b-blue">16 · Archivo Gen.</span></td><td><input type="datetime-local" class="input-datetime-sm" disabled></td></tr>
-        </table>
-        <div class="btn-row">
-          <button class="btn">📄 Generar TXT (seleccionados)</button>
-          <button class="btn ghost">📥 Cargar resultado del banco</button>
-          <button class="btn ghost">📎 Cargar constancia PDF</button>
+    <div class="dp-overview-section">
+      <div class="dp-ctx-info-row">
+        <i class="icon-layers"></i>
+        <div>
+          <span class="dp-ctx-title" id="dp-ctx-title">Todos los períodos</span>
+          <span class="dp-ctx-sep"> · </span>
+          <span class="dp-ctx-sub" id="dp-ctx-sub">LOT-000067 — LOT-000078 · 852 tramos</span>
         </div>
-        <small class="small-muted">La fecha de pago efectivo se habilita solo después de cargar el resultado bancario.</small>
       </div>
-      <div class="tab-pane" id="dp-scotia">
-        <div class="info">Scotiabank informa la <b>fecha de pago en la cabecera</b> de su Excel de resultado — el sistema la asigna automáticamente a todos los registros del lote.</div>
-        <div class="check-all"><input type="checkbox"><label>Seleccionar todo el grupo Scotiabank</label></div>
-        <table>
-          <tr><th></th><th>Agente</th><th>RUC</th><th>N° Cuenta</th><th>Monto</th><th>Estado</th><th>Fecha pago (auto)</th></tr>
-          <tr><td><input type="checkbox"></td><td>Sucre y Sale</td><td>10238817868</td><td>780-7618819-00</td><td>S/ 94.72</td><td><span class="badge b-ok">19 · Confirmado</span></td><td>2026-09-05 (cabecera)</td></tr>
-        </table>
-        <div class="btn-row"><button class="btn">📄 Generar TXT</button><button class="btn ghost">📥 Cargar resultado</button><button class="btn ghost">📎 Constancia PDF</button></div>
+      <div class="kpi-row kpi-3col">
+      <div class="kpi-card kpi-blue">
+        <div class="kpi-icon"><i class="icon-dollar-sign"></i></div>
+        <div class="kpi-body"><div class="kpi-lbl">Total a pagar</div><div class="kpi-n" id="dp-kpi-total">S/ 554,100</div><div class="kpi-sub" id="dp-kpi-total-sub">852 tramos · período activo</div></div>
       </div>
-      <div class="tab-pane" id="dp-bbva">
-        <div class="info">BBVA informa <b>fecha y hora por registro</b> en su Excel — el sistema la asigna automáticamente a cada comprobante.</div>
-        <div class="check-all"><input type="checkbox"><label>Seleccionar todo el grupo BBVA</label></div>
-        <table>
-          <tr><th></th><th>Agente</th><th>RUC</th><th>N° Cuenta</th><th>Monto</th><th>Estado</th><th>Fecha pago (auto)</th></tr>
-          <tr><td><input type="checkbox"></td><td>Agente Miraflores</td><td>20487778889</td><td>0011-0234-56789012</td><td>S/ 980.00</td><td><span class="badge b-ok">19 · Confirmado</span></td><td>2026-09-05 14:32</td></tr>
-        </table>
-        <div class="btn-row"><button class="btn">📄 Generar TXT</button><button class="btn ghost">📥 Cargar resultado</button><button class="btn ghost">📎 Constancia PDF</button></div>
+      <div class="kpi-card kpi-green">
+        <div class="kpi-icon"><i class="icon-check-circle"></i></div>
+        <div class="kpi-body"><div class="kpi-lbl">Ya pagado</div><div class="kpi-n" id="dp-kpi-pagado">S/ 321,840</div><div class="kpi-sub" id="dp-kpi-pagado-sub">58% del total · 494 tramos</div></div>
       </div>
-      <div class="tab-pane" id="dp-detrac">
-        <div class="info">SUNAT Detracciones: la fecha de pago efectivo se asigna manualmente, igual que BCP.</div>
-        <div class="check-all"><input type="checkbox"><label>Seleccionar todo el grupo Detracciones</label></div>
-        <table>
-          <tr><th></th><th>Agente</th><th>RUC</th><th>Cuenta detracción</th><th>Monto detr.</th><th>Estado</th><th>Fecha pago</th></tr>
-          <tr><td><input type="checkbox"></td><td>Servicios del Sur</td><td>20485556667</td><td>00-123-456789</td><td>S/ 158.40</td><td><span class="badge b-kas">15 · Programado</span></td><td><input type="datetime-local" class="input-datetime-sm" disabled></td></tr>
-        </table>
-        <div class="btn-row"><button class="btn">📄 Generar TXT</button><button class="btn ghost">📥 Cargar resultado</button><button class="btn ghost">📎 Constancia PDF</button></div>
+      <div class="kpi-card kpi-amber">
+        <div class="kpi-icon"><i class="icon-clock"></i></div>
+        <div class="kpi-body"><div class="kpi-lbl">Restante a pagar</div><div class="kpi-n" id="dp-kpi-restante">S/ 232,260</div><div class="kpi-sub" id="dp-kpi-restante-sub">42% del total · 358 tramos</div></div>
       </div>
-      <div class="tab-pane" id="dp-cajas">
-        <div class="info">Dispersión en línea vía <b>API TAM</b>. Login JWT (8h), cifrado AES-GCM. La fecha de pago la responde el API por transacción. Sin generar TXT.</div>
-        <div class="filters mb-10">
-          <div class="fld fld-flex"><label>Glosa genérica</label><input class="input-glosa" value="Pago autofacturación período 2026-08"></div>
-          <div class="fld"><label>&nbsp;</label><button class="btn ghost sm">Aplicar a todos</button></div>
+      </div>
+    </div><!-- /dp-overview-section -->
+    <div class="dp-chart-section">
+      <div class="pb">
+        <div class="dp-chart-legend">
+          <span class="dp-leg-item"><span class="dp-leg-dot dp-dot-pago"></span>Pagado</span>
+          <span class="dp-leg-item"><span class="dp-leg-dot dp-dot-prog"></span>Programado / En proceso</span>
+          <span class="dp-leg-item"><span class="dp-leg-dot dp-dot-err"></span>Error / Rechazado</span>
         </div>
-        <div class="check-all"><input type="checkbox"><label>Seleccionar todos</label></div>
-        <table>
-          <tr><th></th><th>Agente</th><th>RUC</th><th>financialBin</th><th>Monto</th><th>Glosa</th><th>Estado</th><th>Fecha pago</th></tr>
-          <tr><td><input type="checkbox"></td><td>Agente Kasnet 0912</td><td>20486667778</td><td>009</td><td>S/ 430.00</td><td><input value="Pago autofacturación período 2026-08" class="input-glosa-sm"></td><td><span class="badge b-ok">20 · Completado</span></td><td>2026-09-05 16:42:18</td></tr>
-          <tr><td><input type="checkbox"></td><td>Agente Kasnet 1188</td><td>20489990001</td><td>011</td><td>S/ 380.00</td><td><input value="Pago autofacturación período 2026-08" class="input-glosa-sm"></td><td><span class="badge b-warn">17 · Pago Error</span></td><td>—</td></tr>
-        </table>
-        <div class="btn-row"><button class="btn ok">▶ Dispersar seleccionados</button><button class="btn ghost">Reintentar errores (17)</button></div>
+        <div class="dp-channel-chart">
+          <div class="dp-ch-row" data-canal="BCP">
+            <span class="dp-ch-lbl">BCP</span>
+            <div class="dp-ch-bar-col">
+              <div class="dp-ch-bar-wrap">
+                <div class="dp-ch-bar" style="width:100%">
+                  <div class="dp-ch-seg dp-seg-pago" style="width:59.8%"></div>
+                  <div class="dp-ch-seg dp-seg-prog" style="width:31.5%"></div>
+                  <div class="dp-ch-seg dp-seg-err"  style="width: 8.7%"></div>
+                </div>
+              </div>
+              <div class="dp-ch-labels">
+                <span class="dp-ch-label dp-lbl-pago"><span class="dp-lbl-pct">59.8%</span> <span class="dp-lbl-amt">S/ 110,800</span></span>
+                <span class="dp-ch-label dp-lbl-prog"><span class="dp-lbl-pct">31.5%</span> <span class="dp-lbl-amt">S/ 58,340</span></span>
+                <span class="dp-ch-label dp-lbl-err"><span class="dp-lbl-pct">8.7%</span> <span class="dp-lbl-amt">S/ 16,280</span></span>
+              </div>
+            </div>
+            <span class="dp-ch-amt">S/ 185,420</span>
+          </div>
+          <div class="dp-ch-row" data-canal="BBVA">
+            <span class="dp-ch-lbl">BBVA</span>
+            <div class="dp-ch-bar-col">
+              <div class="dp-ch-bar-wrap">
+                <div class="dp-ch-bar" style="width:80.3%">
+                  <div class="dp-ch-seg dp-seg-pago" style="width:58.0%"></div>
+                  <div class="dp-ch-seg dp-seg-prog" style="width:32.4%"></div>
+                  <div class="dp-ch-seg dp-seg-err"  style="width: 9.6%"></div>
+                </div>
+              </div>
+              <div class="dp-ch-labels">
+                <span class="dp-ch-label dp-lbl-pago"><span class="dp-lbl-pct">58.0%</span> <span class="dp-lbl-amt">S/ 86,500</span></span>
+                <span class="dp-ch-label dp-lbl-prog"><span class="dp-lbl-pct">32.4%</span> <span class="dp-lbl-amt">S/ 48,320</span></span>
+                <span class="dp-ch-label dp-lbl-err"><span class="dp-lbl-pct">9.6%</span> <span class="dp-lbl-amt">S/ 14,140</span></span>
+              </div>
+            </div>
+            <span class="dp-ch-amt">S/ 148,960</span>
+          </div>
+          <div class="dp-ch-row" data-canal="Scotiabank">
+            <span class="dp-ch-lbl">Scotiabank</span>
+            <div class="dp-ch-bar-col">
+              <div class="dp-ch-bar-wrap">
+                <div class="dp-ch-bar" style="width:51.1%">
+                  <div class="dp-ch-seg dp-seg-pago" style="width:58.5%"></div>
+                  <div class="dp-ch-seg dp-seg-prog" style="width:33.9%"></div>
+                  <div class="dp-ch-seg dp-seg-err"  style="width: 7.6%"></div>
+                </div>
+              </div>
+              <div class="dp-ch-labels">
+                <span class="dp-ch-label dp-lbl-pago"><span class="dp-lbl-pct">58.5%</span> <span class="dp-lbl-amt">S/ 55,400</span></span>
+                <span class="dp-ch-label dp-lbl-prog"><span class="dp-lbl-pct">33.9%</span> <span class="dp-lbl-amt">S/ 32,180</span></span>
+                <span class="dp-ch-label dp-lbl-err"><span class="dp-lbl-pct">7.6%</span> <span class="dp-lbl-amt">S/ 7,180</span></span>
+              </div>
+            </div>
+            <span class="dp-ch-amt">S/ 94,760</span>
+          </div>
+          <div class="dp-ch-row" data-canal="Detracción">
+            <span class="dp-ch-lbl">Detracción</span>
+            <div class="dp-ch-bar-col">
+              <div class="dp-ch-bar-wrap">
+                <div class="dp-ch-bar" style="width:30.3%">
+                  <div class="dp-ch-seg dp-seg-pago" style="width:76.3%"></div>
+                  <div class="dp-ch-seg dp-seg-prog" style="width:20.7%"></div>
+                  <div class="dp-ch-seg dp-seg-err"  style="width: 3.0%"></div>
+                </div>
+              </div>
+              <div class="dp-ch-labels">
+                <span class="dp-ch-label dp-lbl-pago"><span class="dp-lbl-pct">76.3%</span> <span class="dp-lbl-amt">S/ 42,840</span></span>
+                <span class="dp-ch-label dp-lbl-prog"><span class="dp-lbl-pct">20.7%</span> <span class="dp-lbl-amt">S/ 11,620</span></span>
+                <span class="dp-ch-label dp-lbl-err"><span class="dp-lbl-pct">3.0%</span> <span class="dp-lbl-amt">S/ 1,660</span></span>
+              </div>
+            </div>
+            <span class="dp-ch-amt">S/ 56,120</span>
+          </div>
+          <div class="dp-ch-row" data-canal="API TAM">
+            <span class="dp-ch-lbl">API TAM</span>
+            <div class="dp-ch-bar-col">
+              <div class="dp-ch-bar-wrap">
+                <div class="dp-ch-bar" style="width:37.1%">
+                  <div class="dp-ch-seg dp-seg-pago" style="width:38.2%"></div>
+                  <div class="dp-ch-seg dp-seg-prog" style="width:46.7%"></div>
+                  <div class="dp-ch-seg dp-seg-err"  style="width:15.1%"></div>
+                </div>
+              </div>
+              <div class="dp-ch-labels">
+                <span class="dp-ch-label dp-lbl-pago"><span class="dp-lbl-pct">38.2%</span> <span class="dp-lbl-amt">S/ 26,300</span></span>
+                <span class="dp-ch-label dp-lbl-prog"><span class="dp-lbl-pct">46.7%</span> <span class="dp-lbl-amt">S/ 32,180</span></span>
+                <span class="dp-ch-label dp-lbl-err"><span class="dp-lbl-pct">15.1%</span> <span class="dp-lbl-amt">S/ 10,360</span></span>
+              </div>
+            </div>
+            <span class="dp-ch-amt">S/ 68,840</span>
+          </div>
+        </div>
+      </div>
+    </div><!-- /dp-chart-section -->
+  </div><!-- /panel unificado -->
+
+    <!-- Gestión Telebanking -->
+    <div class="panel">
+      <div class="ph">Gestión de Telebanking</div>
+      <div class="pb">
+        <div class="lotes-filters" style="margin-bottom:16px">
+          <div class="float-fld float-fld-select">
+            <span class="float-label">Entidad Financiera</span>
+            <select id="tb-grupo" onchange="tbUpdateSummary()">
+              <option value="">Selecciona una entidad</option>
+              <option value="BCP">BCP</option>
+              <option value="BBVA">BBVA</option>
+              <option value="Scotiabank">Scotiabank</option>
+              <option value="Banco de la Nación">Banco de la Nación</option>
+            </select>
+          </div>
+          <div class="float-fld">
+            <span class="float-label">ID Lote</span>
+            <input type="text" id="tb-lote" placeholder="ID Lote">
+          </div>
+          <button class="btn btn-yellow lotes-buscar-btn" onclick="tbUpdateSummary()">Buscar</button>
+          <button class="btn ghost lotes-buscar-btn" onclick="tbLimpiar()">Limpiar</button>
+        </div>
+
+        <div id="tb-summary" style="display:none">
+          <div class="tb-result-row">
+            <div class="tb-result-item">
+              <span class="tb-result-lbl">Registros</span>
+              <span class="tb-result-val" id="tb-total-pagos">—</span>
+            </div>
+            <div class="tb-result-sep"></div>
+            <div class="tb-result-item">
+              <span class="tb-result-lbl">Monto total</span>
+              <span class="tb-result-val" id="tb-total-monto">—</span>
+            </div>
+          </div>
+          <div class="tb-actions">
+            <div class="tb-txt-info"><i class="icon-file-text"></i> <span id="tb-txt-info-txt">—</span></div>
+            <button class="btn btn-yellow tb-gen-btn" onclick="tbGenerarTxt()"><i class="icon-download"></i> Generar TXT Telebanking</button>
+          </div>
+        </div>
+
+        <div id="tb-empty" class="tb-empty">
+          <i class="icon-info"></i>
+          Selecciona una entidad y un ID Lote para ver el resumen y generar el archivo TXT
+        </div>
       </div>
     </div>
-  </div>
-  <!-- Bloque 3: Bandeja de Pagos Rechazados -->
+
+  </div><!-- /dp-pane-general -->
+
+  <div class="pp-pane" id="dp-pane-detalle">
   <div class="panel">
-    <div class="ph">Bandeja de pagos rechazados <span class="cnt">5 comprobantes — estado 18</span></div>
-    <div class="pb">
-      <div class="info info-mb10">El banco rechazó el pago. Corrige los datos bancarios y el sistema regresa el comprobante a <b>15 · Pago Programado</b> con indicador <span class="badge-novedad">Novedad</span>.</div>
-      <table>
-        <tr><th>Agente</th><th>RUC</th><th>N° Cuenta actual</th><th>Canal</th><th>Monto</th><th>Motivo rechazo</th><th>Cuenta corregida</th><th></th></tr>
-        <tr><td>Bodega Pequeña</td><td>20481230000</td><td>194-9988000-0-11</td><td>BCP</td><td>S/ 220.00</td><td>Cuenta inexistente</td>
-          <td><input placeholder="Nueva cuenta…" class="input-cuenta"></td>
-          <td><button class="btn sm ok">Corregir → 15</button></td></tr>
-        <tr><td>Kiosco Central</td><td>20481235555</td><td>780-0000001-00</td><td>Scotiabank</td><td>S/ 95.00</td><td>Cuenta cerrada</td>
-          <td><input placeholder="Nueva cuenta…" class="input-cuenta"></td>
-          <td><button class="btn sm ok">Corregir → 15</button></td></tr>
+    <div class="ph ph-bare">Listado de pagos</div>
+    <div class="lotes-search-panel">
+      <div class="pb">
+        <div class="lotes-filters">
+          <div class="float-fld pp-search-fld">
+            <span class="float-label">Buscar por</span>
+            <input type="text" id="dp-search" placeholder="RUC, N° Comprobante, ID Lote o Store ID">
+          </div>
+          <div class="float-fld float-fld-select">
+            <span class="float-label">Entidad Financiera</span>
+            <select id="dp-entidad">
+              <option value="">Todas las entidades</option>
+              <option value="BCP">BCP</option>
+              <option value="BBVA">BBVA</option>
+              <option value="Scotiabank">Scotiabank</option>
+              <option value="Caja Huancayo">Caja Huancayo</option>
+              <option value="Caja Trujillo">Caja Trujillo</option>
+              <option value="Banco de la Nación">Banco de la Nación</option>
+            </select>
+          </div>
+          <div class="float-fld float-fld-select">
+            <span class="float-label">Canal</span>
+            <select id="dp-canal-tipo">
+              <option value="">Todos los canales</option>
+              <option value="Telebanking">Telebanking</option>
+              <option value="Detracción">Detracción</option>
+              <option value="API TAM">API TAM</option>
+            </select>
+          </div>
+          <div class="float-fld float-fld-select">
+            <span class="float-label">Estado</span>
+            <select id="dp-estado">
+              <option value="">Todos los estados</option>
+              <option value="P-01">P-01 · Pago Programado</option>
+              <option value="P-02">P-02 · Pago Telebanking</option>
+              <option value="P-03">P-03 · Pago Api</option>
+              <option value="P-04">P-04 · Pago Error</option>
+              <option value="P-05">P-05 · Pago Rechazado</option>
+              <option value="P-06">P-06 · Pago Confirmado</option>
+            </select>
+          </div>
+          <div class="float-fld float-fld-select">
+            <span class="float-label">Período</span>
+            <select id="dp-periodo">
+              <option value="">Todos los períodos</option>
+              <option value="2026-11">2026-11</option>
+              <option value="2026-10">2026-10</option>
+              <option value="2026-09">2026-09</option>
+              <option value="2026-08">2026-08</option>
+            </select>
+          </div>
+          <button class="btn btn-yellow lotes-buscar-btn" id="dp-buscar-btn">Buscar</button>
+          <button class="btn ghost lotes-buscar-btn" id="dp-limpiar-btn">Limpiar</button>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-x">
+      <table id="dp-table">
+        <thead><tr>
+          <th>ID Lote</th><th>Período</th><th>RUC</th><th>Store ID</th><th>Tipo</th><th>N° Comprobante</th>
+          <th>Monto</th><th>Entidad Financiera</th><th>Canal</th>
+          <th>Estado</th><th>Fecha Programada</th><th>Fecha Efectiva</th><th>Acciones</th>
+        </tr></thead>
+        <tbody>
+          <tr data-canal="BCP" data-estado="P-06" data-periodo="2026-11"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-11</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001245</td><td>S/ 542.37</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-06</td><td class="mono-sm">2026-11-06</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-06" data-periodo="2026-11"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-11</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001245</td><td>S/ 98.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-06</td><td class="mono-sm">2026-11-06</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000071</td><td class="mono-sm">2026-11</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00001001</td><td>S/ 1,008.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-11-30</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000071</td><td class="mono-sm">2026-11</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00001001</td><td>S/ 112.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-11-30</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-05" data-periodo="2026-11"><td class="mono-sm">LOT-000072</td><td class="mono-sm">2026-11</td><td class="mono">20484445556</td><td class="mono-sm">100006</td><td>Factura</td><td class="mono">F020-00001025</td><td>S/ 1,116.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-05" data-periodo="2026-11"><td class="mono-sm">LOT-000072</td><td class="mono-sm">2026-11</td><td class="mono">20484445556</td><td class="mono-sm">100006</td><td>Factura</td><td class="mono">F020-00001025</td><td>S/ 124.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-09</td><td class="mono">20567890123</td><td class="mono-sm">100004</td><td>Boleta</td><td class="mono">B020-00001004</td><td>S/ 290.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-15</td><td class="mono-sm">2026-09-15</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000071</td><td class="mono-sm">2026-11</td><td class="mono">10987654321</td><td class="mono-sm">100010</td><td>Boleta</td><td class="mono">B020-00001010</td><td>S/ 180.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-11-30</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-04" data-periodo="2026-11"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-11</td><td class="mono">20112233445</td><td class="mono-sm">100011</td><td>Factura</td><td class="mono">F020-00001011</td><td>S/ 850.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p04" data-state="P-04">Pago Error</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-02" data-periodo="2026-11"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-11</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001246</td><td>S/ 779.66</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p02" data-state="P-02">Pago Telebanking</span></td><td class="mono-sm">2026-11-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-10</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00001038</td><td>S/ 1,848.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-20</td><td class="mono-sm">2026-10-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-10</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00001038</td><td>S/ 252.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-20</td><td class="mono-sm">2026-10-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-11</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00001002</td><td>S/ 740.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-11-30</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-05" data-periodo="2026-10"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-10</td><td class="mono">20484445556</td><td class="mono-sm">100006</td><td>Factura</td><td class="mono">F020-00001026</td><td>S/ 882.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-10-25</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-11</td><td class="mono">20567890123</td><td class="mono-sm">100004</td><td>Boleta</td><td class="mono">B020-00001005</td><td>S/ 320.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-11-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-04" data-periodo="2026-11"><td class="mono-sm">LOT-000071</td><td class="mono-sm">2026-11</td><td class="mono">20112233445</td><td class="mono-sm">100011</td><td>Factura</td><td class="mono">F020-00001012</td><td>S/ 1,050.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p04" data-state="P-04">Pago Error</span></td><td class="mono-sm">2026-11-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000072</td><td class="mono-sm">2026-10</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00001039</td><td>S/ 1,628.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-20</td><td class="mono-sm">2026-10-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000072</td><td class="mono-sm">2026-10</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00001039</td><td>S/ 222.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-20</td><td class="mono-sm">2026-10-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-05" data-periodo="2026-11"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-11</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001247</td><td>S/ 504.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-02" data-periodo="2026-11"><td class="mono-sm">LOT-000071</td><td class="mono-sm">2026-11</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00001003</td><td>S/ 890.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p02" data-state="P-02">Pago Telebanking</span></td><td class="mono-sm">2026-12-10</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000067</td><td class="mono-sm">2026-08</td><td class="mono">20300400500</td><td class="mono-sm">100016</td><td>Factura</td><td class="mono">F020-00002001</td><td>S/ 680.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-10</td><td class="mono-sm">2026-09-10</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000067</td><td class="mono-sm">2026-08</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00002002</td><td>S/ 920.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-10</td><td class="mono-sm">2026-09-10</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000068</td><td class="mono-sm">2026-08</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00002003</td><td>S/ 1,560.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-15</td><td class="mono-sm">2026-09-15</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000068</td><td class="mono-sm">2026-08</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00002003</td><td>S/ 187.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-15</td><td class="mono-sm">2026-09-15</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000067</td><td class="mono-sm">2026-08</td><td class="mono">20567890123</td><td class="mono-sm">100004</td><td>Boleta</td><td class="mono">B020-00002004</td><td>S/ 310.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-10</td><td class="mono-sm">2026-09-10</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000068</td><td class="mono-sm">2026-08</td><td class="mono">10987654321</td><td class="mono-sm">100010</td><td>Boleta</td><td class="mono">B020-00002005</td><td>S/ 165.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-15</td><td class="mono-sm">2026-09-15</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000069</td><td class="mono-sm">2026-08</td><td class="mono">20484445556</td><td class="mono-sm">100006</td><td>Factura</td><td class="mono">F020-00002006</td><td>S/ 1,100.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-20</td><td class="mono-sm">2026-09-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000069</td><td class="mono-sm">2026-08</td><td class="mono">20484445556</td><td class="mono-sm">100006</td><td>Factura</td><td class="mono">F020-00002006</td><td>S/ 110.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-20</td><td class="mono-sm">2026-09-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000069</td><td class="mono-sm">2026-08</td><td class="mono">20112233445</td><td class="mono-sm">100011</td><td>Factura</td><td class="mono">F020-00002007</td><td>S/ 730.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-20</td><td class="mono-sm">2026-09-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000070</td><td class="mono-sm">2026-08</td><td class="mono">20444555666</td><td class="mono-sm">100019</td><td>Factura</td><td class="mono">F020-00002008</td><td>S/ 480.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-25</td><td class="mono-sm">2026-09-25</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000071</td><td class="mono-sm">2026-09</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001300</td><td>S/ 590.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-15</td><td class="mono-sm">2026-10-15</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000071</td><td class="mono-sm">2026-09</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00002009</td><td>S/ 870.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-15</td><td class="mono-sm">2026-10-15</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000071</td><td class="mono-sm">2026-09</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00002009</td><td>S/ 87.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-15</td><td class="mono-sm">2026-10-15</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000072</td><td class="mono-sm">2026-09</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00002010</td><td>S/ 2,200.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-20</td><td class="mono-sm">2026-10-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000072</td><td class="mono-sm">2026-09</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00002010</td><td>S/ 264.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-20</td><td class="mono-sm">2026-10-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000071</td><td class="mono-sm">2026-09</td><td class="mono">20300400500</td><td class="mono-sm">100016</td><td>Factura</td><td class="mono">F020-00002011</td><td>S/ 710.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-15</td><td class="mono-sm">2026-10-15</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-09</td><td class="mono">10987654321</td><td class="mono-sm">100010</td><td>Boleta</td><td class="mono">B020-00002012</td><td>S/ 190.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-25</td><td class="mono-sm">2026-10-25</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-09</td><td class="mono">20111222333</td><td class="mono-sm">100018</td><td>Boleta</td><td class="mono">B020-00002013</td><td>S/ 145.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-25</td><td class="mono-sm">2026-10-25</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-05" data-periodo="2026-09"><td class="mono-sm">LOT-000072</td><td class="mono-sm">2026-09</td><td class="mono">20444555666</td><td class="mono-sm">100019</td><td>Factura</td><td class="mono">F020-00002014</td><td>S/ 560.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-10-10</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-05" data-periodo="2026-09"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-09</td><td class="mono">20484445556</td><td class="mono-sm">100006</td><td>Factura</td><td class="mono">F020-00002015</td><td>S/ 830.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-10-10</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-11</td><td class="mono">20300400500</td><td class="mono-sm">100016</td><td>Factura</td><td class="mono">F020-00002016</td><td>S/ 720.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-11-30</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-11</td><td class="mono">20444555666</td><td class="mono-sm">100019</td><td>Factura</td><td class="mono">F020-00002017</td><td>S/ 940.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-01</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-11</td><td class="mono">20111222333</td><td class="mono-sm">100018</td><td>Boleta</td><td class="mono">B020-00002018</td><td>S/ 175.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-11</td><td class="mono">20112233445</td><td class="mono-sm">100011</td><td>Factura</td><td class="mono">F020-00002019</td><td>S/ 1,080.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-10</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-11</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001301</td><td>S/ 660.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-15</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-02" data-periodo="2026-11"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-11</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00002020</td><td>S/ 1,750.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p02" data-state="P-02">Pago Telebanking</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-02" data-periodo="2026-11"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-11</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00002020</td><td>S/ 210.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p02" data-state="P-02">Pago Telebanking</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-11</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00002021</td><td>S/ 990.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-11-30</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-11</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00002021</td><td>S/ 99.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-11-30</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-02" data-periodo="2026-11"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-11</td><td class="mono">20300400500</td><td class="mono-sm">100016</td><td>Factura</td><td class="mono">F020-00002022</td><td>S/ 640.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p02" data-state="P-02">Pago Telebanking</span></td><td class="mono-sm">2026-11-25</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-11</td><td class="mono">20567890123</td><td class="mono-sm">100004</td><td>Boleta</td><td class="mono">B020-00002023</td><td>S/ 280.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-11</td><td class="mono">10987654321</td><td class="mono-sm">100010</td><td>Boleta</td><td class="mono">B020-00002024</td><td>S/ 155.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-10</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000077</td><td class="mono-sm">2026-11</td><td class="mono">20484445556</td><td class="mono-sm">100006</td><td>Factura</td><td class="mono">F020-00002025</td><td>S/ 1,340.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-11-30</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000077</td><td class="mono-sm">2026-11</td><td class="mono">20484445556</td><td class="mono-sm">100006</td><td>Factura</td><td class="mono">F020-00002025</td><td>S/ 134.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-11-30</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000077</td><td class="mono-sm">2026-11</td><td class="mono">20112233445</td><td class="mono-sm">100011</td><td>Factura</td><td class="mono">F020-00002026</td><td>S/ 860.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-01</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000077</td><td class="mono-sm">2026-11</td><td class="mono">20444555666</td><td class="mono-sm">100019</td><td>Factura</td><td class="mono">F020-00002027</td><td>S/ 510.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-15</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-03" data-periodo="2026-11"><td class="mono-sm">LOT-000078</td><td class="mono-sm">2026-11</td><td class="mono">20111222333</td><td class="mono-sm">100018</td><td>Boleta</td><td class="mono">B020-00002028</td><td>S/ 185.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p03" data-state="P-03">Pago Api</span></td><td class="mono-sm">2026-11-28</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-03" data-periodo="2026-11"><td class="mono-sm">LOT-000078</td><td class="mono-sm">2026-11</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001302</td><td>S/ 750.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p03" data-state="P-03">Pago Api</span></td><td class="mono-sm">2026-11-28</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-02" data-periodo="2026-11"><td class="mono-sm">LOT-000078</td><td class="mono-sm">2026-11</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00002029</td><td>S/ 1,120.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p02" data-state="P-02">Pago Telebanking</span></td><td class="mono-sm">2026-11-25</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-02" data-periodo="2026-11"><td class="mono-sm">LOT-000078</td><td class="mono-sm">2026-11</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00002029</td><td>S/ 112.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p02" data-state="P-02">Pago Telebanking</span></td><td class="mono-sm">2026-11-25</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-05" data-periodo="2026-10"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-10</td><td class="mono">20300400500</td><td class="mono-sm">100016</td><td>Factura</td><td class="mono">F020-00002030</td><td>S/ 830.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-11-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-05" data-periodo="2026-10"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-10</td><td class="mono">20111222333</td><td class="mono-sm">100018</td><td>Boleta</td><td class="mono">B020-00002031</td><td>S/ 145.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-11-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-05" data-periodo="2026-11"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-11</td><td class="mono">20112233445</td><td class="mono-sm">100011</td><td>Factura</td><td class="mono">F020-00002032</td><td>S/ 970.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-04" data-periodo="2026-11"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-11</td><td class="mono">20444555666</td><td class="mono-sm">100019</td><td>Factura</td><td class="mono">F020-00002033</td><td>S/ 610.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p04" data-state="P-04">Pago Error</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-04" data-periodo="2026-10"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-10</td><td class="mono">20300400500</td><td class="mono-sm">100016</td><td>Factura</td><td class="mono">F020-00002034</td><td>S/ 740.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p04" data-state="P-04">Pago Error</span></td><td class="mono-sm">2026-11-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-05" data-periodo="2026-10"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-10</td><td class="mono">20567890123</td><td class="mono-sm">100004</td><td>Factura</td><td class="mono">F020-00002035</td><td>S/ 430.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-11-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-04" data-periodo="2026-11"><td class="mono-sm">LOT-000077</td><td class="mono-sm">2026-11</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001303</td><td>S/ 580.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p04" data-state="P-04">Pago Error</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-05" data-periodo="2026-11"><td class="mono-sm">LOT-000078</td><td class="mono-sm">2026-11</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00002036</td><td>S/ 1,900.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-05" data-periodo="2026-11"><td class="mono-sm">LOT-000078</td><td class="mono-sm">2026-11</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00002036</td><td>S/ 228.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-04" data-periodo="2026-09"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-09</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001304</td><td>S/ 720.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p04" data-state="P-04">Pago Error</span></td><td class="mono-sm">2026-10-10</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000070</td><td class="mono-sm">2026-08</td><td class="mono">20567890123</td><td class="mono-sm">100004</td><td>Factura</td><td class="mono">F020-00002037</td><td>S/ 400.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-25</td><td class="mono-sm">2026-09-25</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-06" data-periodo="2026-08"><td class="mono-sm">LOT-000070</td><td class="mono-sm">2026-08</td><td class="mono">20111222333</td><td class="mono-sm">100018</td><td>Boleta</td><td class="mono">B020-00002038</td><td>S/ 130.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-09-25</td><td class="mono-sm">2026-09-25</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-09</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001305</td><td>S/ 640.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-30</td><td class="mono-sm">2026-10-30</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-09</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001305</td><td>S/ 77.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-30</td><td class="mono-sm">2026-10-30</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-09</td><td class="mono">20444555666</td><td class="mono-sm">100019</td><td>Factura</td><td class="mono">F020-00002039</td><td>S/ 480.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-30</td><td class="mono-sm">2026-10-30</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-06" data-periodo="2026-09"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-09</td><td class="mono">20300400500</td><td class="mono-sm">100016</td><td>Factura</td><td class="mono">F020-00002040</td><td>S/ 590.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-10-25</td><td class="mono-sm">2026-10-25</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-10</td><td class="mono">10987654321</td><td class="mono-sm">100010</td><td>Boleta</td><td class="mono">B020-00002041</td><td>S/ 205.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-10</td><td class="mono-sm">2026-11-10</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-10</td><td class="mono">20112233445</td><td class="mono-sm">100011</td><td>Factura</td><td class="mono">F020-00002042</td><td>S/ 1,100.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-15</td><td class="mono-sm">2026-11-15</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-10</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00002043</td><td>S/ 870.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-15</td><td class="mono-sm">2026-11-15</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-10</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00002043</td><td>S/ 87.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-15</td><td class="mono-sm">2026-11-15</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000077</td><td class="mono-sm">2026-10</td><td class="mono">20484445556</td><td class="mono-sm">100006</td><td>Factura</td><td class="mono">F020-00002044</td><td>S/ 1,230.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">2026-11-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000077</td><td class="mono-sm">2026-10</td><td class="mono">20484445556</td><td class="mono-sm">100006</td><td>Factura</td><td class="mono">F020-00002044</td><td>S/ 123.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">2026-11-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000077</td><td class="mono-sm">2026-10</td><td class="mono">20444555666</td><td class="mono-sm">100019</td><td>Factura</td><td class="mono">F020-00002045</td><td>S/ 670.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">2026-11-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000077</td><td class="mono-sm">2026-10</td><td class="mono">20111222333</td><td class="mono-sm">100018</td><td>Boleta</td><td class="mono">B020-00002046</td><td>S/ 155.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">2026-11-20</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000078</td><td class="mono-sm">2026-10</td><td class="mono">20300400500</td><td class="mono-sm">100016</td><td>Factura</td><td class="mono">F020-00002047</td><td>S/ 810.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-25</td><td class="mono-sm">2026-11-25</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-06" data-periodo="2026-10"><td class="mono-sm">LOT-000078</td><td class="mono-sm">2026-10</td><td class="mono">20567890123</td><td class="mono-sm">100004</td><td>Factura</td><td class="mono">F020-00002048</td><td>S/ 350.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p06" data-state="P-06">Pago Confirmado</span></td><td class="mono-sm">2026-11-25</td><td class="mono-sm">2026-11-25</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-11</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001306</td><td>S/ 710.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-01</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-11</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00002049</td><td>S/ 2,100.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Banco de la Nación" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-11</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020-00002049</td><td>S/ 252.00</td><td>Banco de la Nación</td><td>Detracción</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000074</td><td class="mono-sm">2026-11</td><td class="mono">20481112223</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F001-00001307</td><td>S/ 630.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-10</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-11</td><td class="mono">20444555666</td><td class="mono-sm">100019</td><td>Factura</td><td class="mono">F020-00002050</td><td>S/ 560.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-15</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000073</td><td class="mono-sm">2026-11</td><td class="mono">20300400500</td><td class="mono-sm">100016</td><td>Factura</td><td class="mono">F020-00002051</td><td>S/ 790.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-02" data-periodo="2026-11"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-11</td><td class="mono">20567890123</td><td class="mono-sm">100004</td><td>Factura</td><td class="mono">F020-00002052</td><td>S/ 460.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p02" data-state="P-02">Pago Telebanking</span></td><td class="mono-sm">2026-11-28</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-02" data-periodo="2026-11"><td class="mono-sm">LOT-000075</td><td class="mono-sm">2026-11</td><td class="mono">10987654321</td><td class="mono-sm">100010</td><td>Boleta</td><td class="mono">B020-00002053</td><td>S/ 170.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p02" data-state="P-02">Pago Telebanking</span></td><td class="mono-sm">2026-11-28</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-02" data-periodo="2026-11"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-11</td><td class="mono">20111222333</td><td class="mono-sm">100018</td><td>Boleta</td><td class="mono">B020-00002054</td><td>S/ 140.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p02" data-state="P-02">Pago Telebanking</span></td><td class="mono-sm">2026-11-30</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Huancayo" data-estado="P-03" data-periodo="2026-11"><td class="mono-sm">LOT-000076</td><td class="mono-sm">2026-11</td><td class="mono">20112233445</td><td class="mono-sm">100011</td><td>Factura</td><td class="mono">F020-00002055</td><td>S/ 1,160.00</td><td>Caja Huancayo</td><td>API TAM</td><td><span class="badge-2 b-p03" data-state="P-03">Pago Api</span></td><td class="mono-sm">2026-12-01</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Caja Trujillo" data-estado="P-03" data-periodo="2026-11"><td class="mono-sm">LOT-000077</td><td class="mono-sm">2026-11</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020-00002056</td><td>S/ 1,040.00</td><td>Caja Trujillo</td><td>API TAM</td><td><span class="badge-2 b-p03" data-state="P-03">Pago Api</span></td><td class="mono-sm">2026-12-05</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BCP" data-estado="P-05" data-periodo="2026-11"><td class="mono-sm">LOT-000077</td><td class="mono-sm">2026-11</td><td class="mono">20300400500</td><td class="mono-sm">100016</td><td>Factura</td><td class="mono">F020-00002057</td><td>S/ 680.00</td><td>BCP</td><td>Telebanking</td><td><span class="badge-2 b-p05" data-state="P-05">Pago Rechazado</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="BBVA" data-estado="P-04" data-periodo="2026-11"><td class="mono-sm">LOT-000078</td><td class="mono-sm">2026-11</td><td class="mono">20444555666</td><td class="mono-sm">100019</td><td>Factura</td><td class="mono">F020-00002058</td><td>S/ 920.00</td><td>BBVA</td><td>Telebanking</td><td><span class="badge-2 b-p04" data-state="P-04">Pago Error</span></td><td class="mono-sm">2026-11-20</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+          <tr data-canal="Scotiabank" data-estado="P-01" data-periodo="2026-11"><td class="mono-sm">LOT-000078</td><td class="mono-sm">2026-11</td><td class="mono">20112233445</td><td class="mono-sm">100011</td><td>Factura</td><td class="mono">F020-00002059</td><td>S/ 1,220.00</td><td>Scotiabank</td><td>Telebanking</td><td><span class="badge-2 b-p01" data-state="P-01">Pago Programado</span></td><td class="mono-sm">2026-12-10</td><td class="mono-sm">—</td><td><div class="act-btns"><button class="btn sm ghost">Ver detalles</button></div></td></tr>
+        </tbody>
       </table>
     </div>
+    <div class="lotes-footer">
+      <div class="float-fld float-fld-select">
+        <span class="float-label">Items</span>
+        <select id="dp-page-size">
+          <option value="20" selected>20 por hoja</option>
+          <option value="50">50 por hoja</option>
+        </select>
+      </div>
+      <span class="pager-info" id="dp-pager-info">1-20 de 852 tramos</span>
+      <div class="pager pager-inline">
+        <div class="pager-ctrls" id="dp-pager-ctrls"></div>
+      </div>
+    </div>
   </div>
+  </div><!-- /dp-pane-detalle -->
+
 </section>
 
 <section class="view" id="band-pagos">
@@ -3591,11 +3839,28 @@
     </div>
     <div class="kpi-card kpi-red">
       <div class="kpi-icon"><i class="icon-x-circle"></i></div>
-      <div class="kpi-body"><div class="kpi-lbl">Pago Rechazado</div><div class="kpi-n" id="bpag-kpi-p03">-</div><div class="kpi-sub">Estado P-03</div></div>
+      <div class="kpi-body"><div class="kpi-lbl">Pago Error</div><div class="kpi-n" id="bpag-kpi-p03">-</div><div class="kpi-sub">P-04 · reintentable</div></div>
     </div>
     <div class="kpi-card kpi-red">
       <div class="kpi-icon"><i class="icon-alert-triangle"></i></div>
-      <div class="kpi-body"><div class="kpi-lbl">Error de datos</div><div class="kpi-n" id="bpag-kpi-p04">-</div><div class="kpi-sub">Estado P-04</div></div>
+      <div class="kpi-body"><div class="kpi-lbl">Pago Rechazado</div><div class="kpi-n" id="bpag-kpi-p04">-</div><div class="kpi-sub">P-05 · corregible</div></div>
+    </div>
+  </div>
+
+  <!-- Bandeja de Pagos Rechazados (movida desde Dispersión) -->
+  <div class="panel">
+    <div class="ph">Bandeja de pagos rechazados <span class="ph hint">5 comprobantes — estado 18</span></div>
+    <div class="pb">
+      <div class="info info-mb10">El banco rechazó el pago. Corrige los datos bancarios y el sistema regresa el comprobante a <b>15 · Pago Programado</b> con indicador <span class="badge-novedad">Novedad</span>.</div>
+      <table>
+        <tr><th>Agente</th><th>RUC</th><th>N° Cuenta actual</th><th>Canal</th><th>Monto</th><th>Motivo rechazo</th><th>Cuenta corregida</th><th></th></tr>
+        <tr><td>Bodega Pequeña</td><td>20481230000</td><td>194-9988000-0-11</td><td>BCP</td><td>S/ 220.00</td><td>Cuenta inexistente</td>
+          <td><input placeholder="Nueva cuenta…" class="input-cuenta"></td>
+          <td><button class="btn sm ok">Corregir → 15</button></td></tr>
+        <tr><td>Kiosco Central</td><td>20481235555</td><td>780-0000001-00</td><td>Scotiabank</td><td>S/ 95.00</td><td>Cuenta cerrada</td>
+          <td><input placeholder="Nueva cuenta…" class="input-cuenta"></td>
+          <td><button class="btn sm ok">Corregir → 15</button></td></tr>
+      </table>
     </div>
   </div>
 
@@ -3613,8 +3878,8 @@
             <select id="bpag-estado">
               <option value="">Todos los estados</option>
               <option value="C-12">C-12 - Pago Observado</option>
-              <option value="P-03">P-03 - Pago Rechazado</option>
-              <option value="P-04">P-04 - Error datos</option>
+              <option value="P-04">P-04 - Pago Error</option>
+              <option value="P-05">P-05 - Pago Rechazado</option>
             </select>
           </div>
           <div class="float-fld float-fld-select">
@@ -3641,12 +3906,12 @@
           <tr data-motivo="Cuenta bancaria observada por el banco emisor"><td class="mono-sm">LOT-000067-001</td><td class="mono">20481230000</td><td class="mono-sm">100001</td><td>Factura</td><td class="mono">F020</td><td class="mono">00001062</td><td>2026-07</td><td>S/ 820.00</td><td>BCP</td><td><span class="badge-2 b-bandeja" data-state="C-12">Pago Observado</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
           <tr data-motivo="CCI no corresponde a la entidad financiera registrada"><td class="mono-sm">LOT-000068-001</td><td class="mono">20484445556</td><td class="mono-sm">100006</td><td>Factura</td><td class="mono">F020</td><td class="mono">00001070</td><td>2026-07</td><td>S/ 1,450.00</td><td>BBVA</td><td><span class="badge-2 b-bandeja" data-state="C-12">Pago Observado</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
           <tr data-motivo="Fondos insuficientes en la cuenta de origen"><td class="mono-sm">LOT-000069-001</td><td class="mono">20567890123</td><td class="mono-sm">100004</td><td>Boleta</td><td class="mono">B020</td><td class="mono">00001078</td><td>2026-07</td><td>S/ 220.00</td><td>Interbank</td><td><span class="badge-2 b-bandeja" data-state="C-12">Pago Observado</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
-          <tr data-motivo="Límite diario excedido — código 0099"><td class="mono-sm">LOT-000071-001</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020</td><td class="mono">00001015</td><td>2026-08</td><td>S/ 1,120.00</td><td>BCP</td><td><span class="badge-2 b-bandeja" data-state="P-03">Pago Rechazado</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
-          <tr data-motivo="Error operativo — código 0051 (fondos insuficientes)"><td class="mono-sm">LOT-000072-001</td><td class="mono">20112233445</td><td class="mono-sm">100011</td><td>Boleta</td><td class="mono">B020</td><td class="mono">00001022</td><td>2026-08</td><td>S/ 340.00</td><td>Scotiabank</td><td><span class="badge-2 b-bandeja" data-state="P-03">Pago Rechazado</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
-          <tr data-motivo="Extorno ejecutado — timeout en API TAM (3 reintentos)"><td class="mono-sm">LOT-000073-001</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020</td><td class="mono">00001038</td><td>2026-08</td><td>S/ 2,100.00</td><td>Pichincha</td><td><span class="badge-2 b-bandeja" data-state="P-03">Pago Rechazado</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
-          <tr data-motivo="Cuenta programada inexistente en la entidad financiera"><td class="mono-sm">LOT-000074-001</td><td class="mono">20484445556</td><td class="mono-sm">100007</td><td>Factura</td><td class="mono">F020</td><td class="mono">00001033</td><td>2026-08</td><td>S/ 634.00</td><td>Interbank</td><td><span class="badge-2 b-bandeja" data-state="P-04">Error datos</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
-          <tr data-motivo="RUC del titular no coincide con el registrado en el banco"><td class="mono-sm">LOT-000075-001</td><td class="mono">10987654321</td><td class="mono-sm">100010</td><td>Factura</td><td class="mono">F020</td><td class="mono">00001025</td><td>2026-08</td><td>S/ 850.00</td><td>Scotiabank</td><td><span class="badge-2 b-bandeja" data-state="P-04">Error datos</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
-          <tr data-motivo="Número de cuenta CCI inválido — dígito verificador incorrecto"><td class="mono-sm">LOT-000071-002</td><td class="mono">20567890123</td><td class="mono-sm">100005</td><td>Boleta</td><td class="mono">B020</td><td class="mono">00001041</td><td>2026-08</td><td>S/ 180.00</td><td>BCP</td><td><span class="badge-2 b-bandeja" data-state="P-04">Error datos</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
+          <tr data-motivo="Límite diario excedido — código 0099"><td class="mono-sm">LOT-000071-001</td><td class="mono">20481230000</td><td class="mono-sm">100002</td><td>Factura</td><td class="mono">F020</td><td class="mono">00001015</td><td>2026-08</td><td>S/ 1,120.00</td><td>BCP</td><td><span class="badge-2 b-bandeja" data-state="P-03">Pago Error</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
+          <tr data-motivo="Error operativo — código 0051 (fondos insuficientes)"><td class="mono-sm">LOT-000072-001</td><td class="mono">20112233445</td><td class="mono-sm">100011</td><td>Boleta</td><td class="mono">B020</td><td class="mono">00001022</td><td>2026-08</td><td>S/ 340.00</td><td>Scotiabank</td><td><span class="badge-2 b-bandeja" data-state="P-03">Pago Error</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
+          <tr data-motivo="Extorno ejecutado — timeout en API TAM (3 reintentos)"><td class="mono-sm">LOT-000073-001</td><td class="mono">20998877665</td><td class="mono-sm">100013</td><td>Factura</td><td class="mono">F020</td><td class="mono">00001038</td><td>2026-08</td><td>S/ 2,100.00</td><td>Pichincha</td><td><span class="badge-2 b-bandeja" data-state="P-03">Pago Error</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
+          <tr data-motivo="Cuenta programada inexistente en la entidad financiera"><td class="mono-sm">LOT-000074-001</td><td class="mono">20484445556</td><td class="mono-sm">100007</td><td>Factura</td><td class="mono">F020</td><td class="mono">00001033</td><td>2026-08</td><td>S/ 634.00</td><td>Interbank</td><td><span class="badge-2 b-bandeja" data-state="P-04">Pago Rechazado</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
+          <tr data-motivo="RUC del titular no coincide con el registrado en el banco"><td class="mono-sm">LOT-000075-001</td><td class="mono">10987654321</td><td class="mono-sm">100010</td><td>Factura</td><td class="mono">F020</td><td class="mono">00001025</td><td>2026-08</td><td>S/ 850.00</td><td>Scotiabank</td><td><span class="badge-2 b-bandeja" data-state="P-04">Pago Rechazado</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
+          <tr data-motivo="Número de cuenta CCI inválido — dígito verificador incorrecto"><td class="mono-sm">LOT-000071-002</td><td class="mono">20567890123</td><td class="mono-sm">100005</td><td>Boleta</td><td class="mono">B020</td><td class="mono">00001041</td><td>2026-08</td><td>S/ 180.00</td><td>BCP</td><td><span class="badge-2 b-bandeja" data-state="P-04">Pago Rechazado</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openBandejaPagosDetalle(this)">Ver detalles</button></div></td></tr>
         </tbody>
       </table>
     </div>

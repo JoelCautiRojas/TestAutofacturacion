@@ -739,6 +739,7 @@ initBandejaComponents();
 initBandejaPagosComponents();
 initPppComponents();
 initPpComponents();
+initDispPagosComponents();
 
 // ── Vista por comprobantes (pp-table) ───────────────────────
 function initPpPagination(){
@@ -948,8 +949,8 @@ function updateBandejaPagosKPIs(){
     if(!badge) return;
     const st = badge.dataset.state;
     if(st==='C-12') c12++;
-    else if(st==='P-03') p03++;
-    else if(st==='P-04') p04++;
+    else if(st==='P-04') p03++;
+    else if(st==='P-05') p04++;
   });
   const el = id => document.getElementById(id);
   if(el('bpag-kpi-total')) el('bpag-kpi-total').textContent = total;
@@ -2660,7 +2661,256 @@ function applyMutedProg(tableSelector, stateColIdx, progColIdx, mutedCheck){
   });
 }
 
-// ── Drawer detalle lote en pago ─────────────────────────────
+// ── Gestión de Telebanking ──────────────────────────────────
+const _TB_ENTIDAD = {
+  'BCP':               { registros:312, monto:185420 },
+  'BBVA':              { registros:180, monto:148960 },
+  'Scotiabank':        { registros:142, monto:94760  },
+  'Banco de la Nación':{ registros:98,  monto:56120  }
+};
+const _TB_LOT = {
+  'LOT-000067':{ 'BCP':{r:12,m:9800},  'BBVA':{r:9,m:8200},   'Scotiabank':{r:7,m:5600},  'Banco de la Nación':{r:3,m:2100} },
+  'LOT-000068':{ 'BCP':{r:14,m:11000}, 'BBVA':{r:11,m:9600},  'Scotiabank':{r:8,m:5840},  'Banco de la Nación':{r:4,m:2660} },
+  'LOT-000069':{ 'BCP':{r:16,m:13200}, 'BBVA':{r:13,m:11480}, 'Scotiabank':{r:9,m:7120},  'Banco de la Nación':{r:4,m:2400} },
+  'LOT-000070':{ 'BCP':{r:18,m:14200}, 'BBVA':{r:9,m:7500},   'Scotiabank':{r:7,m:5600},  'Banco de la Nación':{r:2,m:1600} },
+  'LOT-000071':{ 'BCP':{r:18,m:14200}, 'BBVA':{r:14,m:11500}, 'Scotiabank':{r:8,m:6840},  'Banco de la Nación':{r:4,m:2860} },
+  'LOT-000072':{ 'BCP':{r:14,m:11560}, 'BBVA':{r:12,m:9860},  'Scotiabank':{r:7,m:5840},  'Banco de la Nación':{r:4,m:2860} },
+  'LOT-000073':{ 'BCP':{r:16,m:12540}, 'BBVA':{r:14,m:11180}, 'Scotiabank':{r:9,m:7450},  'Banco de la Nación':{r:3,m:2100} },
+  'LOT-000074':{ 'BCP':{r:13,m:10040}, 'BBVA':{r:12,m:9640},  'Scotiabank':{r:8,m:6540},  'Banco de la Nación':{r:6,m:4540} },
+  'LOT-000075':{ 'BCP':{r:18,m:14200}, 'BBVA':{r:14,m:11480}, 'Scotiabank':{r:8,m:6560},  'Banco de la Nación':{r:4,m:3200} },
+  'LOT-000076':{ 'BCP':{r:18,m:14580}, 'BBVA':{r:14,m:11640}, 'Scotiabank':{r:9,m:7340},  'Banco de la Nación':{r:5,m:3940} },
+  'LOT-000077':{ 'BCP':{r:15,m:12340}, 'BBVA':{r:12,m:10220}, 'Scotiabank':{r:8,m:6560},  'Banco de la Nación':{r:6,m:4780} },
+  'LOT-000078':{ 'BCP':{r:14,m:11240}, 'BBVA':{r:11,m:9100},  'Scotiabank':{r:8,m:6400},  'Banco de la Nación':{r:5,m:3700} }
+};
+
+function tbUpdateSummary(){
+  const grupo = document.getElementById('tb-grupo')?.value || '';
+  const lote  = (document.getElementById('tb-lote')?.value||'').trim().toUpperCase();
+  const sumEl  = document.getElementById('tb-summary');
+  const empEl  = document.getElementById('tb-empty');
+  if(!grupo || !lote){ sumEl.style.display='none'; empEl.style.display=''; return; }
+
+  let registros, monto;
+  if(lote && _TB_LOT[lote] && _TB_LOT[lote][grupo]){
+    registros = _TB_LOT[lote][grupo].r;
+    monto     = _TB_LOT[lote][grupo].m;
+  } else {
+    const d = _TB_ENTIDAD[grupo]||{registros:0,monto:0};
+    registros = d.registros; monto = d.monto;
+  }
+
+  const setEl=(id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=v; };
+  setEl('tb-total-pagos', registros+' registros');
+  setEl('tb-total-monto', dpFmt(monto));
+  const ctx = (lote?lote+' · ':'')+grupo;
+  setEl('tb-txt-info-txt', ctx+' · '+registros+' registros listos para pagar');
+  sumEl.style.display=''; empEl.style.display='none';
+}
+
+function tbLimpiar(){
+  const g=document.getElementById('tb-grupo'), l=document.getElementById('tb-lote');
+  if(g){ g.selectedIndex=0; g.dispatchEvent(new Event('change')); }
+  if(l) l.value='';
+  const sumEl=document.getElementById('tb-summary'), empEl=document.getElementById('tb-empty');
+  if(sumEl) sumEl.style.display='none';
+  if(empEl) empEl.style.display='';
+}
+
+function tbGenerarTxt(){
+  const grupo = document.getElementById('tb-grupo')?.value||'';
+  const lote  = document.getElementById('tb-lote')?.value?.trim()||'';
+  const ctx   = (lote?lote+' · ':'')+grupo;
+  showToast('Archivo TXT generado: '+ctx);
+}
+function dpCtxLimpiar(){
+  const p=document.getElementById('dp-ctx-periodo'), l=document.getElementById('dp-ctx-lote');
+  if(p){ p.selectedIndex=0; p.dispatchEvent(new Event('change')); }
+  if(l) l.value='';
+  const dpPer=document.getElementById('dp-periodo');
+  if(dpPer){ dpPer.selectedIndex=0; dpPer.dispatchEvent(new Event('change')); }
+  dpUpdateContext();
+}
+function dpTab(btn, paneId){
+  document.querySelectorAll('#disp-pagos .pp-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#disp-pagos .pp-pane').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  const pane = document.getElementById(paneId);
+  if(pane) pane.classList.add('active');
+}
+
+// ── Datos por período y lote ────────────────────────────────
+const _DP_DATA = {
+  'all':    { title:'Todos los períodos', sub:'LOT-000067 — LOT-000078 · 852 tramos', total:554100, pagado:321840, restante:232260, pct:58, trPag:494, trRes:358,
+    canales:[ {l:'BCP',total:185420,pag:110800,prog:58340,err:16280}, {l:'BBVA',total:148960,pag:86500,prog:48320,err:14140}, {l:'Scotiabank',total:94760,pag:55400,prog:32180,err:7180}, {l:'Detracción',total:56120,pag:42840,prog:11620,err:1660}, {l:'API TAM',total:68840,pag:26300,prog:32180,err:10360} ]},
+  '2026-08':{ title:'Período 2026-08', sub:'LOT-000067, LOT-000068, LOT-000069, LOT-000070 · 198 tramos', total:128450, pagado:128450, restante:0, pct:100, trPag:198, trRes:0,
+    canales:[ {l:'BCP',total:48200,pag:48200,prog:0,err:0}, {l:'BBVA',total:36780,pag:36780,prog:0,err:0}, {l:'Scotiabank',total:24160,pag:24160,prog:0,err:0}, {l:'Detracción',total:8760,pag:8760,prog:0,err:0}, {l:'API TAM',total:10550,pag:10550,prog:0,err:0} ]},
+  '2026-09':{ title:'Período 2026-09', sub:'LOT-000071, LOT-000072, LOT-000073, LOT-000074 · 215 tramos', total:139620, pagado:118470, restante:21150, pct:85, trPag:183, trRes:32,
+    canales:[ {l:'BCP',total:48340,pag:40890,prog:0,err:7450}, {l:'BBVA',total:42180,pag:36100,prog:0,err:6080}, {l:'Scotiabank',total:26780,pag:22480,prog:0,err:4300}, {l:'Detracción',total:12360,pag:11920,prog:0,err:440}, {l:'API TAM',total:9960,pag:7080,prog:0,err:2880} ]},
+  '2026-10':{ title:'Período 2026-10', sub:'LOT-000075, LOT-000076, LOT-000077, LOT-000078 · 221 tramos', total:152780, pagado:74920, restante:77860, pct:49, trPag:108, trRes:113,
+    canales:[ {l:'BCP',total:52340,pag:25600,prog:20640,err:6100}, {l:'BBVA',total:42460,pag:20800,prog:16780,err:4880}, {l:'Scotiabank',total:26860,pag:13180,prog:10620,err:3060}, {l:'Detracción',total:15620,pag:9380,prog:5420,err:820}, {l:'API TAM',total:15500,pag:5960,prog:7580,err:1960} ]},
+  '2026-11':{ title:'Período 2026-11', sub:'LOT-000071 — LOT-000078 · 218 tramos', total:133250, pagado:0, restante:133250, pct:0, trPag:0, trRes:218,
+    canales:[ {l:'BCP',total:36540,pag:0,prog:32840,err:3700}, {l:'BBVA',total:27540,pag:0,prog:24760,err:2780}, {l:'Scotiabank',total:16960,pag:0,prog:15380,err:1580}, {l:'Detracción',total:19380,pag:0,prog:19380,err:0}, {l:'API TAM',total:32830,pag:0,prog:24340,err:8490} ]},
+  'LOT-000067':{ title:'LOT-000067', sub:'Período 2026-08 · 48 tramos', total:28400, pagado:28400, restante:0, pct:100, trPag:48, trRes:0,
+    canales:[ {l:'BCP',total:9800,pag:9800,prog:0,err:0}, {l:'BBVA',total:8200,pag:8200,prog:0,err:0}, {l:'Scotiabank',total:5600,pag:5600,prog:0,err:0}, {l:'Detracción',total:2100,pag:2100,prog:0,err:0}, {l:'API TAM',total:2700,pag:2700,prog:0,err:0} ]},
+  'LOT-000068':{ title:'LOT-000068', sub:'Período 2026-08 · 52 tramos', total:31200, pagado:31200, restante:0, pct:100, trPag:52, trRes:0,
+    canales:[ {l:'BCP',total:11000,pag:11000,prog:0,err:0}, {l:'BBVA',total:9600,pag:9600,prog:0,err:0}, {l:'Scotiabank',total:5840,pag:5840,prog:0,err:0}, {l:'Detracción',total:2660,pag:2660,prog:0,err:0}, {l:'API TAM',total:2100,pag:2100,prog:0,err:0} ]},
+  'LOT-000071':{ title:'LOT-000071', sub:'Período 2026-09 · 54 tramos', total:36840, pagado:32480, restante:4360, pct:88, trPag:48, trRes:6,
+    canales:[ {l:'BCP',total:14200,pag:12980,prog:0,err:1220}, {l:'BBVA',total:11500,pag:10140,prog:0,err:1360}, {l:'Scotiabank',total:6840,pag:6020,prog:0,err:820}, {l:'Detracción',total:2860,pag:2860,prog:0,err:0}, {l:'API TAM',total:1440,pag:480,prog:0,err:960} ]},
+  'LOT-000073':{ title:'LOT-000073', sub:'Período 2026-09 · 58 tramos', total:34280, pagado:32980, restante:1300, pct:96, trPag:56, trRes:2,
+    canales:[ {l:'BCP',total:12540,pag:12540,prog:0,err:0}, {l:'BBVA',total:11180,pag:11180,prog:0,err:0}, {l:'Scotiabank',total:7450,pag:7450,prog:0,err:0}, {l:'Detracción',total:2100,pag:2100,prog:0,err:0}, {l:'API TAM',total:1010,pag:0,prog:0,err:1010} ]},
+  'LOT-000075':{ title:'LOT-000075', sub:'Período 2026-10 · 56 tramos', total:38640, pagado:20180, restante:18460, pct:52, trPag:29, trRes:27,
+    canales:[ {l:'BCP',total:14200,pag:7420,prog:5680,err:1100}, {l:'BBVA',total:11480,pag:5980,prog:4620,err:880}, {l:'Scotiabank',total:6560,pag:3420,prog:2680,err:460}, {l:'Detracción',total:3200,pag:1680,prog:1340,err:180}, {l:'API TAM',total:3200,pag:1680,prog:1340,err:180} ]},
+  'LOT-000078':{ title:'LOT-000078', sub:'Período 2026-10/11 · 58 tramos', total:35440, pagado:14960, restante:20480, pct:42, trPag:24, trRes:34,
+    canales:[ {l:'BCP',total:11240,pag:4760,prog:4980,err:1500}, {l:'BBVA',total:9100,pag:3860,prog:3980,err:1260}, {l:'Scotiabank',total:6400,pag:2700,prog:2820,err:880}, {l:'Detracción',total:3700,pag:1560,prog:2140,err:0}, {l:'API TAM',total:5000,pag:2080,prog:2240,err:680} ]}
+};
+
+function dpFmt(n){ return 'S/ '+Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+
+function dpUpdateContext(){
+  const per  = document.getElementById('dp-ctx-periodo')?.value||'';
+  const lote = (document.getElementById('dp-ctx-lote')?.value||'').trim().toUpperCase();
+  const key  = (_DP_DATA[lote]) ? lote : (per && _DP_DATA[per]) ? per : 'all';
+  const d    = _DP_DATA[key];
+  if(!d) return;
+
+  // Texto de contexto
+  const t = document.getElementById('dp-ctx-title');
+  const s = document.getElementById('dp-ctx-sub');
+  if(t) t.textContent = d.title;
+  if(s) s.textContent = d.sub;
+
+  // KPIs
+  const setEl = (id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=v; };
+  setEl('dp-kpi-total',   dpFmt(d.total));
+  setEl('dp-kpi-pagado',  dpFmt(d.pagado));
+  setEl('dp-kpi-restante',dpFmt(d.restante));
+  setEl('dp-kpi-total-sub',   d.sub.split('·')[1]?.trim() || '');
+  setEl('dp-kpi-pagado-sub',  d.pct+'% del total · '+d.trPag+' tramos');
+  setEl('dp-kpi-restante-sub',(100-d.pct)+'% del total · '+d.trRes+' tramos');
+
+  // Gráfico
+  const max = Math.max(...d.canales.map(c=>c.total));
+  d.canales.forEach(c=>{
+    const row = document.querySelector('.dp-ch-row[data-canal="'+c.l+'"]');
+    if(!row) return;
+    const bar  = row.querySelector('.dp-ch-bar');
+    const segs = row.querySelectorAll('.dp-ch-seg');
+    const amt  = row.querySelector('.dp-ch-amt');
+    if(bar)   bar.style.width = (max>0 ? (c.total/max*100).toFixed(1) : 0)+'%';
+    if(segs[0]) segs[0].style.width = (c.total>0 ? (c.pag/c.total*100).toFixed(1):0)+'%';
+    if(segs[1]) segs[1].style.width = (c.total>0 ? (c.prog/c.total*100).toFixed(1):0)+'%';
+    if(segs[2]) segs[2].style.width = (c.total>0 ? (c.err/c.total*100).toFixed(1):0)+'%';
+    if(amt)   amt.textContent = dpFmt(c.total);
+    // Actualizar labels (% + monto)
+    const vals = [c.pag, c.prog, c.err];
+    row.querySelectorAll('.dp-ch-label').forEach((lbl,i)=>{
+      const pct = c.total>0 ? (vals[i]/c.total*100) : 0;
+      const pctEl = lbl.querySelector('.dp-lbl-pct');
+      const amtEl = lbl.querySelector('.dp-lbl-amt');
+      if(pctEl) pctEl.textContent = pct.toFixed(1)+'%';
+      if(amtEl) amtEl.textContent = dpFmt(vals[i]);
+      lbl.style.display = vals[i]===0 ? 'none' : '';
+    });
+  });
+
+  // Sincronizar filtro de periodo en Vista Detallada
+  const dpPer = document.getElementById('dp-periodo');
+  if(dpPer && dpPer.value !== per){ dpPer.value=per; dpPer.dispatchEvent(new Event('change')); }
+}
+function initDispPagosPagination(){
+  if(!document.getElementById('dp-table')) return;
+  let page=1, size=20;
+  function getRows(){ return Array.from(document.querySelectorAll('#dp-table tbody tr:not(.row-filtered)')); }
+  function render(){
+    const rows=getRows(), total=rows.length;
+    const pages=Math.max(1,Math.ceil(total/size));
+    page=Math.max(1,Math.min(page,pages));
+    const from=(page-1)*size, to=Math.min(from+size,total);
+    document.querySelectorAll('#dp-table tbody tr').forEach(r=>{ if(!r.classList.contains('row-filtered')) r.style.display='none'; });
+    rows.forEach((r,i)=>{ r.style.display=(i>=from&&i<to)?'':'none'; r.classList.toggle('row-stripe',i>=from&&i<to&&(i-from)%2!==0); });
+    const info=document.getElementById('dp-pager-info');
+    if(info) info.textContent=total?`${from+1}-${to} de ${total} tramos`:'0 tramos';
+    const ctrls=document.getElementById('dp-pager-ctrls');
+    if(!ctrls) return;
+    function range(cur,tot){
+      if(tot<=7) return Array.from({length:tot},(_,i)=>i+1);
+      const r=[1]; if(cur>3) r.push('...');
+      for(let p=Math.max(2,cur-1);p<=Math.min(tot-1,cur+1);p++) r.push(p);
+      if(cur<tot-2) r.push('...'); r.push(tot); return r;
+    }
+    let h=`<button onclick="dpPage(${page-1})"${page===1?' disabled':''}>&#8249;</button>`;
+    range(page,pages).forEach(p=>{
+      if(p==='...') h+='<button class="pager-ellipsis" disabled>...</button>';
+      else h+=`<button class="${p===page?'active':''}" onclick="dpPage(${p})">${p}</button>`;
+    });
+    h+=`<button onclick="dpPage(${page+1})"${page===pages?' disabled':''}>&#8250;</button>`;
+    ctrls.innerHTML=h;
+  }
+  window.dpPage=p=>{ const pages=Math.ceil(getRows().length/size); if(p<1||p>pages) return; page=p; render(); };
+  const sel=document.getElementById('dp-page-size');
+  if(sel){ size=parseInt(sel.value)||20; sel.addEventListener('change',function(){ size=parseInt(this.value)||20; page=1; render(); }); }
+  render(); window.dpRender=render;
+}
+
+function initDispPagosFilters(){
+  if(!document.getElementById('dp-table')) return;
+  const inp      = document.getElementById('dp-search');
+  const selEnt   = document.getElementById('dp-entidad');
+  const selCan   = document.getElementById('dp-canal-tipo');
+  const selEst   = document.getElementById('dp-estado');
+  const selPer   = document.getElementById('dp-periodo');
+  const btnB     = document.getElementById('dp-buscar-btn');
+  const btnL     = document.getElementById('dp-limpiar-btn');
+  // Cols: 0=ID Lote|1=Período|2=RUC|3=Store|4=Tipo|5=Comp|6=Monto|7=EF|8=Canal|9=Estado|10=FProg|11=FEfec|12=Acc
+  function apply(){
+    const txt = inp    ? inp.value.trim().toLowerCase() : '';
+    const ent = selEnt ? selEnt.value : '';
+    const can = selCan ? selCan.value : '';
+    const est = selEst ? selEst.value : '';
+    const per = selPer ? selPer.value : '';
+    document.querySelectorAll('#dp-table tbody tr').forEach(row=>{
+      const tds   = row.querySelectorAll('td');
+      if(tds.length < 10) return;
+      const lote  = tds[0].textContent.toLowerCase();
+      const ruc   = tds[2].textContent.toLowerCase();
+      const store = tds[3].textContent.toLowerCase();
+      const comp  = tds[5].textContent.toLowerCase();
+      const canal = tds[8].textContent.trim();
+      const rEnt  = row.dataset.canal  || '';
+      const rEst  = row.dataset.estado || '';
+      const rPer  = row.dataset.periodo|| '';
+      let m = true;
+      if(txt && !lote.includes(txt)&&!ruc.includes(txt)&&!store.includes(txt)&&!comp.includes(txt)) m=false;
+      if(ent && rEnt !== ent)   m=false;
+      if(can && canal !== can)  m=false;
+      if(est && rEst !== est)   m=false;
+      if(per && rPer !== per)   m=false;
+      row.classList.toggle('row-filtered',!m);
+    });
+    if(window.dpRender) window.dpRender();
+  }
+  function clear(){
+    if(inp)    inp.value='';
+    if(selEnt){ selEnt.selectedIndex=0; selEnt.dispatchEvent(new Event('change')); }
+    if(selCan){ selCan.selectedIndex=0; selCan.dispatchEvent(new Event('change')); }
+    if(selEst){ selEst.selectedIndex=0; selEst.dispatchEvent(new Event('change')); }
+    if(selPer){ selPer.selectedIndex=0; selPer.dispatchEvent(new Event('change')); }
+    document.querySelectorAll('#dp-table tbody tr').forEach(r=>r.classList.remove('row-filtered'));
+    if(window.dpRender) window.dpRender();
+  }
+  if(btnB) btnB.addEventListener('click',apply);
+  if(btnL) btnL.addEventListener('click',clear);
+  if(inp)  inp.addEventListener('keydown',e=>{ if(e.key==='Enter') apply(); });
+  if(selEnt) selEnt.addEventListener('change',apply);
+  if(selCan) selCan.addEventListener('change',apply);
+  if(selEst) selEst.addEventListener('change',apply);
+  if(selPer) selPer.addEventListener('change',apply);
+}
+
+function initDispPagosComponents(){
+  initDispPagosPagination();
+  initDispPagosFilters();
+}
 function openPppDetalle(btn){
   const row = btn.closest('tr');
   const tds = row.querySelectorAll('td');
