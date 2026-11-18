@@ -1,4 +1,4 @@
-const TITLES = {
+﻿const TITLES = {
   inicio:'Inicio', 'kasnet-digital':'Kasnet Digital', wallet:'Wallet',
   'kasnet-pos':'Kasnet POS', reporting:'Reporting',
   'sistema-comprobantes':'Sistema de Comprobantes',
@@ -35,6 +35,15 @@ async function navTo(id){
   }
   const section = document.getElementById(id);
   if(section) section.classList.add('active');
+  // Resetear tab por defecto en secciones con pestañas propias
+  if(id === 'disp-pagos'){
+    document.querySelectorAll('#disp-pagos .pp-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('#disp-pagos .pp-pane').forEach(p=>p.classList.remove('active'));
+    const firstTab = document.querySelector('#disp-pagos .pp-tab');
+    if(firstTab) firstTab.classList.add('active');
+    const genPane = document.getElementById('dp-pane-general');
+    if(genPane) genPane.classList.add('active');
+  }
   window.scrollTo(0,0);
 }
 document.querySelectorAll('.sb-nav a[data-view]').forEach(a=>{
@@ -686,7 +695,7 @@ function closeDrawer(){
 function downloadLoteExcel(){
   const lotId   = document.getElementById('drawer-lot-id')?.textContent.trim() || 'lote';
   const lotFile = document.querySelector('.drawer-filename')?.textContent.trim() || 'lote.xlsx';
-  showToast(`Descargando ${lotFile} (${lotId})-?-`);
+  showToast(`Descargando ${lotFile} (${lotId})`);
 }
 document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
 
@@ -928,24 +937,22 @@ function guardarPpProgramacion(){
   const comp = document.getElementById('ppcd-comp')?.textContent || '-';
   document.getElementById('prog-confirm-lot').textContent   = comp;
   document.getElementById('prog-confirm-fecha').textContent = document.getElementById('ppcd-fecha-display')?.value || fecha;
-  document.getElementById('prog-confirm-title').textContent = 'Programar fecha de pago?';
+  document.getElementById('prog-confirm-title').textContent = '\u00bfDeseas guardar los cambios?';
   closePpCompDrawer();
   document.getElementById('prog-confirm-modal-bg').classList.add('open');
 }
 function updateBandejaPagosKPIs(){
   const rows = Array.from(document.querySelectorAll('#bpag-table tbody tr:not(.row-filtered)'));
-  let total=rows.length, c12=0, p03=0, p04=0;
+  let total=rows.length, p03=0, p04=0;
   rows.forEach(row => {
     const badge = row.querySelector('[data-state]');
     if(!badge) return;
     const st = badge.dataset.state;
-    if(st==='C-12') c12++;
-    else if(st==='P-04') p03++;
+    if(st==='P-04') p03++;
     else if(st==='P-05') p04++;
   });
   const el = id => document.getElementById(id);
   if(el('bpag-kpi-total')) el('bpag-kpi-total').textContent = total;
-  if(el('bpag-kpi-c12'))   el('bpag-kpi-c12').textContent   = c12;
   if(el('bpag-kpi-p03'))   el('bpag-kpi-p03').textContent   = p03;
   if(el('bpag-kpi-p04'))   el('bpag-kpi-p04').textContent   = p04;
 }
@@ -1024,8 +1031,7 @@ function initBandejaPagosComponents(){
 }
 
 function openBandejaPagosDetalle(btn){
-  // Reutiliza openBandejaDetalle — mismo drawer, mismo modo edición
-  openBandejaDetalle(btn);
+  openDpDetalle(btn);
 }
 _sectionInited.add('anulaciones');
 initCustomSelects();   // custom dropdown para todos los .float-fld-select
@@ -1351,9 +1357,9 @@ const _CD_REPROCESAR = {
   'C-06': 'Reenviar a OSE',
   'C-07': 'Reenviar a OSE',
   'C-09': 'Reenviar a SUNAT',
-  'C-12': 'Corregir y reenviar pago',
-  'P-03': 'Reprogramar fecha',
-  'P-04': 'Corregir cuenta',
+  'C-12': 'Reenviar pago',
+  'P-03': 'Reprocesar Pago',
+  'P-04': 'Reprocesar Pago',
 };
 
 function openCompDetalle(btn){
@@ -1631,11 +1637,11 @@ function openCompDetalle(btn){
   const motivoBox   = document.getElementById('comp-drw-motivo');
   const motivoMsg   = document.getElementById('comp-drw-motivo-msg');
   const motivoTitle = document.getElementById('comp-drw-motivo-title');
-  const hasError    = !!_CD_ERRORS[st];
+  const hasError    = badge?.classList.contains('b-bandeja') || !!_CD_ERRORS[st];
   if(motivoBox && motivoMsg){
     if(hasError){
       motivoMsg.style.whiteSpace = 'pre-line';
-      motivoMsg.textContent = _CD_ERRORS[st];
+      motivoMsg.textContent = _CD_ERRORS[st] || `El comprobante presenta una observaci\u00f3n en estado "${stText}".\n\nRevisa los datos del comprobante y utiliza el bot\u00f3n de reprocesar para corregirlo.`;
       if(motivoTitle) motivoTitle.textContent = `Motivo de ${stText}`;
       motivoBox.classList.remove('d-none');
     } else {
@@ -1697,7 +1703,7 @@ const _COMP_STEPS = ['Carga','Emisión','SUNAT','Pago','Completado'];
 // [stepIndex (0-based), displayStatus, cssClass]
 const _COMP_STATE_MAP = {
   'C-01':[0,'No Aplica',''],    'C-02':[0,'No Pago',''],
-  'C-03':[0,'Observado','err'], 'C-04':[1,'Pendiente',''],
+  'C-03':[0,'Carga Observado','err'], 'C-04':[1,'Pendiente',''],
   'C-05':[1,'En proceso','proc'], 'C-06':[1,'Observado','err'],
   'C-07':[1,'Error técnico','err'],'C-08':[2,'Pendiente',''],
   'C-09':[2,'Rechazado','err'], 'C-10':[3,'Pendiente',''],
@@ -2108,6 +2114,12 @@ function openAnulDetalle(btn){
 }
 
 function closeAnulDrawer(){
+  const drwEl = document.getElementById('anul-drw');
+  if(drwEl) drwEl.classList.remove('drw-edit-mode');
+  document.querySelectorAll('#atab-nc .cdtc-value, #atab-agente .cdtc-value').forEach(el=>{
+    el.removeAttribute('contenteditable');
+  });
+  document.getElementById('anul-drw-guardar')?.classList.add('d-none');
   document.getElementById('anul-drw-overlay').classList.remove('open');
   document.getElementById('anul-drw').classList.remove('open');
 }
@@ -2127,7 +2139,6 @@ function openAnulacionModal() {
   document.getElementById('comp-drw-overlay')?.classList.remove('open');
   document.getElementById('comp-drw')?.classList.remove('open');
   // Resetea y abre el modal
-  document.getElementById('anlm-motivo').value = '';
   document.getElementById('anlm-detalle').value = '';
   document.getElementById('anlm-counter').textContent = '00/30';
   document.getElementById('anulacion-modal-bg').classList.add('open');
@@ -2144,11 +2155,6 @@ function anlmCountChars() {
 }
 
 function confirmAnulacion() {
-  const motivo = document.getElementById('anlm-motivo').value;
-  if (!motivo) {
-    showToast('Selecciona un motivo de anulación');
-    return;
-  }
   // Leer serie-correlativo del drawer para el mensaje de confirmación
   const serieCorr = document.getElementById('comp-drw-serie')?.textContent.trim() || '-';
   document.getElementById('anulacion-confirm-sub').innerHTML =
@@ -2186,7 +2192,8 @@ function updateBandejaKPIs(){
     const badge = row.querySelector('[data-state]');
     if(!badge) return;
     const st = badge.dataset.state;
-    if(st==='C-03') carga++;
+    if(st==='C-04') carga++;
+    else if(st==='C-06'||st==='C-07') emision++;
     else if(st==='C-06'||st==='C-07') emision++;
     else if(st==='C-09') sunat++;
     else if(st==='C-12') pagos++;
@@ -2354,6 +2361,14 @@ function openBandejaNCDetalle(btn){
   if(footer) footer.classList.toggle('d-none',!_AN_REPROCESAR[st]);
 
   anulDrwTab(document.querySelector('#anul-drw .comp-drw-tabs button'),'atab-estado');
+  // Activar modo edición (tabs NC y Agente)
+  const anulDrwEl = document.getElementById('anul-drw');
+  if(anulDrwEl) anulDrwEl.classList.add('drw-edit-mode');
+  document.querySelectorAll('#atab-nc .cdtc-value, #atab-agente .cdtc-value').forEach(el=>{
+    el.setAttribute('contenteditable','true');
+  });
+  document.getElementById('anul-drw-guardar')?.classList.remove('d-none');
+  if(footer) footer.classList.remove('d-none');
   document.getElementById('anul-drw-overlay').classList.add('open');
   document.getElementById('anul-drw').classList.add('open');
 }
@@ -2363,23 +2378,23 @@ function openBandejaDetalle(btn){
   const row = btn.closest('tr');
   const tds = row.querySelectorAll('td');
 
-  // Bandeja cols: 0=ID Lote|1=RUC|2=StoreID|3=Tipo|4=Serie|5=Corr|6=Per|7=Total|8=Fase|9=Estado|10=Acc
-  const ruc    = tds[1]?.textContent.trim() || '-';
-  const tipo   = tds[3]?.textContent.trim() || '-';
-  const serie  = tds[4]?.textContent.trim() || '-';
-  const corr   = tds[5]?.textContent.trim() || '-';
-  const per    = tds[6]?.textContent.trim() || '-';
-  const total  = tds[7]?.textContent.trim() || '-';
-  const fase   = tds[8]?.textContent.trim() || '-';
-  const badge  = tds[9]?.querySelector('[data-state]');
-  const st     = badge?.dataset.state || '';
-  const stText = badge?.textContent.trim() || '-';
-  const storeId= tds[2]?.textContent.trim() || '-';
-  const loteId = tds[0]?.textContent.trim() || '-';
-  const motivo = row.dataset.motivo || '';
+  // Bandeja cols: 0=ID Lote-Nu00b0|1=RUC|2=StoreID|3=Tipo|4=Serie|5=Corr|6=Per|7=Total|8=Fase|9=Estado|10=Acc
+  const ruc      = tds[1]?.textContent.trim() || '-';
+  const tipo     = tds[3]?.textContent.trim() || '-';
+  const serie    = tds[4]?.textContent.trim() || '-';
+  const corr     = tds[5]?.textContent.trim() || '-';
+  const per      = tds[6]?.textContent.trim() || '-';
+  const total    = tds[7]?.textContent.trim() || '-';
+  const fase     = tds[8]?.textContent.trim() || '-';
+  const badge    = tds[9]?.querySelector('[data-state]');
+  const st       = badge?.dataset.state || '';
+  const stText   = badge?.textContent.trim() || '-';
+  const storeId  = tds[2]?.textContent.trim() || '-';
+  const loteId   = tds[0]?.textContent.trim() || '-';
+  const serieCorr = (serie !== '-' && corr !== '-') ? serie+'-'+corr : '-';
+  const motivo   = row.dataset.motivo || '';;
 
   const nombre    = _AGENT_NAMES[ruc] || ruc;
-  const serieCorr = (serie !== '-' && corr !== '-') ? `${serie}-${corr}` : '-';
   const cancelSt  = row.dataset.cancellationStatus || 'NONE';
 
   // Alerta amber
@@ -2898,6 +2913,137 @@ function initDispPagosFilters(){
   if(selPer) selPer.addEventListener('change',apply);
 }
 
+// ── Drawer Detalle Pago (Dispersión) ───────────────────────
+const _DP_OBS = {
+  'P-04':{
+    'BCP':'Límite diario de transferencias excedido — código 0099',
+    'BBVA':'Cuenta de destino bloqueada temporalmente — código ERR-004',
+    'Scotiabank':'Error de conexión con la entidad financiera — tiempo de espera agotado',
+    'Caja Huancayo':'Timeout en API TAM — extorno ejecutado automáticamente',
+    'Caja Trujillo':'Error operativo API TAM — código 0051 (fondos insuficientes)',
+    'Banco de la Nación':'Error al procesar detracción — cuenta de origen observada'
+  },
+  'P-05':{
+    'BCP':'Número de cuenta inexistente en BCP',
+    'BBVA':'CCI no corresponde a la entidad financiera registrada',
+    'Scotiabank':'Cuenta cerrada — el titular realizó el cierre del producto',
+    'Caja Huancayo':'RUC del titular no coincide con el registrado en Caja Huancayo',
+    'Caja Trujillo':'Número de cuenta inválido — dígito verificador incorrecto',
+    'Banco de la Nación':'Cuenta de detracciones inexistente para este RUC'
+  }
+};
+
+function openDpDetalle(btn){
+  const row  = btn.closest('tr');
+  const tds  = row.querySelectorAll('td');
+  // Cols: 0=ID Lote|1=Período|2=RUC|3=Store|4=Tipo|5=Comp|6=Monto|7=EF|8=Canal|9=Estado|10=FProg|11=FEfec
+  const lote    = tds[0]?.textContent.trim()||'—';
+  const periodo = tds[1]?.textContent.trim()||'—';
+  const ruc     = tds[2]?.textContent.trim()||'—';
+  const store   = tds[3]?.textContent.trim()||'—';
+  const tipo    = tds[4]?.textContent.trim()||'—';
+  const comp    = tds[5]?.textContent.trim()||'—';
+  const monto   = tds[6]?.textContent.trim()||'—';
+  const ef      = tds[7]?.textContent.trim()||'—';
+  const canal   = tds[8]?.textContent.trim()||'—';
+  const badge   = tds[9]?.querySelector('[data-state]');
+  const estado  = badge?.dataset.state||'';
+  const fprog   = tds[10]?.querySelector('span')?.textContent.trim() || tds[10]?.textContent.trim()||'—';
+  const fefec   = tds[11]?.textContent.trim()||'—';
+
+  // Tramo derivado del canal
+  const tramo = canal==='Detracción' ? 'DETRACCION' : 'NETO';
+
+  // Header
+  document.getElementById('dpdw-lote').textContent = lote;
+  document.getElementById('dpdw-sub').textContent  = `${periodo} \u00b7 ${tipo} \u00b7 ${tramo}`;
+  const stWrap = document.getElementById('dpdw-estado-wrap');
+  stWrap.innerHTML = '';
+  if(badge) stWrap.appendChild(badge.cloneNode(true));
+
+  // Identificación
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('dpdw-lote2',  lote);
+  set('dpdw-periodo',periodo);
+  set('dpdw-tipo',   tipo);
+  set('dpdw-comp',   comp);
+  set('dpdw-ruc',    ruc);
+  set('dpdw-store',  store);
+  set('dpdw-tramo',  tramo);
+
+  // Monto y canal
+  set('dpdw-monto', monto);
+  set('dpdw-ef',    ef);
+  set('dpdw-canal', canal);
+
+  // Glosa (solo API TAM)
+  const isApi = canal==='API TAM';
+  const glosa = isApi ? `Pago autofacturaci\u00f3n ${periodo} \u00b7 Store ${store}` : '';
+  document.getElementById('dpdw-glosa-lbl')?.classList.toggle('d-none', !isApi);
+  document.getElementById('dpdw-glosa')?.classList.toggle('d-none', !isApi);
+  if(isApi) set('dpdw-glosa', glosa);
+
+  // Cuenta bancaria
+  const _ACC = {
+    '20481112223':{type:'Cuenta Corriente', num:'194-2837465-0-88',  cci:'00219402837465088'},
+    '20481230000':{type:'Cuenta Corriente', num:'194-9988776-0-55',  cci:'00219499887760551'},
+    '20484445556':{type:'Cuenta Corriente', num:'0011-0234-56789012',cci:'00011023456789012'},
+    '10987654321':{type:'Cuenta de Ahorros',num:'780-7618819-00',    cci:'00878007618819001'},
+    '20112233445':{type:'Cuenta Corriente', num:'194-5544332-0-99',  cci:'00219455443320991'},
+    '20998877665':{type:'Cuenta Corriente', num:'0011-0234-98765432',cci:'00011023498765432'},
+    '20300400500':{type:'Cuenta Corriente', num:'194-1122334-0-66',  cci:'00219411223340668'},
+    '20111222333':{type:'Cuenta de Ahorros',num:'780-9988776-00',    cci:'00878099887760011'},
+    '20444555666':{type:'Cuenta Corriente', num:'194-5566778-0-99',  cci:'00219455667780991'}
+  };
+  const acc = ef==='Banco de la Naci\u00f3n'
+    ? {type:'Cuenta Detracciones', num:'00-'+ruc.slice(-6), cci:'\u2014'}
+    : (_ACC[ruc]||{type:'Cuenta Corriente', num:'\u2014', cci:'\u2014'});
+  set('dpdw-acc-type', acc.type);
+  set('dpdw-acc-num',  acc.num);
+  set('dpdw-cci',      acc.cci);
+
+  // Programación
+  set('dpdw-fprog', fprog||'\u2014');
+  set('dpdw-fefec', fefec||'\u2014');
+
+  // Observación (P-04 / P-05)
+  const obsSection = document.getElementById('dpdw-obs-section');
+  const obsText    = document.getElementById('dpdw-obs-txt');
+  if(obsSection){
+    const hasObs = estado==='P-04'||estado==='P-05';
+    obsSection.classList.toggle('d-none', !hasObs);
+    if(hasObs && obsText){
+      obsText.textContent = (_DP_OBS[estado]&&_DP_OBS[estado][ef]) || 'Observación registrada por la entidad financiera.';
+    }
+  }
+
+  // Constancia (P-06) - removed
+
+  // PDF button: visible solo para P-06
+  const pdfBtn = document.getElementById('dpdw-dl-pdf');
+  if(pdfBtn) pdfBtn.classList.toggle('d-none', estado !== 'P-06');
+
+  // Botón de acción contextual
+  const actBtn = document.getElementById('dpdw-action-btn');
+  if(actBtn){
+    const actions = {
+      'P-01':'Enviar a Telebanking','P-02':'Ver archivo TXT',
+      'P-03':'Ver respuesta API',   'P-04':'Reintentar pago',
+      'P-05':'Corregir y reenviar'
+    };
+    if(actions[estado]){ actBtn.textContent=actions[estado]; actBtn.style.display=''; }
+    else actBtn.style.display='none';
+  }
+
+  document.getElementById('dp-drw-overlay').classList.add('open');
+  document.getElementById('dp-drw').classList.add('open');
+}
+
+function closeDpDrawer(){
+  document.getElementById('dp-drw-overlay').classList.remove('open');
+  document.getElementById('dp-drw').classList.remove('open');
+}
+
 function initDispPagosComponents(){
   initDispPagosPagination();
   initDispPagosFilters();
@@ -2979,7 +3125,7 @@ function guardarProgramacion(){
   }
   const lotId = document.getElementById('ppp-drw-id')?.textContent || '-';
   const esReprog = document.querySelector('#ppp-drw .drw-btn-action')?.textContent?.trim().includes('Reprogramar');
-  document.getElementById('prog-confirm-title').textContent = esReprog ? 'Reprogramar fecha de pago?' : 'Programar fecha de pago?';
+  document.getElementById('prog-confirm-title').textContent = '\u00bfDeseas guardar los cambios?';
   document.getElementById('prog-confirm-lot').textContent   = lotId;
   document.getElementById('prog-confirm-fecha').textContent = fechaDisp || fechaISO;
   closePppDrawer();
