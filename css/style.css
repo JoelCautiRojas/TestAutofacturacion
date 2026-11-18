@@ -1,4 +1,4 @@
-/* ══════════════════════════════════════════════════════
+﻿/* ══════════════════════════════════════════════════════
    SDCM — style.css  |  Mockup
    ══════════════════════════════════════════════════════ */
 
@@ -171,6 +171,19 @@ tr:nth-child(even){background:#fafbff;}
 #comp-table tbody tr.row-stripe td{background:#fafbff;}
 #comp-table tbody tr.row-stripe:hover td{background:#f7f8ff;}
 #comp-table tbody tr.row-filtered{display:none !important;}
+/* ── Auditoría ───────────────────────────────────────────── */
+#aud-table th:nth-child(1),#aud-table td:nth-child(1){text-align:left;white-space:nowrap;}
+#aud-table th:nth-child(2),#aud-table td:nth-child(2){text-align:left;}
+#aud-table th:nth-child(5),#aud-table td:nth-child(5){text-align:left;}
+#aud-table th:nth-child(7),#aud-table td:nth-child(7){text-align:left;}
+#aud-table th:nth-child(8),#aud-table td:nth-child(8){text-align:left;}
+#aud-table th:nth-child(10),#aud-table td:nth-child(10){text-align:left;}
+#aud-table tbody tr:nth-child(even){background:inherit;}
+#aud-table tbody tr.row-stripe td{background:#fafbff;}
+#aud-table tbody tr.row-stripe:hover td{background:#f7f8ff;}
+#aud-table tbody tr:hover td{background:#f7f8ff;}
+.aud-detalle{font-size:12.5px;color:var(--text);max-width:260px;}
+.aud-state{font-size:12px;color:#475569;white-space:nowrap;}
 #band-table tbody tr.row-filtered{display:none !important;}
 #bpag-table tbody tr.row-filtered{display:none !important;}
 #ppp-table tbody tr.row-filtered{display:none !important;}
@@ -277,6 +290,7 @@ tr:nth-child(even){background:#fafbff;}
 .lotes-buscar-btn{align-self:stretch;padding:0 32px;font-size:14px;border-radius:8px;}
 .lotes-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--border);flex-wrap:wrap;gap:8px;}
 .lotes-footer .pager{margin-top:0;border-top:none;}
+.pager-row{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid var(--border);gap:12px;}
 .act-btns{display:flex;gap:8px;justify-content:center;}
 
 /* ── 18. TABLE PROGRESS BARS ─────────────────────────── */
@@ -854,7 +868,7 @@ tr:nth-child(even){background:#fafbff;}
 .cd-footer{padding:20px 0;display:flex;justify-content:center;border-top:1px solid var(--border);margin-top:24px;}
 .cd-anular-btn{color:#dc2626 !important;border:1px solid #dc2626 !important; background: white;}
 .cd-anular-btn:hover{background:#fef2f2 !important;}
-.cd-reprocesar-btn{background:var(--kas);color:white !important;min-width:220px;max-width:280px;font-weight:500;font-family:'Poppins Medium';}
+.cd-reprocesar-btn{background:var(--kas);color:white !important;flex:1;min-width:0;max-width:280px;font-weight:500;font-family:'Poppins Medium';}
 .cd-reprocesar-btn:hover{background:var(--kas-d);filter:brightness(0.93);}
 #comp-drw-footer .cd-anular-btn,
 #comp-drw-footer .cd-reprocesar-btn,

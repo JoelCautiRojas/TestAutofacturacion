@@ -3967,26 +3967,102 @@
 </section>
 
 <section class="view" id="auditoria">
-  <div class="filters">
-    <div class="fld"><label>Usuario</label><input placeholder="jcauti"></div>
-    <div class="fld"><label>Entidad</label><select><option>Todas</option><option>Lote</option><option>Comprobante</option><option>Pago</option><option>Ubigeo</option><option>Agente</option></select></div>
-    <div class="fld"><label>Acción</label><select><option>Todas</option><option>Crear</option><option>Editar</option><option>Anular</option><option>Aprobar</option><option>Dispersar</option></select></div>
-    <div class="fld"><label>Período</label><input type="month" value="2026-08"></div>
-    <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
-    <div class="fld"><label>&nbsp;</label><button class="btn ghost">Exportar</button></div>
+  <div class="pg-header">
+    <div>
+      <h2 class="pg-title">Auditoría</h2>
+      <p class="pg-sub">Bitácora de eventos y cambios del sistema.</p>
+    </div>
   </div>
   <div class="panel">
-    <div class="ph">Bitácora de auditoría <span class="cnt">registro de cambios del sistema</span></div>
-    <div class="pb">
-      <table>
-        <tr><th>Fecha/hora</th><th>Usuario</th><th>Entidad</th><th>Acción</th><th>Detalle</th><th>IP</th></tr>
-        <tr><td>2026-08-31 09:14:22</td><td>Joel Cauti</td><td><span class="badge b-kas">Lote</span></td><td><span class="badge b-ok">Crear</span></td><td>Carga_2026-08.xlsx · 1,482 registros</td><td>10.20.1.45</td></tr>
-        <tr><td>2026-08-31 11:02:10</td><td>María Torres</td><td><span class="badge b-kas">Comprobante</span></td><td><span class="badge b-amber">Editar</span></td><td>F001-0244 · corrección RUC receptor</td><td>10.20.1.52</td></tr>
-        <tr><td>2026-08-30 16:40:55</td><td>Joel Cauti</td><td><span class="badge b-kas">Comprobante</span></td><td><span class="badge b-warn">Anular</span></td><td>F001-0198 · NC FC01-045 · motivo: error en monto</td><td>10.20.1.45</td></tr>
-        <tr><td>2026-08-30 14:31:08</td><td>Red Comercial</td><td><span class="badge b-kas">Pago</span></td><td><span class="badge b-ok">Aprobar</span></td><td>852 comprobantes aprobados para pago</td><td>10.20.1.77</td></tr>
-        <tr><td>2026-08-29 10:05:33</td><td>Tesorería</td><td><span class="badge b-kas">Pago</span></td><td><span class="badge b-blue">Dispersar</span></td><td>Lote BCP · 312 registros · TXT generado</td><td>10.20.1.90</td></tr>
+    <div class="ph ph-bare">Registro de eventos</div>
+    <div class="lotes-search-panel">
+      <div class="pb">
+        <div class="lotes-filters">
+          <div class="float-fld lotes-search-fld">
+            <span class="float-label">Usuario</span>
+            <input type="text" id="aud-usuario" placeholder="Nombre de usuario">
+          </div>
+          <div class="float-fld float-fld-select">
+            <span class="float-label">Entidad</span>
+            <select id="aud-entidad">
+              <option value="">Todas las entidades</option>
+              <option>Lote</option>
+              <option>Comprobante</option>
+              <option>Pago</option>
+              <option>Ubigeo</option>
+              <option>Agente</option>
+            </select>
+          </div>
+          <div class="float-fld float-fld-select">
+            <span class="float-label">Acción</span>
+            <select id="aud-accion">
+              <option value="">Todas las acciones</option>
+              <option>Crear</option>
+              <option>Editar</option>
+              <option>Anular</option>
+              <option>Aprobar</option>
+              <option>Dispersar</option>
+            </select>
+          </div>
+          <div class="float-fld float-fld-select">
+            <span class="float-label">Rol</span>
+            <select id="aud-rol">
+              <option value="">Todos los roles</option>
+              <option>USUARIO_INTERNO</option>
+              <option>ADMINISTRADOR</option>
+              <option>USUARIO_EXTERNO</option>
+              <option>SISTEMA</option>
+            </select>
+          </div>
+          <button class="btn lotes-buscar-btn" id="aud-buscar-btn">Buscar</button>
+          <button class="btn ghost lotes-buscar-btn" id="aud-limpiar-btn">Limpiar</button>
+          <button class="btn ghost lotes-buscar-btn">Exportar</button>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-x">
+      <table id="aud-table">
+        <thead>
+          <tr>
+            <th>Fecha / Hora</th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Entidad</th>
+            <th>ID Registro</th>
+            <th>Acción</th>
+            <th>Antes</th>
+            <th>Después</th>
+            <th>IP</th>
+            <th>Metadata</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="mono-sm">2026-08-31 09:14:22</td><td>Joel Cauti</td><td><span class="badge-2 b-muted">USUARIO_INTERNO</span></td><td><span class="badge-2 b-kas">Lote</span></td><td class="mono-sm">LOT-000070</td><td><span class="badge-2 b-p06">Crear</span></td><td class="aud-state">—</td><td class="aud-state">L-01 · Lote Creado</td><td class="mono-sm">10.20.1.45</td><td class="aud-detalle">Carga_2026-08.xlsx · 1,482 registros cargados</td></tr>
+          <tr class="row-stripe"><td class="mono-sm">2026-08-31 11:02:10</td><td>María Torres</td><td><span class="badge-2 b-blue">ADMINISTRADOR</span></td><td><span class="badge-2 b-kas">Comprobante</span></td><td class="mono-sm">F001-00000244</td><td><span class="badge-2 b-blue">Editar</span></td><td class="aud-state">RUC: 20100199537</td><td class="aud-state">RUC: 20481230000</td><td class="mono-sm">10.20.1.52</td><td class="aud-detalle">F001-0244 · corrección RUC receptor</td></tr>
+          <tr><td class="mono-sm">2026-08-30 16:40:55</td><td>Joel Cauti</td><td><span class="badge-2 b-muted">USUARIO_INTERNO</span></td><td><span class="badge-2 b-kas">Comprobante</span></td><td class="mono-sm">F001-00000198</td><td><span class="badge-2 b-p04">Anular</span></td><td class="aud-state">C-11 · Sunat Aprobado</td><td class="aud-state">C-14 · Anulación en proceso</td><td class="mono-sm">10.20.1.45</td><td class="aud-detalle">NC FC01-045 · motivo: error en monto</td></tr>
+          <tr class="row-stripe"><td class="mono-sm">2026-08-30 14:31:08</td><td>Red Comercial</td><td><span class="badge-2 b-p01">USUARIO_EXTERNO</span></td><td><span class="badge-2 b-kas">Pago</span></td><td class="mono-sm">LOT-000073</td><td><span class="badge-2 b-p01">Aprobar</span></td><td class="aud-state">Pendiente aprobación</td><td class="aud-state">852 comp. aprobados</td><td class="mono-sm">10.20.1.77</td><td class="aud-detalle">852 comprobantes aprobados para dispersión</td></tr>
+          <tr><td class="mono-sm">2026-08-29 10:05:33</td><td>Tesorería</td><td><span class="badge-2 b-muted">USUARIO_INTERNO</span></td><td><span class="badge-2 b-kas">Pago</span></td><td class="mono-sm">LOT-000071</td><td><span class="badge-2 b-muted">Dispersar</span></td><td class="aud-state">TXT pendiente</td><td class="aud-state">TXT generado</td><td class="mono-sm">10.20.1.90</td><td class="aud-detalle">Lote BCP · 312 registros · TXT generado</td></tr>
+          <tr class="row-stripe"><td class="mono-sm">2026-08-29 08:50:17</td><td>Joel Cauti</td><td><span class="badge-2 b-muted">USUARIO_INTERNO</span></td><td><span class="badge-2 b-kas">Lote</span></td><td class="mono-sm">LOT-000071</td><td><span class="badge-2 b-blue">Editar</span></td><td class="aud-state">L-02 · En Clasificación</td><td class="aud-state">L-02 · 14 registros reclasificados</td><td class="mono-sm">10.20.1.45</td><td class="aud-detalle">LOT-000071 · reclasificación de 14 registros</td></tr>
+          <tr><td class="mono-sm">2026-08-28 15:22:04</td><td>SISTEMA</td><td><span class="badge-2 b-kas">SISTEMA</span></td><td><span class="badge-2 b-kas">Agente</span></td><td class="mono-sm">20567890123</td><td><span class="badge-2 b-p06">Crear</span></td><td class="aud-state">—</td><td class="aud-state">selfBilling: true</td><td class="mono-sm">10.20.1.10</td><td class="aud-detalle">RUC 20567890123 · alta de nuevo agente en padrón</td></tr>
+          <tr class="row-stripe"><td class="mono-sm">2026-08-28 12:11:39</td><td>María Torres</td><td><span class="badge-2 b-blue">ADMINISTRADOR</span></td><td><span class="badge-2 b-kas">Comprobante</span></td><td class="mono-sm">B020-00001078</td><td><span class="badge-2 b-p04">Anular</span></td><td class="aud-state">C-11 · Sunat Aprobado</td><td class="aud-state">C-14 · Anulación en proceso</td><td class="mono-sm">10.20.1.52</td><td class="aud-detalle">B020-00001078 · motivo: duplicado con F001-0198</td></tr>
+          <tr><td class="mono-sm">2026-08-27 09:03:55</td><td>Joel Cauti</td><td><span class="badge-2 b-muted">USUARIO_INTERNO</span></td><td><span class="badge-2 b-kas">Lote</span></td><td class="mono-sm">LOT-000067</td><td><span class="badge-2 b-p06">Crear</span></td><td class="aud-state">—</td><td class="aud-state">L-01 · Lote Creado</td><td class="mono-sm">10.20.1.45</td><td class="aud-detalle">Carga_2026-07.xlsx · 980 registros cargados</td></tr>
+          <tr class="row-stripe"><td class="mono-sm">2026-08-26 17:45:02</td><td>Tesorería</td><td><span class="badge-2 b-muted">USUARIO_INTERNO</span></td><td><span class="badge-2 b-kas">Pago</span></td><td class="mono-sm">LOT-000068</td><td><span class="badge-2 b-muted">Dispersar</span></td><td class="aud-state">TXT pendiente</td><td class="aud-state">TXT generado</td><td class="mono-sm">10.20.1.90</td><td class="aud-detalle">Lote BBVA · 215 registros · TXT generado</td></tr>
+        </tbody>
       </table>
-      <div class="pager"><span class="pager-info">1–5 de 2,841 eventos</span><div class="pager-ctrls"><button>«</button><button class="active">1</button><button>2</button><button>3</button><button>»</button></div></div>
+    </div>
+    <div class="lotes-footer">
+      <div class="float-fld float-fld-select">
+        <span class="float-label">Items</span>
+        <select id="aud-page-size">
+          <option value="10" selected>10 por hoja</option>
+          <option value="25">25 por hoja</option>
+          <option value="50">50 por hoja</option>
+        </select>
+      </div>
+      <span class="pager-info" id="aud-pager-info"></span>
+      <div class="pager pager-inline">
+        <div class="pager-ctrls" id="aud-pager-ctrls"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -4643,11 +4719,7 @@
 
     </div>
   </div>
-  <div class="drawer-footer" id="comp-drw-footer">
-    <button class="btn cd-reprocesar-btn d-none" id="comp-drw-reprocesar"><i class="icon-refresh-cw"></i> <span id="comp-drw-reprocesar-txt">Reprocesar</span></button>
-    <button class="btn cd-reprocesar-btn d-none" id="comp-drw-guardar" onclick="guardarCambiosBandeja()"><i class="icon-save"></i> Guardar cambios</button>
-    <button class="btn cd-anular-btn btn-footer-drawer d-none" id="comp-drw-anular" onclick="openAnulacionModal()"><i class="icon-x-circle"></i> Iniciar anulación</button>
-  </div>
+
 </div>
 
 <!-- ===== DRAWER: DETALLE NOTA DE CRÉDITO ===== -->
@@ -4753,12 +4825,7 @@
 
     </div>
   </div>
-  <div class="drawer-footer d-none" id="anul-drw-footer">
-    <button class="btn cd-reprocesar-btn d-none" id="anul-drw-reprocesar">
-      <i class="icon-refresh-cw"></i> <span id="anul-drw-reprocesar-txt">Reprocesar</span>
-    </button>
-    <button class="btn cd-reprocesar-btn d-none" id="anul-drw-guardar" onclick="showToast('Cambios guardados correctamente')"><i class="icon-save"></i> Guardar cambios</button>
-  </div>
+
 </div>
 
 <!-- ===== MODAL: CONFIRMAR ANULACIÓN ===== -->
@@ -4996,17 +5063,17 @@
     </div>
     <div class="drw-section">
       <h4 class="drw-section-title">Cuenta bancaria</h4>
-      <div class="drw-info-grid">
-        <span class="drw-label">Tipo de cuenta</span>  <span class="drw-value" id="dpdw-acc-type">—</span>
-        <span class="drw-label">N° Cuenta</span>       <span class="drw-value" id="dpdw-acc-num">—</span>
-        <span class="drw-label">CCI</span>             <span class="drw-value" id="dpdw-cci">—</span>
+      <div class="cdtc-grid">
+        <div class="cdtc-card"><div class="cdtc-label">Tipo de cuenta</div><div class="cdtc-value" id="dpdw-acc-type">—</div></div>
+        <div class="cdtc-card"><div class="cdtc-label">N° Cuenta</div><div class="cdtc-value" id="dpdw-acc-num">—</div></div>
+        <div class="cdtc-card"><div class="cdtc-label">CCI</div><div class="cdtc-value" id="dpdw-cci">—</div></div>
       </div>
     </div>
     <div class="drw-section">
       <h4 class="drw-section-title">Programación</h4>
-      <div class="drw-info-grid">
-        <span class="drw-label">Fecha programada</span>  <span class="drw-value" id="dpdw-fprog">—</span>
-        <span class="drw-label">Fecha efectiva</span>    <span class="drw-value" id="dpdw-fefec">—</span>
+      <div class="cdtc-grid">
+        <div class="cdtc-card"><div class="cdtc-label">Fecha programada</div><div class="cdtc-value" id="dpdw-fprog">—</div></div>
+        <div class="cdtc-card"><div class="cdtc-label">Fecha efectiva</div><div class="cdtc-value" id="dpdw-fefec">—</div></div>
       </div>
     </div>
     <div class="drw-section d-none" id="dpdw-obs-section">
@@ -5017,7 +5084,8 @@
     </div>
   </div>
   <div class="drawer-footer">
-    <button class="btn drw-btn-action" id="dpdw-action-btn">Reprogramar</button>
+    <button class="btn cd-reprocesar-btn d-none" id="dpdw-guardar" onclick="guardarCambiosPago()"><i class="icon-save"></i> Guardar cambios</button>
+    <button class="btn cd-reprocesar-btn d-none" id="dpdw-reprocesar" onclick="reprocesarPago()"><i class="icon-refresh-cw"></i> Reprocesar</button>
   </div>
 </div>
 <script src="js/script.js"></script>

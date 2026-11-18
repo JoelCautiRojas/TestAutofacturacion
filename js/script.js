@@ -19,6 +19,7 @@ async function navTo(id){
   if(!_sectionInited.has(id)){
     _sectionInited.add(id);
     if(id === 'lotes') initLotesComponents();
+    if(id === 'auditoria') initAuditoriaComponents();
   }
 
   document.querySelectorAll('.sb-nav a').forEach(a=>a.classList.remove('active'));
@@ -1032,6 +1033,14 @@ function initBandejaPagosComponents(){
 
 function openBandejaPagosDetalle(btn){
   openDpDetalle(btn);
+  // Activar modo edición
+  const drw = document.getElementById('dp-drw');
+  if(drw) drw.classList.add('drw-edit-mode');
+  document.querySelectorAll('#dp-drw .cdtc-value').forEach(el => el.setAttribute('contenteditable','true'));
+  document.getElementById('dpdw-fefec')?.removeAttribute('contenteditable');
+  document.getElementById('dpdw-guardar')?.classList.remove('d-none');
+  document.getElementById('dpdw-reprocesar')?.classList.remove('d-none');
+  document.getElementById('dpdw-action-btn')?.classList.add('d-none');
 }
 _sectionInited.add('anulaciones');
 initCustomSelects();   // custom dropdown para todos los .float-fld-select
@@ -2867,7 +2876,7 @@ function initDispPagosFilters(){
   const selPer   = document.getElementById('dp-periodo');
   const btnB     = document.getElementById('dp-buscar-btn');
   const btnL     = document.getElementById('dp-limpiar-btn');
-  // Cols: 0=ID Lote|1=Período|2=RUC|3=Store|4=Tipo|5=Comp|6=Monto|7=EF|8=Canal|9=Estado|10=FProg|11=FEfec|12=Acc
+  // Cols: 0=ID Pago|1=ID Lote|2=Período|3=RUC|4=Store|5=Tipo|6=Comp|7=Monto|8=EF|9=Canal|10=Estado|11=FProg|12=FEfec|13=Acc
   function apply(){
     const txt = inp    ? inp.value.trim().toLowerCase() : '';
     const ent = selEnt ? selEnt.value : '';
@@ -2876,12 +2885,12 @@ function initDispPagosFilters(){
     const per = selPer ? selPer.value : '';
     document.querySelectorAll('#dp-table tbody tr').forEach(row=>{
       const tds   = row.querySelectorAll('td');
-      if(tds.length < 10) return;
-      const lote  = tds[0].textContent.toLowerCase();
-      const ruc   = tds[2].textContent.toLowerCase();
-      const store = tds[3].textContent.toLowerCase();
-      const comp  = tds[5].textContent.toLowerCase();
-      const canal = tds[8].textContent.trim();
+      if(tds.length < 12) return;
+      const lote  = tds[1].textContent.toLowerCase();
+      const ruc   = tds[3].textContent.toLowerCase();
+      const store = tds[4].textContent.toLowerCase();
+      const comp  = tds[6].textContent.toLowerCase();
+      const canal = tds[9].textContent.trim();
       const rEnt  = row.dataset.canal  || '';
       const rEst  = row.dataset.estado || '';
       const rPer  = row.dataset.periodo|| '';
@@ -2936,20 +2945,20 @@ const _DP_OBS = {
 function openDpDetalle(btn){
   const row  = btn.closest('tr');
   const tds  = row.querySelectorAll('td');
-  // Cols: 0=ID Lote|1=Período|2=RUC|3=Store|4=Tipo|5=Comp|6=Monto|7=EF|8=Canal|9=Estado|10=FProg|11=FEfec
-  const lote    = tds[0]?.textContent.trim()||'—';
-  const periodo = tds[1]?.textContent.trim()||'—';
-  const ruc     = tds[2]?.textContent.trim()||'—';
-  const store   = tds[3]?.textContent.trim()||'—';
-  const tipo    = tds[4]?.textContent.trim()||'—';
-  const comp    = tds[5]?.textContent.trim()||'—';
-  const monto   = tds[6]?.textContent.trim()||'—';
-  const ef      = tds[7]?.textContent.trim()||'—';
-  const canal   = tds[8]?.textContent.trim()||'—';
-  const badge   = tds[9]?.querySelector('[data-state]');
+  // Cols: 0=ID Pago|1=ID Lote|2=Período|3=RUC|4=Store|5=Tipo|6=Comp|7=Monto|8=EF|9=Canal|10=Estado|11=FProg|12=FEfec|13=Acc
+  const lote    = tds[1]?.textContent.trim()||'—';
+  const periodo = tds[2]?.textContent.trim()||'—';
+  const ruc     = tds[3]?.textContent.trim()||'—';
+  const store   = tds[4]?.textContent.trim()||'—';
+  const tipo    = tds[5]?.textContent.trim()||'—';
+  const comp    = tds[6]?.textContent.trim()||'—';
+  const monto   = tds[7]?.textContent.trim()||'—';
+  const ef      = tds[8]?.textContent.trim()||'—';
+  const canal   = tds[9]?.textContent.trim()||'—';
+  const badge   = tds[10]?.querySelector('[data-state]');
   const estado  = badge?.dataset.state||'';
-  const fprog   = tds[10]?.querySelector('span')?.textContent.trim() || tds[10]?.textContent.trim()||'—';
-  const fefec   = tds[11]?.textContent.trim()||'—';
+  const fprog   = tds[11]?.textContent.trim()||'—';
+  const fefec   = tds[12]?.textContent.trim()||'—';
 
   // Tramo derivado del canal
   const tramo = canal==='Detracción' ? 'DETRACCION' : 'NETO';
@@ -2990,6 +2999,7 @@ function openDpDetalle(btn){
     '20484445556':{type:'Cuenta Corriente', num:'0011-0234-56789012',cci:'00011023456789012'},
     '10987654321':{type:'Cuenta de Ahorros',num:'780-7618819-00',    cci:'00878007618819001'},
     '20112233445':{type:'Cuenta Corriente', num:'194-5544332-0-99',  cci:'00219455443320991'},
+    '20567890123':{type:'Cuenta Corriente', num:'194-3345678-0-11',  cci:'00219433456780119'},
     '20998877665':{type:'Cuenta Corriente', num:'0011-0234-98765432',cci:'00011023498765432'},
     '20300400500':{type:'Cuenta Corriente', num:'194-1122334-0-66',  cci:'00219411223340668'},
     '20111222333':{type:'Cuenta de Ahorros',num:'780-9988776-00',    cci:'00878099887760011'},
@@ -3004,7 +3014,7 @@ function openDpDetalle(btn){
 
   // Programación
   set('dpdw-fprog', fprog||'\u2014');
-  set('dpdw-fefec', fefec||'\u2014');
+  set('dpdw-fefec', (estado==='P-04'||estado==='P-05') ? '—' : fefec||'—');
 
   // Observación (P-04 / P-05)
   const obsSection = document.getElementById('dpdw-obs-section');
@@ -3040,8 +3050,22 @@ function openDpDetalle(btn){
 }
 
 function closeDpDrawer(){
+  const drw = document.getElementById('dp-drw');
+  if(drw) drw.classList.remove('drw-edit-mode');
+  document.querySelectorAll('#dp-drw .cdtc-value').forEach(el => el.removeAttribute('contenteditable'));
+  document.getElementById('dpdw-guardar')?.classList.add('d-none');
+  document.getElementById('dpdw-reprocesar')?.classList.add('d-none');
+  document.getElementById('dpdw-action-btn')?.classList.remove('d-none');
   document.getElementById('dp-drw-overlay').classList.remove('open');
   document.getElementById('dp-drw').classList.remove('open');
+}
+function guardarCambiosPago(){
+  showToast('Cambios guardados correctamente');
+  closeDpDrawer();
+}
+function reprocesarPago(){
+  showToast('Pago enviado a reprocesar');
+  closeDpDrawer();
 }
 
 function initDispPagosComponents(){
@@ -3253,3 +3277,94 @@ function initKnDatePicker(panelId, displayInputId, hiddenInputId){
   panel.addEventListener('click', e=>e.stopPropagation());
 }
 
+
+// ── Auditoría ────────────────────────────────────────────
+function initAuditoriaPagination(){
+  if(!document.getElementById('aud-table')) return;
+  let page=1, size=10;
+  function getRows(){ return Array.from(document.querySelectorAll('#aud-table tbody tr:not(.row-filtered)')); }
+  function render(){
+    const rows=getRows(), total=rows.length;
+    const pages=Math.max(1,Math.ceil(total/size));
+    page=Math.max(1,Math.min(page,pages));
+    const from=(page-1)*size, to=Math.min(from+size,total);
+    document.querySelectorAll('#aud-table tbody tr').forEach(r=>{ r.style.display='none'; });
+    rows.forEach((r,i)=>{ r.style.display=(i>=from&&i<to)?'':'none'; r.classList.toggle('row-stripe',i>=from&&i<to&&(i-from)%2!==0); });
+    const info=document.getElementById('aud-pager-info');
+    if(info) info.textContent=total?`${from+1}\u2013${to} de ${total} eventos`:'0 eventos';
+    const ctrls=document.getElementById('aud-pager-ctrls');
+    if(!ctrls) return;
+    let h=`<button onclick="audPage(${page-1})"${page===1?' disabled':''}>&#8249;</button>`;
+    for(let p=1;p<=pages;p++) h+=`<button class="${p===page?'active':''}" onclick="audPage(${p})">${p}</button>`;
+    h+=`<button onclick="audPage(${page+1})"${page===pages?' disabled':''}>&#8250;</button>`;
+    ctrls.innerHTML=h;
+  }
+  window.audPage=p=>{ const rows=Array.from(document.querySelectorAll('#aud-table tbody tr:not(.row-filtered)')); const pages=Math.max(1,Math.ceil(rows.length/size)); if(p<1||p>pages) return; page=p; render(); };
+  const sel=document.getElementById('aud-page-size');
+  if(sel){ size=parseInt(sel.value)||10; sel.addEventListener('change',function(){ size=parseInt(this.value)||10; page=1; render(); }); }
+  render(); window.audRender=render;
+}
+function initAuditoriaFilters(){
+  if(!document.getElementById('aud-table')) return;
+  const inpUsr=document.getElementById('aud-usuario');
+  const btnB  =document.getElementById('aud-buscar-btn');
+  const btnL  =document.getElementById('aud-limpiar-btn');
+
+  // Lee el valor actual de un custom select por su id de <select>
+  function csGet(id){
+    const wrap=document.querySelector('.float-fld-select[data-cs]');
+    // Busca el wrapper que contiene el select con ese id
+    const sel=document.getElementById(id);
+    if(!sel) return '';
+    const w=sel.closest('[data-cs]');
+    if(w){
+      const txt=w.querySelector('.cs-value')?.textContent?.trim()||'';
+      if(txt.startsWith('Todas')||txt.startsWith('Todos')) return '';
+      return txt;
+    }
+    return sel.value||'';
+  }
+
+  // Cols: 0=Fecha/Hora|1=Usuario|2=Rol|3=Entidad|4=ID Registro|5=Accion|6=Antes|7=Despues|8=IP|9=Metadata
+  function apply(){
+    const usr=inpUsr?inpUsr.value.trim().toLowerCase():'';
+    const ent=csGet('aud-entidad');
+    const acc=csGet('aud-accion');
+    const rol=csGet('aud-rol');
+    document.querySelectorAll('#aud-table tbody tr').forEach(row=>{
+      const tds=row.querySelectorAll('td');
+      if(tds.length<10){ row.classList.remove('row-filtered'); return; }
+      const usuario=tds[1].textContent.trim().toLowerCase();
+      const rolVal =tds[2].textContent.trim();
+      const entVal =tds[3].textContent.trim();
+      const accVal =tds[5].textContent.trim();
+      let m=true;
+      if(usr && !usuario.includes(usr))  m=false;
+      if(ent && entVal!==ent)             m=false;
+      if(acc && accVal!==acc)             m=false;
+      if(rol && rolVal!==rol)             m=false;
+      row.classList.toggle('row-filtered',!m);
+    });
+    if(window.audRender) window.audRender();
+  }
+
+  if(btnB) btnB.addEventListener('click',apply);
+  if(btnL) btnL.addEventListener('click',()=>{
+    if(inpUsr) inpUsr.value='';
+    // Resetear custom selects visualmente
+    ['aud-entidad','aud-accion','aud-rol'].forEach(id=>{
+      const sel=document.getElementById(id);
+      if(!sel) return;
+      sel.selectedIndex=0;
+      sel.dispatchEvent(new Event('change'));
+      const w=sel.closest('[data-cs]');
+      if(w){ const v=w.querySelector('.cs-value'); if(v) v.textContent=sel.options[0]?.text||''; }
+    });
+    document.querySelectorAll('#aud-table tbody tr').forEach(r=>r.classList.remove('row-filtered'));
+    if(window.audRender) window.audRender();
+  });
+}
+function initAuditoriaComponents(){
+  initAuditoriaPagination();
+  initAuditoriaFilters();
+}
