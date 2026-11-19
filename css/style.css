@@ -86,7 +86,7 @@ body{font-family:'Poppins Regular',sans-serif;background:var(--kas-ll);color:var
 
 /* ── 5. TABS ──────────────────────────────────────────── */
 .tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:16px;}
-.tabs button{padding:8px 16px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-size:12.5px;color:var(--muted);transition:color .15s;}
+.tabs button{padding:8px 16px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-size:12.5px;color:var(--muted);transition:color .15s;font-family:'Poppins Regular',sans-serif;}
 .tabs button.active{color:var(--kas);border-bottom-color:var(--kas);font-weight:500;font-family:'Poppins Medium';}
 .tab-pane{display:none;}
 .tab-pane.active{display:block;}
@@ -171,7 +171,12 @@ tr:nth-child(even){background:#fafbff;}
 #comp-table tbody tr.row-stripe td{background:#fafbff;}
 #comp-table tbody tr.row-stripe:hover td{background:#f7f8ff;}
 #comp-table tbody tr.row-filtered{display:none !important;}
-/* ── Auditoría ───────────────────────────────────────────── */
+/* ── Mantenimiento drawer ─────────────────────────── */
+.mant-drw-input,.mant-drw-select{width:100%;border:1.5px solid #d1d5db;border-radius:8px;padding:8px 10px;font-size:13px;font-family:'Poppins Regular',sans-serif;color:var(--text);background:#fff;outline:none;box-sizing:border-box;margin-top:4px;}
+.mant-drw-input:focus,.mant-drw-select:focus{border-color:var(--kas);}
+.mant-drw-input[readonly]{background:#f8fafc;color:var(--muted);cursor:default;}
+#mant-drw .drawer-body{padding:20px 0;}
+#mant-drw .cdtc-grid{padding:0 20px;}
 #aud-table th:nth-child(1),#aud-table td:nth-child(1){text-align:left;white-space:nowrap;}
 #aud-table th:nth-child(2),#aud-table td:nth-child(2){text-align:left;}
 #aud-table th:nth-child(5),#aud-table td:nth-child(5){text-align:left;}
@@ -184,6 +189,9 @@ tr:nth-child(even){background:#fafbff;}
 #aud-table tbody tr:hover td{background:#f7f8ff;}
 .aud-detalle{font-size:12.5px;color:var(--text);max-width:260px;}
 .aud-state{font-size:12px;color:#475569;white-space:nowrap;}
+/* Rol (col 3) y Acción (col 6) sin color de fondo */
+#aud-table td:nth-child(3) .badge-2,
+#aud-table td:nth-child(6) .badge-2{background:transparent !important;color:var(--text) !important;padding:0 !important;border-radius:0 !important;font-size:12.5px;}
 #band-table tbody tr.row-filtered{display:none !important;}
 #bpag-table tbody tr.row-filtered{display:none !important;}
 #ppp-table tbody tr.row-filtered{display:none !important;}
@@ -1186,7 +1194,7 @@ tr:nth-child(even){background:#fafbff;}
 .ppcd-toggle input{opacity:0;width:0;height:0;}
 .ppcd-toggle-slider{position:absolute;inset:0;background:#d1d5db;border-radius:24px;cursor:pointer;transition:background .2s;}
 .ppcd-toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .2s;}
-.ppcd-toggle input:checked + .ppcd-toggle-slider{background:#d97706;}
+.ppcd-toggle input:checked + .ppcd-toggle-slider{background:var(--kas);}
 .ppcd-toggle input:checked + .ppcd-toggle-slider::before{transform:translateX(20px);}
 .ppcd-toggle-hint{font-size:11.5px;color:var(--muted);margin:0;line-height:1.4;}
 

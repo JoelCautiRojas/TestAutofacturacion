@@ -3915,54 +3915,230 @@
 </section>
 
 <section class="view" id="mantenimiento">
-  <div class="tabs">
-    <button class="active" data-tab="mant-ubigeos">🌎 Ubigeos</button>
-    <button data-tab="mant-agentes">👥 Agentes</button>
+  <div class="pg-header">
+    <div>
+      <h2 class="pg-title">Mantenimiento</h2>
+      <p class="pg-sub">Administración de catálogos del sistema.</p>
+    </div>
   </div>
-  <div class="tab-pane active" id="mant-ubigeos">
-    <div class="btn-row btn-row-mb">
-      <button class="btn">+ Nuevo ubigeo</button>
-      <button class="btn ghost">📥 Importar Excel</button>
-      <button class="btn ghost">📤 Exportar Excel</button>
-    </div>
-    <div class="filters">
-      <div class="fld"><label>Código</label><input placeholder="150101"></div>
-      <div class="fld"><label>Departamento</label><input placeholder="Lima"></div>
-      <div class="fld"><label>Excepción IGV</label><select><option>Todos</option><option>Con excepción</option><option>Sin excepción</option></select></div>
-      <div class="fld"><label>Estado</label><select><option>Todos</option><option>Activo</option><option>Inactivo</option></select></div>
-      <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
-    </div>
-    <div class="panel"><div class="pb">
-      <table>
-        <tr><th>Código</th><th>Departamento</th><th>Provincia</th><th>Distrito</th><th>Excepción IGV</th><th>Estado</th><th></th></tr>
-        <tr><td>150101</td><td>Lima</td><td>Lima</td><td>Lima</td><td><span class="badge b-muted">No</span></td><td><span class="badge b-ok">Activo</span></td><td><button class="btn sm ghost">Editar</button></td></tr>
-        <tr><td>160101</td><td>Loreto</td><td>Maynas</td><td>Iquitos</td><td><span class="badge b-ok">Sí — TaxRate=0</span></td><td><span class="badge b-ok">Activo</span></td><td><button class="btn sm ghost">Editar</button></td></tr>
-        <tr><td>210101</td><td>Puno</td><td>Puno</td><td>Puno</td><td><span class="badge b-muted">No</span></td><td><span class="badge b-muted">Inactivo</span></td><td><button class="btn sm ghost">Activar</button></td></tr>
-      </table>
-      <div class="pager"><span class="pager-info">1–3 de 1,874 ubigeos</span><div class="pager-ctrls"><button>«</button><button class="active">1</button><button>2</button><button>»</button></div></div>
-    </div></div>
+  <div class="tabs mt-16">
+    <button class="active" onclick="mantTab(this,'mant-agentes')">Agentes</button>
+    <button onclick="mantTab(this,'mant-ubigeos')">Ubigeos</button>
+    <button onclick="mantTab(this,'mant-entidades')">Entidades Financieras</button>
   </div>
-  <div class="tab-pane" id="mant-agentes">
-    <div class="btn-row btn-row-mb">
-      <button class="btn">+ Alta en autofacturación</button>
-      <button class="btn ghost">📥 Importar Excel</button>
-      <button class="btn ghost">📤 Exportar Excel</button>
+
+  <!-- ══ AGENTES ══════════════════════════════════════════════ -->
+  <div class="tab-pane active" id="mant-agentes">
+    <div class="panel mt-16">
+      <div class="ph ph-bare">Catálogo de agentes</div>
+      <div class="lotes-search-panel">
+        <div class="pb">
+          <div class="lotes-filters">
+            <div class="float-fld lotes-search-fld">
+              <span class="float-label">RUC</span>
+              <input type="text" id="mant-agt-ruc" placeholder="20481234567">
+            </div>
+            <div class="float-fld lotes-search-fld">
+              <span class="float-label">Razón Social</span>
+              <input type="text" id="mant-agt-nombre" placeholder="Nombre del agente">
+            </div>
+            <div class="float-fld float-fld-select">
+              <span class="float-label">Self-billing</span>
+              <select id="mant-agt-sb">
+                <option value="">Todos</option>
+                <option value="Sí">Sí</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div class="float-fld float-fld-select">
+              <span class="float-label">OSE</span>
+              <select id="mant-agt-ose">
+                <option value="">Todos</option>
+                <option value="BIZLINKS">BIZLINKS</option>
+                <option value="RAMGAST">RAMGAST</option>
+              </select>
+            </div>
+            <div class="float-fld float-fld-select">
+              <span class="float-label">Estado</span>
+              <select id="mant-agt-estado">
+                <option value="">Todos</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
+            </div>
+            <button class="btn lotes-buscar-btn" id="mant-agt-buscar">Buscar</button>
+            <button class="btn ghost lotes-buscar-btn" id="mant-agt-limpiar">Limpiar</button>
+            <button class="btn ghost lotes-buscar-btn" onclick="document.getElementById('mant-upload').click()"><i class="icon-upload"></i> Carga masiva</button>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-x">
+        <table id="mant-agt-table">
+          <thead><tr>
+            <th>RUC</th><th>Razón Social</th><th>Self-billing</th><th>Fecha inicio SB</th><th>Cuenta Detracción</th><th>OSE</th><th>Estado</th><th>Acciones</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="mono">20481230000</td><td>Distribuidora Lima SAC</td><td><span class="badge-2 b-p01">Sí</span></td><td class="mono-sm">2024-01-01</td><td class="mono-sm">00-048-123000</td><td><span class="badge-2 b-kas">BIZLINKS</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'agt')">Editar</button></div></td></tr>
+            <tr class="row-stripe"><td class="mono">20484445556</td><td>Comercial Norte SAC</td><td><span class="badge-2 b-p01">Sí</span></td><td class="mono-sm">2024-03-15</td><td class="mono-sm">00-048-444556</td><td><span class="badge-2 b-kas">BIZLINKS</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'agt')">Editar</button></div></td></tr>
+            <tr><td class="mono">20567890123</td><td>Servicios Centro EIRL</td><td><span class="badge-2 b-p01">Sí</span></td><td class="mono-sm">2024-06-01</td><td class="mono-sm">00-056-789012</td><td><span class="badge-2 b-blue">RAMGAST</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'agt')">Editar</button></div></td></tr>
+            <tr class="row-stripe"><td class="mono">10987654321</td><td>García Rodríguez Juan</td><td><span class="badge-2 b-p01">Sí</span></td><td class="mono-sm">2024-01-15</td><td class="mono-sm">00-109-876543</td><td><span class="badge-2 b-kas">BIZLINKS</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'agt')">Editar</button></div></td></tr>
+            <tr><td class="mono">20112233445</td><td>Textiles Sur SAC</td><td><span class="badge-2 b-p01">Sí</span></td><td class="mono-sm">2024-05-10</td><td class="mono-sm">00-011-223344</td><td><span class="badge-2 b-kas">BIZLINKS</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'agt')">Editar</button></div></td></tr>
+            <tr class="row-stripe"><td class="mono">20998877665</td><td>Importaciones Andinas SAC</td><td><span class="badge-2 b-p01">Sí</span></td><td class="mono-sm">2024-02-20</td><td class="mono-sm">00-099-887766</td><td><span class="badge-2 b-blue">RAMGAST</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'agt')">Editar</button></div></td></tr>
+            <tr><td class="mono">20489112233</td><td>Distribuidora Norte SAC</td><td><span class="badge-2 b-muted">No</span></td><td class="mono-sm">—</td><td class="mono-sm">00-048-911223</td><td><span class="badge-2 b-kas">BIZLINKS</span></td><td><span class="badge-2 b-p04">Inactivo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'agt')">Editar</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="lotes-footer">
+        <div class="float-fld float-fld-select">
+          <span class="float-label">Items</span>
+          <select id="mant-agt-page-size">
+            <option value="10" selected>10 por hoja</option>
+            <option value="25">25 por hoja</option>
+            <option value="50">50 por hoja</option>
+          </select>
+        </div>
+        <span class="pager-info" id="mant-agt-pager-info"></span>
+        <div class="pager pager-inline"><div class="pager-ctrls" id="mant-agt-pager-ctrls"></div></div>
+      </div>
     </div>
-    <div class="filters">
-      <div class="fld"><label>RUC</label><input placeholder="20481234567"></div>
-      <div class="fld"><label>Tienda (AgentCode)</label><input placeholder="034301"></div>
-      <div class="fld"><label>Estado</label><select><option>Todos</option><option>Habilitado</option><option>Deshabilitado</option><option>Solo alta (sin datos)</option></select></div>
-      <div class="fld"><label>&nbsp;</label><button class="btn">Filtrar</button></div>
+  </div>
+
+  <!-- ══ UBIGEOS ══════════════════════════════════════════════ -->
+  <div class="tab-pane" id="mant-ubigeos">
+    <div class="panel mt-16">
+      <div class="ph ph-bare">Catálogo de ubigeos</div>
+      <div class="lotes-search-panel">
+        <div class="pb">
+          <div class="lotes-filters">
+            <div class="float-fld lotes-search-fld">
+              <span class="float-label">Código</span>
+              <input type="text" id="mant-ubi-code" placeholder="150101">
+            </div>
+            <div class="float-fld lotes-search-fld">
+              <span class="float-label">Departamento</span>
+              <input type="text" id="mant-ubi-dpto" placeholder="Lima">
+            </div>
+            <div class="float-fld float-fld-select">
+              <span class="float-label">Exención IGV</span>
+              <select id="mant-ubi-igv">
+                <option value="">Todos</option>
+                <option value="Sí">Sí</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div class="float-fld float-fld-select">
+              <span class="float-label">Estado</span>
+              <select id="mant-ubi-estado">
+                <option value="">Todos</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
+            </div>
+            <button class="btn lotes-buscar-btn" id="mant-ubi-buscar">Buscar</button>
+            <button class="btn ghost lotes-buscar-btn" id="mant-ubi-limpiar">Limpiar</button>
+            <button class="btn ghost lotes-buscar-btn" onclick="document.getElementById('mant-upload').click()"><i class="icon-upload"></i> Carga masiva</button>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-x">
+        <table id="mant-ubi-table">
+          <thead><tr>
+            <th>Código</th><th>Departamento</th><th>Provincia</th><th>Distrito</th><th>Exención IGV</th><th>Estado</th><th>Acciones</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="mono-sm">150101</td><td>Lima</td><td>Lima</td><td>Lima</td><td><span class="badge-2 b-muted">No</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ubi')">Editar</button></div></td></tr>
+            <tr class="row-stripe"><td class="mono-sm">150116</td><td>Lima</td><td>Lima</td><td>Miraflores</td><td><span class="badge-2 b-muted">No</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ubi')">Editar</button></div></td></tr>
+            <tr><td class="mono-sm">160101</td><td>Loreto</td><td>Maynas</td><td>Iquitos</td><td><span class="badge-2 b-p01">Sí</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ubi')">Editar</button></div></td></tr>
+            <tr class="row-stripe"><td class="mono-sm">210101</td><td>Puno</td><td>Puno</td><td>Puno</td><td><span class="badge-2 b-muted">No</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ubi')">Editar</button></div></td></tr>
+            <tr><td class="mono-sm">220101</td><td>San Martín</td><td>Moyobamba</td><td>Moyobamba</td><td><span class="badge-2 b-p01">Sí</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ubi')">Editar</button></div></td></tr>
+            <tr class="row-stripe"><td class="mono-sm">010101</td><td>Amazonas</td><td>Chachapoyas</td><td>Chachapoyas</td><td><span class="badge-2 b-p01">Sí</span></td><td><span class="badge-2 b-p04">Inactivo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ubi')">Editar</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="lotes-footer">
+        <div class="float-fld float-fld-select">
+          <span class="float-label">Items</span>
+          <select id="mant-ubi-page-size">
+            <option value="10" selected>10 por hoja</option>
+            <option value="25">25 por hoja</option>
+            <option value="50">50 por hoja</option>
+          </select>
+        </div>
+        <span class="pager-info" id="mant-ubi-pager-info"></span>
+        <div class="pager pager-inline"><div class="pager-ctrls" id="mant-ubi-pager-ctrls"></div></div>
+      </div>
     </div>
-    <div class="panel"><div class="pb">
-      <table>
-        <tr><th>RUC</th><th>Tienda</th><th>Razón Social</th><th>Cuenta detracción</th><th>selfBilling</th><th>Datos</th><th>Habilitado por</th><th></th></tr>
-        <tr><td>10238817868</td><td>034301</td><td>Sucre y Sale</td><td>00-123-456789</td><td><span class="badge b-ok">Habilitado</span></td><td><span class="badge b-ok">Completos</span></td><td>Joel Cauti · 2026-08-01</td><td><button class="btn sm ghost">Editar</button> <button class="btn sm ghost btn-ghost-warn">Deshabilitar</button></td></tr>
-        <tr><td>20484445556</td><td>102944</td><td>—</td><td>00-987-654321</td><td><span class="badge b-ok">Habilitado</span></td><td><span class="badge b-amber">Solo alta</span></td><td>María Torres · 2026-09-20</td><td><button class="btn sm ghost">Editar</button> <button class="btn sm ghost btn-ghost-warn">Deshabilitar</button></td></tr>
-        <tr><td>20489112233</td><td>055888</td><td>Distribuidora Norte SAC</td><td>00-445-112233</td><td><span class="badge b-muted">Deshabilitado</span></td><td><span class="badge b-ok">Completos</span></td><td>Joel Cauti · 2026-06-15</td><td><button class="btn sm ghost">Editar</button> <button class="btn sm ok">Habilitar</button></td></tr>
-      </table>
-      <div class="pager"><span class="pager-info">1–3 de 1,503 agentes</span><div class="pager-ctrls"><button>«</button><button class="active">1</button><button>2</button><button>»</button></div></div>
-    </div></div>
+  </div>
+
+  <!-- ══ ENTIDADES FINANCIERAS ════════════════════════════════ -->
+  <div class="tab-pane" id="mant-entidades">
+    <div class="panel mt-16">
+      <div class="ph ph-bare">Catálogo de entidades financieras</div>
+      <div class="lotes-search-panel">
+        <div class="pb">
+          <div class="lotes-filters">
+            <div class="float-fld lotes-search-fld">
+              <span class="float-label">Nombre</span>
+              <input type="text" id="mant-ef-nombre" placeholder="BCP, BBVA...">
+            </div>
+            <div class="float-fld lotes-search-fld">
+              <span class="float-label">Código</span>
+              <input type="text" id="mant-ef-codigo" placeholder="BCP">
+            </div>
+            <div class="float-fld float-fld-select">
+              <span class="float-label">Canal</span>
+              <select id="mant-ef-canal">
+                <option value="">Todos</option>
+                <option value="BCP">BCP</option>
+                <option value="BBVA">BBVA</option>
+                <option value="SCOTIABANK">SCOTIABANK</option>
+                <option value="CAJAS">CAJAS</option>
+              </select>
+            </div>
+            <div class="float-fld float-fld-select">
+              <span class="float-label">Estado</span>
+              <select id="mant-ef-estado">
+                <option value="">Todos</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
+            </div>
+            <button class="btn lotes-buscar-btn" id="mant-ef-buscar">Buscar</button>
+            <button class="btn ghost lotes-buscar-btn" id="mant-ef-limpiar">Limpiar</button>
+            <button class="btn ghost lotes-buscar-btn" onclick="document.getElementById('mant-upload').click()"><i class="icon-upload"></i> Carga masiva</button>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-x">
+        <table id="mant-ef-table">
+          <thead><tr>
+            <th>Nombre</th><th>Código</th><th>BIN Financiero</th><th>Canal</th><th>Estado</th><th>Acciones</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>BCP</td><td class="mono-sm">BCP</td><td class="mono-sm">00001234</td><td><span class="badge-2 b-kas">BCP</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ef')">Editar</button></div></td></tr>
+            <tr class="row-stripe"><td>BBVA</td><td class="mono-sm">BBVA</td><td class="mono-sm">00005678</td><td><span class="badge-2 b-kas">BBVA</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ef')">Editar</button></div></td></tr>
+            <tr><td>Scotiabank</td><td class="mono-sm">SCO</td><td class="mono-sm">00009012</td><td><span class="badge-2 b-kas">SCOTIABANK</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ef')">Editar</button></div></td></tr>
+            <tr class="row-stripe"><td>Interbank</td><td class="mono-sm">IBK</td><td class="mono-sm">00003456</td><td><span class="badge-2 b-kas">BBVA</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ef')">Editar</button></div></td></tr>
+            <tr><td>Banco de la Nación</td><td class="mono-sm">BN</td><td class="mono-sm">00001111</td><td><span class="badge-2 b-kas">BCP</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ef')">Editar</button></div></td></tr>
+            <tr class="row-stripe"><td>Caja Huancayo</td><td class="mono-sm">CH</td><td class="mono-sm">00007890</td><td><span class="badge-2 b-blue">CAJAS</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ef')">Editar</button></div></td></tr>
+            <tr><td>Pichincha</td><td class="mono-sm">PICH</td><td class="mono-sm">00002222</td><td><span class="badge-2 b-kas">BBVA</span></td><td><span class="badge-2 b-p06">Activo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ef')">Editar</button></div></td></tr>
+            <tr class="row-stripe"><td>Caja Trujillo</td><td class="mono-sm">CT</td><td class="mono-sm">00003333</td><td><span class="badge-2 b-blue">CAJAS</span></td><td><span class="badge-2 b-p04">Inactivo</span></td><td><div class="act-btns"><button class="btn sm ghost" onclick="openMantEditor(this,'ef')">Editar</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="lotes-footer">
+        <div class="float-fld float-fld-select">
+          <span class="float-label">Items</span>
+          <select id="mant-ef-page-size">
+            <option value="10" selected>10 por hoja</option>
+            <option value="25">25 por hoja</option>
+            <option value="50">50 por hoja</option>
+          </select>
+        </div>
+        <span class="pager-info" id="mant-ef-pager-info"></span>
+        <div class="pager pager-inline"><div class="pager-ctrls" id="mant-ef-pager-ctrls"></div></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -3986,32 +4162,32 @@
             <span class="float-label">Entidad</span>
             <select id="aud-entidad">
               <option value="">Todas las entidades</option>
-              <option>Lote</option>
-              <option>Comprobante</option>
-              <option>Pago</option>
-              <option>Ubigeo</option>
-              <option>Agente</option>
+              <option value="Lote">Lote</option>
+              <option value="Comprobante">Comprobante</option>
+              <option value="Pago">Pago</option>
+              <option value="Ubigeo">Ubigeo</option>
+              <option value="Agente">Agente</option>
             </select>
           </div>
           <div class="float-fld float-fld-select">
             <span class="float-label">Acción</span>
             <select id="aud-accion">
               <option value="">Todas las acciones</option>
-              <option>Crear</option>
-              <option>Editar</option>
-              <option>Anular</option>
-              <option>Aprobar</option>
-              <option>Dispersar</option>
+              <option value="Crear">Crear</option>
+              <option value="Editar">Editar</option>
+              <option value="Anular">Anular</option>
+              <option value="Aprobar">Aprobar</option>
+              <option value="Dispersar">Dispersar</option>
             </select>
           </div>
           <div class="float-fld float-fld-select">
             <span class="float-label">Rol</span>
             <select id="aud-rol">
               <option value="">Todos los roles</option>
-              <option>USUARIO_INTERNO</option>
-              <option>ADMINISTRADOR</option>
-              <option>USUARIO_EXTERNO</option>
-              <option>SISTEMA</option>
+              <option value="USUARIO_INTERNO">USUARIO_INTERNO</option>
+              <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+              <option value="USUARIO_EXTERNO">USUARIO_EXTERNO</option>
+              <option value="SISTEMA">SISTEMA</option>
             </select>
           </div>
           <button class="btn lotes-buscar-btn" id="aud-buscar-btn">Buscar</button>
@@ -4720,8 +4896,10 @@
     </div>
   </div>
 
+  <div class="drawer-footer" id="comp-drw-footer">
+    <button class="btn cd-reprocesar-btn" id="comp-drw-guardar-reprocesar" onclick="guardarYReprocesar()"><i class="icon-refresh-cw"></i> Guardar y reprocesar</button>
+  </div>
 </div>
-
 <!-- ===== DRAWER: DETALLE NOTA DE CRÉDITO ===== -->
 <div class="drawer-overlay" id="anul-drw-overlay" onclick="closeAnulDrawer()"></div>
 <div class="drawer comp-drw" id="anul-drw">
@@ -5086,6 +5264,26 @@
   <div class="drawer-footer">
     <button class="btn cd-reprocesar-btn d-none" id="dpdw-guardar" onclick="guardarCambiosPago()"><i class="icon-save"></i> Guardar cambios</button>
     <button class="btn cd-reprocesar-btn d-none" id="dpdw-reprocesar" onclick="reprocesarPago()"><i class="icon-refresh-cw"></i> Reprocesar</button>
+  </div>
+</div>
+<input type="file" id="mant-upload" accept=".xlsx,.xls" class="d-none" onchange="mantHandleUpload(this)">
+<!-- ===== DRAWER: MANTENIMIENTO EDITOR ===== -->
+<div class="drawer-overlay" id="mant-drw-overlay" onclick="closeMantDrawer()"></div>
+<div class="drawer comp-drw" id="mant-drw">
+  <div class="comp-drw-header">
+    <div class="comp-drw-topbar">
+      <button class="comp-drw-back" onclick="closeMantDrawer()"><i class="icon-arrow-left"></i> Volver</button>
+    </div>
+    <div class="comp-drw-header-main">
+      <div>
+        <div class="comp-drw-nombre" id="mant-drw-title">—</div>
+        <div class="comp-drw-serie" id="mant-drw-subtitle">—</div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-body" id="mant-drw-body"></div>
+  <div class="drawer-footer">
+    <button class="btn" onclick="guardarMantCambios()"><i class="icon-save"></i> Guardar cambios</button>
   </div>
 </div>
 <script src="js/script.js"></script>

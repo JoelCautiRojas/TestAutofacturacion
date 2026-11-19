@@ -20,6 +20,7 @@ async function navTo(id){
     _sectionInited.add(id);
     if(id === 'lotes') initLotesComponents();
     if(id === 'auditoria') initAuditoriaComponents();
+    if(id === 'mantenimiento') initMantenimientoComponents();
   }
 
   document.querySelectorAll('.sb-nav a').forEach(a=>a.classList.remove('active'));
@@ -172,7 +173,7 @@ function resetNuevoLoteModal(){
   hint.textContent = 'Formato: Excel (.xlsx, .xls) · Máximo 10,000 registros';
   btn.disabled = true;
   document.getElementById('nlm-step1').style.display = 'block';
-  document.getElementById('nlm-step2').style.display = 'none';
+  document.getElementById('nlm-step2').classList.add('d-none');
 }
 function handleNuevoLoteFile(file){
   if(!file) return;
@@ -198,10 +199,10 @@ function continueNuevoLote(){
   document.getElementById('nlm-s2-name').textContent = name;
   document.getElementById('nlm-s2-size').textContent = size;
   document.getElementById('nlm-step1').style.display = 'none';
-  document.getElementById('nlm-step2').style.display = 'block';
+  document.getElementById('nlm-step2').classList.remove('d-none');
 }
 function backToStep1(){
-  document.getElementById('nlm-step2').style.display = 'none';
+  document.getElementById('nlm-step2').classList.add('d-none');
   document.getElementById('nlm-step1').style.display = 'block';
   resetNuevoLoteModal();
 }
@@ -2540,6 +2541,12 @@ function guardarCambiosBandeja(){
   document.getElementById('comp-drw').classList.remove('open');
   document.getElementById('comp-drw').classList.remove('drw-edit-mode');
 }
+function guardarYReprocesar(){
+  showToast('Cambios guardados y comprobante enviado a reprocesar');
+  document.getElementById('comp-drw-overlay').classList.remove('open');
+  document.getElementById('comp-drw').classList.remove('open');
+  document.getElementById('comp-drw').classList.remove('drw-edit-mode');
+}
 
 
 // ── Vista por lotes (ppp-table) ─────────────────────────────
@@ -3306,60 +3313,42 @@ function initAuditoriaPagination(){
 }
 function initAuditoriaFilters(){
   if(!document.getElementById('aud-table')) return;
-  const inpUsr=document.getElementById('aud-usuario');
-  const btnB  =document.getElementById('aud-buscar-btn');
-  const btnL  =document.getElementById('aud-limpiar-btn');
 
-  // Lee el valor actual de un custom select por su id de <select>
-  function csGet(id){
-    const wrap=document.querySelector('.float-fld-select[data-cs]');
-    // Busca el wrapper que contiene el select con ese id
-    const sel=document.getElementById(id);
-    if(!sel) return '';
-    const w=sel.closest('[data-cs]');
-    if(w){
-      const txt=w.querySelector('.cs-value')?.textContent?.trim()||'';
-      if(txt.startsWith('Todas')||txt.startsWith('Todos')) return '';
-      return txt;
-    }
-    return sel.value||'';
-  }
+  // Captura valores de selects via evento change (custom select siempre lo dispara)
+  let _ent='', _acc='', _rol='';
+  const selEnt = document.getElementById('aud-entidad');
+  const selAcc = document.getElementById('aud-accion');
+  const selRol = document.getElementById('aud-rol');
+  const inpUsr = document.getElementById('aud-usuario');
+  if(selEnt) selEnt.addEventListener('change', e => { _ent = e.target.value; apply(); });
+  if(selAcc) selAcc.addEventListener('change', e => { _acc = e.target.value; apply(); });
+  if(selRol) selRol.addEventListener('change', e => { _rol = e.target.value; apply(); });
 
-  // Cols: 0=Fecha/Hora|1=Usuario|2=Rol|3=Entidad|4=ID Registro|5=Accion|6=Antes|7=Despues|8=IP|9=Metadata
+  // Cols: 0=Fecha/Hora|1=Usuario|2=Rol|3=Entidad|4=ID|5=Accion|6=Antes|7=Despues|8=IP|9=Metadata
   function apply(){
-    const usr=inpUsr?inpUsr.value.trim().toLowerCase():'';
-    const ent=csGet('aud-entidad');
-    const acc=csGet('aud-accion');
-    const rol=csGet('aud-rol');
+    const usr = inpUsr ? inpUsr.value.trim().toLowerCase() : '';
     document.querySelectorAll('#aud-table tbody tr').forEach(row=>{
-      const tds=row.querySelectorAll('td');
+      const tds = row.querySelectorAll('td');
       if(tds.length<10){ row.classList.remove('row-filtered'); return; }
-      const usuario=tds[1].textContent.trim().toLowerCase();
-      const rolVal =tds[2].textContent.trim();
-      const entVal =tds[3].textContent.trim();
-      const accVal =tds[5].textContent.trim();
-      let m=true;
-      if(usr && !usuario.includes(usr))  m=false;
-      if(ent && entVal!==ent)             m=false;
-      if(acc && accVal!==acc)             m=false;
-      if(rol && rolVal!==rol)             m=false;
-      row.classList.toggle('row-filtered',!m);
+      let m = true;
+      if(usr && !tds[1].textContent.trim().toLowerCase().includes(usr)) m=false;
+      if(_ent && tds[3].textContent.trim() !== _ent) m=false;
+      if(_acc && tds[5].textContent.trim() !== _acc) m=false;
+      if(_rol && tds[2].textContent.trim() !== _rol) m=false;
+      row.classList.toggle('row-filtered', !m);
     });
     if(window.audRender) window.audRender();
   }
 
-  if(btnB) btnB.addEventListener('click',apply);
-  if(btnL) btnL.addEventListener('click',()=>{
-    if(inpUsr) inpUsr.value='';
-    // Resetear custom selects visualmente
-    ['aud-entidad','aud-accion','aud-rol'].forEach(id=>{
-      const sel=document.getElementById(id);
-      if(!sel) return;
-      sel.selectedIndex=0;
-      sel.dispatchEvent(new Event('change'));
-      const w=sel.closest('[data-cs]');
-      if(w){ const v=w.querySelector('.cs-value'); if(v) v.textContent=sel.options[0]?.text||''; }
-    });
+  const btnB = document.getElementById('aud-buscar-btn');
+  const btnL = document.getElementById('aud-limpiar-btn');
+  if(btnB) btnB.addEventListener('click', apply);
+  if(btnL) btnL.addEventListener('click', ()=>{
+    if(inpUsr) inpUsr.value = '';
+    _ent=''; _acc=''; _rol='';
+    if(selEnt){ selEnt.selectedIndex=0; selEnt.dispatchEvent(new Event('change')); }
+    if(selAcc){ selAcc.selectedIndex=0; selAcc.dispatchEvent(new Event('change')); }
+    if(selRol){ selRol.selectedIndex=0; selRol.dispatchEvent(new Event('change')); }
     document.querySelectorAll('#aud-table tbody tr').forEach(r=>r.classList.remove('row-filtered'));
     if(window.audRender) window.audRender();
   });
@@ -3367,4 +3356,294 @@ function initAuditoriaFilters(){
 function initAuditoriaComponents(){
   initAuditoriaPagination();
   initAuditoriaFilters();
+}
+// ── Mantenimiento ────────────────────────────────────────
+function mantTab(btn, tabId){
+  document.querySelectorAll('#mantenimiento .tabs button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#mantenimiento .tab-pane').forEach(p=>p.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const pane=document.getElementById(tabId);
+  if(pane) pane.classList.add('active');
+}
+function initMantPagination(tableId, infoId, ctrlsId, sizeId, pageGlobal){
+  if(!document.getElementById(tableId)) return;
+  let page=1, size=10;
+  function getRows(){ return Array.from(document.querySelectorAll('#'+tableId+' tbody tr:not(.row-filtered)')); }
+  function render(){
+    const rows=getRows(), total=rows.length;
+    const pages=Math.max(1,Math.ceil(total/size));
+    page=Math.max(1,Math.min(page,pages));
+    const from=(page-1)*size, to=Math.min(from+size,total);
+    document.querySelectorAll('#'+tableId+' tbody tr').forEach(r=>{r.style.display='none';});
+    rows.forEach((r,i)=>{ r.style.display=(i>=from&&i<to)?'':'none'; r.classList.toggle('row-stripe',i>=from&&i<to&&(i-from)%2!==0); });
+    const info=document.getElementById(infoId);
+    if(info) info.textContent=total?`${from+1}–${to} de ${total} registros`:'0 registros';
+    const ctrls=document.getElementById(ctrlsId);
+    if(!ctrls) return;
+    let h=`<button onclick="${pageGlobal}(${page-1})"${page===1?' disabled':''}>&#8249;</button>`;
+    for(let p=1;p<=pages;p++) h+=`<button class="${p===page?'active':''}" onclick="${pageGlobal}(${p})">${p}</button>`;
+    h+=`<button onclick="${pageGlobal}(${page+1})"${page===pages?' disabled':''}>&#8250;</button>`;
+    ctrls.innerHTML=h;
+  }
+  window[pageGlobal]=p=>{ const rows=getRows(); const pages=Math.max(1,Math.ceil(rows.length/size)); if(p<1||p>pages) return; page=p; render(); };
+  const sel=document.getElementById(sizeId);
+  if(sel){ size=parseInt(sel.value)||10; sel.addEventListener('change',function(){ size=parseInt(this.value)||10; page=1; render(); }); }
+  render(); window[pageGlobal+'Render']=render;
+}
+function initMantFilters(tableId, fields, renderFn){
+  const btnB=document.getElementById(fields.buscar);
+  const btnL=document.getElementById(fields.limpiar);
+  function apply(){
+    document.querySelectorAll('#'+tableId+' tbody tr').forEach(row=>{
+      const tds=row.querySelectorAll('td');
+      let m=true;
+      fields.cols.forEach(f=>{
+        const el=document.getElementById(f.id);
+        if(!el) return;
+        const val=f.type==='text'?el.value.trim().toLowerCase():(el.closest('[data-cs]')?.querySelector('.cs-value')?.textContent?.trim()||el.value);
+        if(!val||val.startsWith('Todos')||val.startsWith('todos')) return;
+        const cell=tds[f.col]?.textContent?.trim()||(f.type==='text'?'':'');
+        if(f.type==='text'){ if(!cell.toLowerCase().includes(val)) m=false; }
+        else { if(cell!==val) m=false; }
+      });
+      row.classList.toggle('row-filtered',!m);
+    });
+    if(window[renderFn]) window[renderFn]();
+  }
+  if(btnB) btnB.addEventListener('click',apply);
+  if(btnL) btnL.addEventListener('click',()=>{
+    fields.cols.forEach(f=>{ const el=document.getElementById(f.id); if(el){ el.value=''; if(f.type!=='text'){ el.selectedIndex=0; el.dispatchEvent(new Event('change')); const w=el.closest('[data-cs]'); if(w){ const v=w.querySelector('.cs-value'); if(v) v.textContent=el.options[0]?.text||''; } } } });
+    document.querySelectorAll('#'+tableId+' tbody tr').forEach(r=>r.classList.remove('row-filtered'));
+    if(window[renderFn]) window[renderFn]();
+  });
+}
+function initMantenimientoComponents(){
+  // Agentes
+  initMantPagination('mant-agt-table','mant-agt-pager-info','mant-agt-pager-ctrls','mant-agt-page-size','mantAgtPage');
+  initMantFilters('mant-agt-table',{
+    buscar:'mant-agt-buscar', limpiar:'mant-agt-limpiar',
+    cols:[
+      {id:'mant-agt-ruc',    col:0, type:'text'},
+      {id:'mant-agt-nombre', col:1, type:'text'},
+      {id:'mant-agt-sb',     col:2, type:'select'},
+      {id:'mant-agt-ose',    col:5, type:'select'},
+      {id:'mant-agt-estado', col:6, type:'select'}
+    ]
+  },'mantAgtPageRender');
+  // Ubigeos
+  initMantPagination('mant-ubi-table','mant-ubi-pager-info','mant-ubi-pager-ctrls','mant-ubi-page-size','mantUbiPage');
+  initMantFilters('mant-ubi-table',{
+    buscar:'mant-ubi-buscar', limpiar:'mant-ubi-limpiar',
+    cols:[
+      {id:'mant-ubi-code',   col:0, type:'text'},
+      {id:'mant-ubi-dpto',   col:1, type:'text'},
+      {id:'mant-ubi-igv',    col:4, type:'select'},
+      {id:'mant-ubi-estado', col:5, type:'select'}
+    ]
+  },'mantUbiPageRender');
+  // Entidades Financieras
+  initMantPagination('mant-ef-table','mant-ef-pager-info','mant-ef-pager-ctrls','mant-ef-page-size','mantEfPage');
+  initMantFilters('mant-ef-table',{
+    buscar:'mant-ef-buscar', limpiar:'mant-ef-limpiar',
+    cols:[
+      {id:'mant-ef-nombre',  col:0, type:'text'},
+      {id:'mant-ef-codigo',  col:1, type:'text'},
+      {id:'mant-ef-canal',   col:3, type:'select'},
+      {id:'mant-ef-estado',  col:4, type:'select'}
+    ]
+  },'mantEfPageRender');
+}
+// ── Mantenimiento ────────────────────────────────────────
+function mantTab(btn, tabId){
+  document.querySelectorAll('#mantenimiento .tabs button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#mantenimiento .tab-pane').forEach(p=>p.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const pane=document.getElementById(tabId);
+  if(pane) pane.classList.add('active');
+}
+function initMantPagination(tableId, infoId, ctrlsId, sizeId, pageGlobal){
+  if(!document.getElementById(tableId)) return;
+  let page=1, size=10;
+  function getRows(){ return Array.from(document.querySelectorAll('#'+tableId+' tbody tr:not(.row-filtered)')); }
+  function render(){
+    const rows=getRows(), total=rows.length;
+    const pages=Math.max(1,Math.ceil(total/size));
+    page=Math.max(1,Math.min(page,pages));
+    const from=(page-1)*size, to=Math.min(from+size,total);
+    document.querySelectorAll('#'+tableId+' tbody tr').forEach(r=>{r.style.display='none';});
+    rows.forEach((r,i)=>{ r.style.display=(i>=from&&i<to)?'':'none'; r.classList.toggle('row-stripe',i>=from&&i<to&&(i-from)%2!==0); });
+    const info=document.getElementById(infoId);
+    if(info) info.textContent=total?`${from+1}–${to} de ${total} registros`:'0 registros';
+    const ctrls=document.getElementById(ctrlsId);
+    if(!ctrls) return;
+    let h=`<button onclick="${pageGlobal}(${page-1})"${page===1?' disabled':''}>&#8249;</button>`;
+    for(let p=1;p<=pages;p++) h+=`<button class="${p===page?'active':''}" onclick="${pageGlobal}(${p})">${p}</button>`;
+    h+=`<button onclick="${pageGlobal}(${page+1})"${page===pages?' disabled':''}>&#8250;</button>`;
+    ctrls.innerHTML=h;
+  }
+  window[pageGlobal]=p=>{ const rows=getRows(); const pages=Math.max(1,Math.ceil(rows.length/size)); if(p<1||p>pages) return; page=p; render(); };
+  const sel=document.getElementById(sizeId);
+  if(sel){ size=parseInt(sel.value)||10; sel.addEventListener('change',function(){ size=parseInt(this.value)||10; page=1; render(); }); }
+  render(); window[pageGlobal+'Render']=render;
+}
+function initMantFilters(tableId, fields, renderFn){
+  const btnB=document.getElementById(fields.buscar);
+  const btnL=document.getElementById(fields.limpiar);
+  // Almacena valores de selects via change (custom select siempre lo dispara)
+  const _vals={};
+  fields.cols.forEach(f=>{
+    if(f.type!=='text'){
+      _vals[f.id]='';
+      const el=document.getElementById(f.id);
+      if(el) el.addEventListener('change', e=>{ _vals[f.id]=e.target.value; apply(); });
+    }
+  });
+  function apply(){
+    document.querySelectorAll('#'+tableId+' tbody tr').forEach(row=>{
+      const tds=row.querySelectorAll('td');
+      let m=true;
+      fields.cols.forEach(f=>{
+        const el=document.getElementById(f.id);
+        if(!el) return;
+        const val=f.type==='text'?el.value.trim().toLowerCase():(_vals[f.id]||'');
+        if(!val||val.startsWith('Todos')||val.startsWith('todos')) return;
+        const cell=tds[f.col]?.textContent?.trim()||'';
+        if(f.type==='text'){ if(!cell.toLowerCase().includes(val)) m=false; }
+        else{ if(cell!==val) m=false; }
+      });
+      row.classList.toggle('row-filtered',!m);
+    });
+    if(window[renderFn]) window[renderFn]();
+  }
+  if(btnB) btnB.addEventListener('click',apply);
+  if(btnL) btnL.addEventListener('click',()=>{
+    fields.cols.forEach(f=>{ const el=document.getElementById(f.id); if(!el) return;
+      if(f.type==='text'){ el.value=''; }
+      else{ _vals[f.id]=''; el.selectedIndex=0; el.dispatchEvent(new Event('change'));
+        const w=el.closest('[data-cs]'); if(w){ const v=w.querySelector('.cs-value'); if(v) v.textContent=el.options[0]?.text||''; }
+      }
+    });
+    document.querySelectorAll('#'+tableId+' tbody tr').forEach(r=>r.classList.remove('row-filtered'));
+    if(window[renderFn]) window[renderFn]();
+  });
+}
+function initMantenimientoComponents(){
+  // Agentes
+  initMantPagination('mant-agt-table','mant-agt-pager-info','mant-agt-pager-ctrls','mant-agt-page-size','mantAgtPage');
+  initMantFilters('mant-agt-table',{
+    buscar:'mant-agt-buscar', limpiar:'mant-agt-limpiar',
+    cols:[
+      {id:'mant-agt-ruc',    col:0, type:'text'},
+      {id:'mant-agt-nombre', col:1, type:'text'},
+      {id:'mant-agt-sb',     col:2, type:'select'},
+      {id:'mant-agt-ose',    col:5, type:'select'},
+      {id:'mant-agt-estado', col:6, type:'select'}
+    ]
+  },'mantAgtPageRender');
+  // Ubigeos
+  initMantPagination('mant-ubi-table','mant-ubi-pager-info','mant-ubi-pager-ctrls','mant-ubi-page-size','mantUbiPage');
+  initMantFilters('mant-ubi-table',{
+    buscar:'mant-ubi-buscar', limpiar:'mant-ubi-limpiar',
+    cols:[
+      {id:'mant-ubi-code',   col:0, type:'text'},
+      {id:'mant-ubi-dpto',   col:1, type:'text'},
+      {id:'mant-ubi-igv',    col:4, type:'select'},
+      {id:'mant-ubi-estado', col:5, type:'select'}
+    ]
+  },'mantUbiPageRender');
+  // Entidades Financieras
+  initMantPagination('mant-ef-table','mant-ef-pager-info','mant-ef-pager-ctrls','mant-ef-page-size','mantEfPage');
+  initMantFilters('mant-ef-table',{
+    buscar:'mant-ef-buscar', limpiar:'mant-ef-limpiar',
+    cols:[
+      {id:'mant-ef-nombre',  col:0, type:'text'},
+      {id:'mant-ef-codigo',  col:1, type:'text'},
+      {id:'mant-ef-canal',   col:3, type:'select'},
+      {id:'mant-ef-estado',  col:4, type:'select'}
+    ]
+  },'mantEfPageRender');
+}
+// ── Mantenimiento: drawer editor ─────────────────────────
+const _MANT_TABLES = {
+  agt:{
+    title:'Editar agente',
+    sub: id=>`RUC: ${id}`,
+    fields:[
+      {label:'RUC',              key:'ruc',    type:'readonly', col:0},
+      {label:'Razón Social',     key:'nombre', type:'text',     col:1},
+      {label:'Self-billing',     key:'sb',     type:'select',   col:2, opts:['Sí','No']},
+      {label:'Fecha inicio SB',  key:'fecha',  type:'text',     col:3},
+      {label:'Cuenta Detracción',key:'detrac', type:'text',     col:4},
+      {label:'OSE',              key:'ose',    type:'select',   col:5, opts:['BIZLINKS','RAMGAST']},
+      {label:'Estado',           key:'estado', type:'select',   col:6, opts:['Activo','Inactivo']}
+    ]
+  },
+  ubi:{
+    title:'Editar ubigeo',
+    sub: id=>`Código: ${id}`,
+    fields:[
+      {label:'Código',           key:'code',   type:'readonly', col:0},
+      {label:'Departamento',     key:'dpto',   type:'text',     col:1},
+      {label:'Provincia',        key:'prov',   type:'text',     col:2},
+      {label:'Distrito',         key:'dist',   type:'text',     col:3},
+      {label:'Exención IGV',     key:'igv',    type:'select',   col:4, opts:['Sí','No']},
+      {label:'Estado',           key:'estado', type:'select',   col:5, opts:['Activo','Inactivo']}
+    ]
+  },
+  ef:{
+    title:'Editar entidad financiera',
+    sub: id=>`Código: ${id}`,
+    fields:[
+      {label:'Nombre',           key:'nombre', type:'text',     col:0},
+      {label:'Código',           key:'code',   type:'text',     col:1},
+      {label:'BIN Financiero',   key:'bin',    type:'text',     col:2},
+      {label:'Canal',            key:'canal',  type:'select',   col:3, opts:['BCP','BBVA','SCOTIABANK','CAJAS']},
+      {label:'Estado',           key:'estado', type:'select',   col:4, opts:['Activo','Inactivo']}
+    ]
+  }
+};
+function openMantEditor(btn, tableKey){
+  const cfg=_MANT_TABLES[tableKey]; if(!cfg) return;
+  const row=btn.closest('tr');
+  const tds=row.querySelectorAll('td');
+  document.getElementById('mant-drw-title').textContent=cfg.title;
+  const pkField=cfg.fields.find(f=>f.type==='readonly');
+  const pkVal=pkField?tds[pkField.col]?.textContent.trim()||'—':'—';
+  document.getElementById('mant-drw-subtitle').textContent=cfg.sub(pkVal);
+  const body=document.getElementById('mant-drw-body');
+  body.innerHTML='';
+  const grid=document.createElement('div'); grid.className='cdtc-grid';
+  cfg.fields.forEach(f=>{
+    const card=document.createElement('div'); card.className='cdtc-card';
+    const lbl=document.createElement('div'); lbl.className='cdtc-label'; lbl.textContent=f.label;
+    card.appendChild(lbl);
+    const rawVal=tds[f.col]?.textContent.trim()||'';
+    if(f.type==='select'){
+      const sel=document.createElement('select'); sel.className='mant-drw-select'; sel.id='mant-fld-'+f.key;
+      (f.opts||[]).forEach(o=>{const opt=document.createElement('option');opt.value=o;opt.textContent=o;if(o===rawVal)opt.selected=true;sel.appendChild(opt);});
+      card.appendChild(sel);
+    } else {
+      const inp=document.createElement('input'); inp.type='text'; inp.className='mant-drw-input'; inp.id='mant-fld-'+f.key; inp.value=rawVal;
+      if(f.type==='readonly') inp.readOnly=true;
+      card.appendChild(inp);
+    }
+    grid.appendChild(card);
+  });
+  body.appendChild(grid);
+  document.getElementById('mant-drw-overlay').classList.add('open');
+  document.getElementById('mant-drw').classList.add('open');
+}
+function closeMantDrawer(){
+  document.getElementById('mant-drw-overlay').classList.remove('open');
+  document.getElementById('mant-drw').classList.remove('open');
+}
+function guardarMantCambios(){
+  showToast('Cambios guardados correctamente');
+  closeMantDrawer();
+}
+function mantHandleUpload(inp){
+  if(!inp.files||!inp.files[0]) return;
+  const name = inp.files[0].name;
+  inp.value = '';
+  showToast(`Archivo "${name}" cargado correctamente`);
 }
