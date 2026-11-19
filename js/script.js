@@ -1717,7 +1717,7 @@ const _COMP_STATE_MAP = {
   'C-05':[1,'En proceso','proc'], 'C-06':[1,'Observado','err'],
   'C-07':[1,'Error técnico','err'],'C-08':[2,'Pendiente',''],
   'C-09':[2,'Rechazado','err'], 'C-10':[3,'Pendiente',''],
-  'C-11':[2,'Documento Rechazado',''],
+  'C-11':[2,'Documento Cerrado',''],
   'C-12':[3,'Observado','err'], 'C-13':[3,'En proceso','proc'],
   'C-14':[3,'En proceso','proc'],  'C-15':[3,'En proceso','proc'],
   'C-16':[4,'Pendiente',''], 'C-17':[5,'Completado','ok'],
